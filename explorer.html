@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="merchantExplorer" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="merchantExplorer" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="merchantExplorer" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="merchantExplorer" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Merchant Explorer</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="explorer.css">
+</head>
+<body ng-app='merchantExplorer'>
+  
+  <section ng-controller='searchController as search'>
+    <!-- <search-tabs></search-tabs> -->
+    <div>
+      <button ng-click='{{ search.activeTab = "search" }}'>Search</button>
+      <button ng-click='{{ search.activeTab = "filter" }}'>Filter</button>
+    </div>
+    
+    <form name='searchForm'>
+      <!-- <search-input ng-show='{ search.isActive("search") }'> -->
+      <div ng-show='{{ search.isActive("search") }}'>
+         <input type='text' name='searchPhrase' ng-model='{{ searchParams.phrase }}'>
+      </div>
+      
+      <!-- <search-filter ng-show='{ search.isActive("filter") }'> -->
+      <div ng-show='{{ search.isActive("filter") }}'>
+        <select name='category' ng-model='filterParams.category' ng-repeat='category in search.categories'>
+          <option val='{{category}}'>{{category}}</option>
+        </select>
+        
+        <select name='country' ng-model='filterParams.country' ng-repeat='country in search.countries'>
+          <option val='{{country}}'>{{country}}</option>
+        </select>
+        
+        <select name='cpc' ng-model='filterParams.cpc' ng-repeat='cpc_cat in search.cpc_cats'>
+          <option val='{{cpc_cat}}'>{{cpc_cat}}</option>
+        </select>
+      </div>
+      
+      <!-- <search-shared> -->
+      <div>
+        <input type='checkbox' name='affiliatable' ng-model='sharedParams.affiliatable'></input>
+        <input type='checkbox' name='insider' ng-model='sharedParams.insider'></input>
+        <input type='checkbox' name='unrestricted' ng-model='sharedParams.unrestricted'></input>
+      </div>
+
+    <form>
+    
+  </section>
+  
+  <section ng-controller='resultsController as results'>
+    <results-table>
+  </section>
+  
+</body>
+</html>
