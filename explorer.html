@@ -60,7 +60,7 @@
         <input type='checkbox' id='unrestricted' name='unrestricted' ng-model='search.sharedParams.unrestricted'></input>
       </div>
       
-      <button ng-click='search.search()'>Search</button>
+      <button ng-click='search.search()' ng-disabled="!search.isSearchable()">Search</button>
 
     <form>
     

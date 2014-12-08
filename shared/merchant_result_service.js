@@ -39,7 +39,7 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   
   this.search = function(searchParams) {
     this.resetSearchData();
-    this.idCall();
+    this.idCall(searchParams);
     
   };
   
@@ -70,7 +70,7 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   
   //API internal methods
   
-  this.idCall = function() {
+  this.idCall = function(searchParams) {
     merchantApi.getIds(searchParams).then(this.handleIdResponse.bind(this));
   }
   
