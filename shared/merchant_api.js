@@ -1,4 +1,4 @@
-var app = angular.module('merchantExplorer', []);
+var app = angular.module('merchantExplorer');
 
 app.service('merchantApi', function() {
   var idUrl = "",
@@ -13,10 +13,10 @@ app.service('merchantApi', function() {
   this.batchCall = function(ids) {
     //TODO make actual calls
     
-    return [{ 
+    return [{
         name: "A"
       }, {
         name: "B"
     }];
   }
-}
+});

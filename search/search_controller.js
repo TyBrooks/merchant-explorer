@@ -1,16 +1,17 @@
-var app = angular.module('merchantExplorer', []);
+var app = angular.module('merchantExplorer');
   
-app.controller('searchController', ["searchParamsFactory", "MerchantResultsService", function(searchParamsFactory, merchantResultsService) {
+app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultsService", "$log", function(searchParamsFactory, merchantResultsService, $log) {
   var params = searchParamsFactory.createDefault();
   
   this.activeTab = "search";
-  this.tabs = ["Search", "Filter"];
+  this.tabs = ["search", "filter"];
   
   this.searchParams = params["search"];
   this.filterParams = params["filter"];
   this.sharedParams = params["shared"];
   
   this.activateTab = function(activeTab) {
+    
     if(this.tabs.indexOf(activeTab) !== -1) {
       this.activeTab = activeTab;
     }
@@ -27,4 +28,11 @@ app.controller('searchController', ["searchParamsFactory", "MerchantResultsServi
   this.search = function() {
     merchantResultsService.getResults(this.activeParams);
   }
-}
+  
+  
+  //Dropdown options
+  //TODO complete these
+  this.categories = ["All Categories", "Automotive", "Consumer Electronics"];
+  this.countries = ["All Countries", "US|International", "Brazil|International"];
+  this.cpc_cats = ["CPC + CPA", "CPC Only", "CPA Only"];
+}]);

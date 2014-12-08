@@ -1,4 +1,4 @@
-var app = angular.module('merchantExplorer', [])
+var app = angular.module('merchantExplorer')
 
 app.factory('searchParamsFactory', function() {
   var factory = {};
@@ -9,9 +9,9 @@ app.factory('searchParamsFactory', function() {
         phrase: ""
       },
       filter: {
-        category: "",
-        country: "",
-        cpc: ""
+        category: "All Categories",
+        country: "All Countries",
+        cpc: "CPC + CPA"
       },
       shared: {
         affiliatable: true,
@@ -22,4 +22,4 @@ app.factory('searchParamsFactory', function() {
   }
   
   return factory;
-}
+});

@@ -10,51 +10,69 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="explorer.css">
+  <script src='lib/angular.js'></script>
+  <script src='app.js'></script>
+  <script src='search/search_controller.js'></script>
+  <script src='search/search_factories.js'></script>
+  <script src='results/results_controller.js'></script>
+  <script src='shared/merchant_api.js'></script>
+  <script src='shared/merchant_result_service.js'></script>
+   
 </head>
-<body ng-app='merchantExplorer'>
+<body>
   
-  <section ng-controller='searchController as search'>
+  <section id='search' ng-controller='SearchCtrl as search'>
     <!-- <search-tabs></search-tabs> -->
     <div>
-      <button ng-click='{{ search.activeTab = "search" }}'>Search</button>
-      <button ng-click='{{ search.activeTab = "filter" }}'>Filter</button>
+      <button ng-click='search.activateTab("search")'>Search</button>
+      <button ng-click='search.activateTab("filter")'>Filter</button>
     </div>
     
     <form name='searchForm'>
       <!-- <search-input ng-show='{ search.isActive("search") }'> -->
-      <div ng-show='{{ search.isActive("search") }}'>
-         <input type='text' name='searchPhrase' ng-model='{{ searchParams.phrase }}'>
+      <div ng-show='search.isActive("search")'>
+         <input type='text' name='searchPhrase' ng-model='search.searchParams.phrase'>
       </div>
       
       <!-- <search-filter ng-show='{ search.isActive("filter") }'> -->
-      <div ng-show='{{ search.isActive("filter") }}'>
-        <select name='category' ng-model='filterParams.category' ng-repeat='category in search.categories'>
-          <option val='{{category}}'>{{category}}</option>
+      <div ng-show='search.isActive("filter")'>
+        <select name='category' ng-model='search.filterParams.category' ng-options='category for category in search.categories'>
         </select>
         
-        <select name='country' ng-model='filterParams.country' ng-repeat='country in search.countries'>
-          <option val='{{country}}'>{{country}}</option>
+        <select name='country' ng-model='search.filterParams.country' ng-options='country for country in search.countries'>
         </select>
         
-        <select name='cpc' ng-model='filterParams.cpc' ng-repeat='cpc_cat in search.cpc_cats'>
-          <option val='{{cpc_cat}}'>{{cpc_cat}}</option>
+        <select name='cpc' ng-model='search.filterParams.cpc' ng-options='cpc for cpc in search.cpc_cats'>
         </select>
       </div>
       
       <!-- <search-shared> -->
       <div>
-        <input type='checkbox' name='affiliatable' ng-model='sharedParams.affiliatable'></input>
-        <input type='checkbox' name='insider' ng-model='sharedParams.insider'></input>
-        <input type='checkbox' name='unrestricted' ng-model='sharedParams.unrestricted'></input>
+        <label for='affiliatable'>Affiliates to Me</label>
+        <input type='checkbox' id='affiliatable' name='affiliatable' ng-model='search.sharedParams.affiliatable'></input>
+        <label for='insider'>Inisder Only</label>
+        <input type='checkbox' id='insider'      name='insider'      ng-model='search.sharedParams.insider'></input>
+        <label for='unrestricted'>Unrestricted Only</label>
+        <input type='checkbox' id='unrestricted' name='unrestricted' ng-model='search.sharedParams.unrestricted'></input>
       </div>
+      
+      <button>Search</button>
 
     <form>
     
   </section>
   
-  <section ng-controller='resultsController as results'>
+  <section ng-controller='ResultsCtrl as results'>
     <results-table>
   </section>
   
 </body>
 </html>
+
+
+<!--Style Notes
+1. $scope vs _ as _
+2. Angular structure
+
+
+ -->

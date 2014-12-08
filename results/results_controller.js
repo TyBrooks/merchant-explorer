@@ -1,6 +1,6 @@
-var app = angular.module('merchantExplorer', []);
+var app = angular.module('merchantExplorer');
 
-app.controller('resultsController', ['merchantResultsService', function(resultsService) {
+app.controller('ResultsCtrl', ['merchantResultsService', function(resultsService) {
   //Grab results data from merchant results service
   this.results = resultsService.data;
   this.currentCalls = resultsService.currentCalls;
