@@ -1,13 +1,7 @@
 var app = angular.module('merchantExplorer');
 
 app.controller('ResultsCtrl', ['merchantResultsService', function(resultsService) {
-  //Grab results data from merchant results service
-  this.results = resultsService.getResults;
-  this.currentCalls = resultsService.currentCalls;
-  this.totalCalls = resultsService.totalCalls;
-  this.refreshable = resultsService.refreshable;
-  
-  //pass through function
+  //pass through functions
   this.refreshResults = function() {
     resultsService.addPendingToResults();
   }

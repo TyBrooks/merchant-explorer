@@ -2,28 +2,31 @@ var app = angular.module('merchantExplorer');
 
 app.service('merchantApi', ["$q", function($q) {
   var idUrl = "",
-      batchUrl = "";
+      batchUrl = "",
+      currentPromise = null;
   
   this.getIds = function(searchParams) {
     //TODO make actual calls
-    var promise = $q.defer();
+    var deferred = $q.defer();
+    currentPromise = deferred;
     
     setTimeout(function() {
-      promise.resolve([1,2, 3, 4, 5, 6]);
+      deferred.resolve([1,2, 3, 4, 5, 6]);
     }, 200)
     
-    return promise;
+    return deferred;
   }
   
   this.batchCall = function(ids) {
     //TODO make actual calls
-    var promise = $q.defer();
+    var deferred = $q.defer();
+    currentPromise = deferred;
     
     setTimeout(function() {
       var rand1 = Math.floor(Math.random() * 1000);
       var rand2 = Math.floor(Math.random() * 1000);
       
-      promise.resolve(
+      deferred.resolve(
         [{
             name: "Merchant " + rand1,
             domain: "D1",
@@ -42,6 +45,12 @@ app.service('merchantApi', ["$q", function($q) {
       );
     }, 1000);
     
-    return promise;
+    return deferred;
+  }
+  
+  this.cancelCurrentCall = function() {
+    if ( currentPromise ) {
+      currentPromise.reject();
+    }
   }
 }]);

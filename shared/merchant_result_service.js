@@ -29,6 +29,8 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   }
   
   this.search = function(searchParams) {
+    this.resetSearchData();
+    
     var deferred = merchantApi.getIds(searchParams);
     
     deferred.promise.then(function(ids) {
@@ -84,6 +86,15 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
     if ( this.currentCalls < this.totalCalls ) {
       this.batchCall(this.ids);
     }
+  }
+ 
+  this.resetSearchData = function() {
+    this.data = [];
+    this.pending = [];
+    this.currentCalls = 0;
+    this.totalCalls = 0;
+    
+    merchantApi.cancelCurrentCall();
   }
  
    
