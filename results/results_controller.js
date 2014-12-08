@@ -6,4 +6,10 @@ app.controller('ResultsCtrl', ['merchantResultsService', function(resultsService
   this.currentCalls = resultsService.currentCalls;
   this.totalCalls = resultsService.totalCalls;
   this.refreshable = resultsService.refreshable;
+  
+  //pass through function
+  this.refreshResults = function() {
+    console.log('refreshing');
+    resultsService.addPendingToResults();
+  }
 }]);

@@ -10,7 +10,12 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="explorer.css">
+  
+  <!-- Library Scripts -->
   <script src='lib/angular.js'></script>
+  <script src='lib/ng-table.js'></script>
+  
+  <!-- My Scripts -->
   <script src='app.js'></script>
   <script src='search/search_controller.js'></script>
   <script src='search/search_factories.js'></script>
@@ -49,7 +54,7 @@
       <div>
         <label for='affiliatable'>Affiliates to Me</label>
         <input type='checkbox' id='affiliatable' name='affiliatable' ng-model='search.sharedParams.affiliatable'></input>
-        <label for='insider'>Inisder Only</label>
+        <label for='insider'>Insider Only</label>
         <input type='checkbox' id='insider'      name='insider'      ng-model='search.sharedParams.insider'></input>
         <label for='unrestricted'>Unrestricted Only</label>
         <input type='checkbox' id='unrestricted' name='unrestricted' ng-model='search.sharedParams.unrestricted'></input>
@@ -61,8 +66,27 @@
     
   </section>
   
-  <section ng-controller='ResultsCtrl as results'>
-    <results-table>
+  <section id='results' ng-controller='ResultsCtrl as results'>
+    <table ng-table>
+      <tr>
+        <th>Merchant Name</th>
+        <th>Domain</th>
+        <th>Country</th>
+        <th>CPC/CPA</th>
+        <th>Aff Status</th>
+        <th>Commission</th>
+      </tr>
+      <tr ng-repeat='result in results.results'>
+        <td>{{result.name}}</td>
+        <td>{{result.domain}}</td>
+        <td>{{result.country}}</td>
+        <td>{{result.cpc}}</td>
+        <td>{{result.aff_status}}</td>
+        <td>{{result.commission}}</td>
+      </tr>
+    </table>
+    
+    <button ng-click='results.refreshResults()'>Refresh</button>
   </section>
   
 </body>
@@ -72,6 +96,6 @@
 <!--Style Notes
 1. $scope vs _ as _
 2. Angular structure
-
+3. ng-table default values
 
  -->

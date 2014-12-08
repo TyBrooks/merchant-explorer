@@ -11,15 +11,16 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   //Initial settings
   this.totalCalls = 0;
   this.currentCalls = 0;
-  this.data = {};
-  this.pending = {};
+  this.data = [];
+  this.pending = [];
   this.refreshable = false;
   this.ids = [];
   
+  
   this.getResults = function(searchParams) {
-    var promise = merchantApi.getIds(searchParams);
+    var deferred = merchantApi.getIds(searchParams);
     
-    promise.then(function(ids) {
+    deferred.promise.then(function(ids) {
       resultsService.ids = ids;
       resultsService.totalCalls = ids.length;
       
@@ -28,16 +29,25 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   };
   
   this.addPendingToResults = function() {
-    this.data.concat(this.pending);
-    this.pending = {};
+    this.data = this.data.concat(this.pending);
+    this.pending = [];
+    
+        console.log('data: ', this.data);
     
     this.refreshable = false;
   };
   
   this.addToPending = function(results) {
-    this.pending.concat(results);
+    var isInitialData = ( this.data.length === 0 ) ? true : false;
+    this.pending = this.pending.concat(results);
+    console.log('pending: ', this.pending);
     
-    this.refreshable = true;
+    if ( isInitialData ) {
+      this.addPendingToResults();
+    } else {
+      this.refreshable = true;
+    }
+    
   }
   
   this.isDone = function() {
@@ -50,10 +60,9 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
     
     var batchIds = ids.slice(min, max);
     
-    var promise = merchantApi.batchCall(batchIds);
+    var deferred = merchantApi.batchCall(batchIds);
     
-    promise.then(handleBatchResponse.bind(this));
-    //TODO failed promise
+    deferred.promise.then(this.handleBatchResponse.bind(this));
   }
   
   this.handleBatchResponse = function(response) {
