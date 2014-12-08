@@ -29,7 +29,13 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   };
   
   this.addPendingToResults = function() {
-    this.data = this.data.concat(this.pending);
+    var results = this;
+    //TODO figure out a better watch system
+    this.pending.forEach(function(pending) {
+      results.data.push(pending);
+    })
+    
+    
     this.pending = [];
     
         console.log('data: ', this.data);
