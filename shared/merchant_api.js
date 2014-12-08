@@ -20,18 +20,19 @@ app.service('merchantApi', ["$q", function($q) {
     var promise = $q.defer();
     
     setTimeout(function() {
-      var rand = Math.floor(Math.random() * 1000);
+      var rand1 = Math.floor(Math.random() * 1000);
+      var rand2 = Math.floor(Math.random() * 1000);
       
       promise.resolve(
         [{
-            name: "Merchant 1: " + rand,
+            name: "Merchant " + rand1,
             domain: "D1",
             country: "US",
             cpc: "CPC and CPA",
             aff_status: true,
             commission: "5% on all products"
         }, {
-            name: "Merchant 2: " + rand,
+            name: "Merchant " + rand2,
             domain: "D2",
             country: "UK",
             cpc: "CPC Only",

@@ -9,7 +9,10 @@ app.controller('ResultsCtrl', ['merchantResultsService', function(resultsService
   
   //pass through function
   this.refreshResults = function() {
-    console.log('refreshing');
     resultsService.addPendingToResults();
+  }
+  
+  this.isPendingResults = function() {
+    return !(resultsService.pending.length === 0);
   }
 }]);

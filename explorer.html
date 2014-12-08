@@ -86,7 +86,7 @@
       </tr>
     </table>
     
-    <button ng-click='results.refreshResults()'>Refresh</button>
+    <button ng-click='results.refreshResults()' ng-disabled='!results.isPendingResults()'>Refresh</button>
   </section>
   
 </body>
