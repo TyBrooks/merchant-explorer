@@ -39,9 +39,18 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   
   this.search = function(searchParams) {
     this.resetSearchData();
-    console.log('searching');
-    merchantApi.getIds(searchParams).then(this.handleInitialCallResponse.bind(this));
+    this.idCall();
+    
   };
+  
+  this.resetSearchData = function() {
+    data = [];
+    pending = [];
+    currentCalls = 0;
+    totalCalls = 0;
+    
+    merchantApi.cancelCurrentCall();
+  }
   
   //Methods for handling pending data
   
@@ -61,7 +70,11 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   
   //API internal methods
   
-  this.handleInitialCallResponse = function(responseIds) {
+  this.idCall = function() {
+    merchantApi.getIds(searchParams).then(this.handleIdResponse.bind(this));
+  }
+  
+  this.handleIdResponse = function(responseIds) {
     ids = responseIds;
     totalCalls = ids.length;
     
@@ -86,15 +99,5 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
       this.batchCall(ids);
     }
   }
- 
-  this.resetSearchData = function() {
-    data = [];
-    pending = [];
-    currentCalls = 0;
-    totalCalls = 0;
-    
-    merchantApi.cancelCurrentCall();
-  }
- 
    
 }])
