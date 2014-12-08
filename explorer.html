@@ -76,7 +76,7 @@
         <th>Aff Status</th>
         <th>Commission</th>
       </tr>
-      <tr ng-repeat='result in results.results'>
+      <tr ng-repeat='result in results.getCurrentResults()'>
         <td>{{result.name}}</td>
         <td>{{result.domain}}</td>
         <td>{{result.country}}</td>

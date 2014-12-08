@@ -17,7 +17,11 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   this.ids = [];
   
   
-  this.getResults = function(searchParams) {
+  this.getResults = function() {
+    return this.data;
+  }
+  
+  this.search = function(searchParams) {
     var deferred = merchantApi.getIds(searchParams);
     
     deferred.promise.then(function(ids) {
@@ -29,13 +33,7 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   };
   
   this.addPendingToResults = function() {
-    var results = this;
-    //TODO figure out a better watch system
-    this.pending.forEach(function(pending) {
-      results.data.push(pending);
-    })
-    
-    
+    this.data = this.data.concat(this.pending);
     this.pending = [];
     
         console.log('data: ', this.data);
