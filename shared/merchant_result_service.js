@@ -1,6 +1,6 @@
 var app = angular.module('merchantExplorer');
 
-app.service('merchantResultsService', ["merchantApi", function() {
+app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
   //TODO make private methods private.
   
   var idUrl = "",
