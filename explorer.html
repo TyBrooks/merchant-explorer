@@ -29,7 +29,7 @@
   <section id='search' ng-controller='SearchCtrl as search'>
     <!-- <search-tabs></search-tabs> -->
     <div id='search-buttons'>
-      <button ng-repeat='buttonName in search.tabs' ng-click='search.activateTab("{{buttonName}}")'>{{buttonName | titleize}}</button>
+      <button ng-repeat='buttonName in search.tabs' ng-click='search.activateTab(buttonName)'>{{buttonName | titleize}}</button>
     </div>
     
     <form name='searchForm'>

@@ -10,10 +10,9 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultsService", "
   this.filterParams = params["filter"];
   this.sharedParams = params["shared"];
   
-  this.activateTab = function(activeTab) {
-    
-    if(this.tabs.indexOf(activeTab) !== -1) {
-      this.activeTab = activeTab;
+  this.activateTab = function(clicked) {
+    if(this.tabs.indexOf(clicked) !== -1) {
+      this.activeTab = clicked;
     }
   };
   
