@@ -7,7 +7,7 @@ app.controller('ResultsCtrl', ['merchantResultsService', function(resultsService
   }
   
   this.isPendingResults = function() {
-    return !(resultsService.pending.length === 0);
+    return resultsService.isPendingResults();
   }
   
   this.getCurrentResults = function() {

@@ -14,7 +14,7 @@ app.service('merchantApi', ["$q", function($q) {
       deferred.resolve([1,2, 3, 4, 5, 6]);
     }, 200)
     
-    return deferred;
+    return deferred.promise;
   }
   
   this.batchCall = function(ids) {
@@ -45,7 +45,7 @@ app.service('merchantApi', ["$q", function($q) {
       );
     }, 1000);
     
-    return deferred;
+    return deferred.promise;
   }
   
   this.cancelCurrentCall = function() {
