@@ -20,4 +20,8 @@ app.controller('ResultsCtrl', ['merchantResultsService', function(resultsService
     return resultsService.getResults();
   }
   
+  this.getCallCountInfo = function() {
+    return resultsService.getCallCountInfo();
+  }
+  
 }]);

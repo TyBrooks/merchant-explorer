@@ -21,6 +21,13 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
     return this.data;
   }
   
+  this.getCallCountInfo = function() {
+    return {
+      totalCalls: this.totalCalls,
+      currentCalls: this.currentCalls
+    }
+  }
+  
   this.search = function(searchParams) {
     var deferred = merchantApi.getIds(searchParams);
     
