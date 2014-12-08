@@ -11,7 +11,7 @@ app.service('merchantApi', ["$q", function($q) {
     currentPromise = deferred;
     
     setTimeout(function() {
-      deferred.resolve([1,2, 3, 4, 5, 6]);
+      deferred.resolve([1,2, 3, 4, 5, 6,2, 3, 4, 5, 6,2, 3, 4, 5, 6,2, 3, 4, 5, 6,2, 3, 4, 5, 6]);
     }, 200)
     
     return deferred.promise;
@@ -28,6 +28,76 @@ app.service('merchantApi', ["$q", function($q) {
       
       deferred.resolve(
         [{
+            name: "Merchant " + rand1,
+            domain: "D1",
+            country: "US",
+            cpc: "CPC and CPA",
+            aff_status: true,
+            commission: "5% on all products"
+        }, {
+            name: "Merchant " + rand2,
+            domain: "D2",
+            country: "UK",
+            cpc: "CPC Only",
+            aff_status: true,
+            commission: "8% on all products"
+        },{
+            name: "Merchant " + rand1,
+            domain: "D1",
+            country: "US",
+            cpc: "CPC and CPA",
+            aff_status: true,
+            commission: "5% on all products"
+        }, {
+            name: "Merchant " + rand2,
+            domain: "D2",
+            country: "UK",
+            cpc: "CPC Only",
+            aff_status: true,
+            commission: "8% on all products"
+        },{
+            name: "Merchant " + rand1,
+            domain: "D1",
+            country: "US",
+            cpc: "CPC and CPA",
+            aff_status: true,
+            commission: "5% on all products"
+        }, {
+            name: "Merchant " + rand2,
+            domain: "D2",
+            country: "UK",
+            cpc: "CPC Only",
+            aff_status: true,
+            commission: "8% on all products"
+        },{
+            name: "Merchant " + rand1,
+            domain: "D1",
+            country: "US",
+            cpc: "CPC and CPA",
+            aff_status: true,
+            commission: "5% on all products"
+        }, {
+            name: "Merchant " + rand2,
+            domain: "D2",
+            country: "UK",
+            cpc: "CPC Only",
+            aff_status: true,
+            commission: "8% on all products"
+        },{
+            name: "Merchant " + rand1,
+            domain: "D1",
+            country: "US",
+            cpc: "CPC and CPA",
+            aff_status: true,
+            commission: "5% on all products"
+        }, {
+            name: "Merchant " + rand2,
+            domain: "D2",
+            country: "UK",
+            cpc: "CPC Only",
+            aff_status: true,
+            commission: "8% on all products"
+        },{
             name: "Merchant " + rand1,
             domain: "D1",
             country: "US",
