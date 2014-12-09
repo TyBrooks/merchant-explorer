@@ -20,6 +20,10 @@ app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
     return data;
   }
   
+  this.getPageData = function(paqe) {
+    return results.data( ( currentPage - 1 ) * perPage, perPage);
+  }
+  
   this.getCallCountInfo = function() {
     return {
       totalCalls: totalCalls,
