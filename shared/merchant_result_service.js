@@ -41,7 +41,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
   }
   
   this.checkBuffer = function(pageNum) {
-    var buffer = results.getNumPreLoaded();
+    var buffer = results.getNumPreloaded();
     if ( buffer > minBuffer && results.getNumNotLoaded > 0 ) {
       var newIds = results.getNextIds(batchSize);
       api.getMerchantData(nextIds).then( angular.bind( this, handleBatchCall ) );

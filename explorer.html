@@ -87,7 +87,8 @@
       </tr>
     </table>
     
-    <button ng-click='results.refreshResults()' ng-disabled='!results.isPendingResults()'>Refresh</button>
+    <button ng-click='results.previousPage()' ng-disabled='!results.doShowPrevious()'>Previous</button>
+    <button ng-click='results.nextPage()' ng-disabled='!results.doShowNext()'>Next</button>
   </section>
   
 </body>

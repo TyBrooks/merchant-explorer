@@ -95,12 +95,12 @@ app.service('merchantResultModel', function() {
   
   // number of merchants loaded but after the currently viewed page
   this.getNumPreloaded = function(pageNum, perPage) {
-    return Math.ceil( searchInfo[currentSearch]["totalCalls"] - (pageNum * perPage), 0 )
+    return Math.ceil( this.searchInfo[this.currentSearch]["totalCalls"] - (pageNum * perPage), 0 )
   }
   
   // number of remaining merchants that haven't been loaded yet.
   this.getNumNotLoaded = function() {
-    var searchInfo = searchInfo[currentSearch];
+    var searchInfo = this.searchInfo[this.currentSearch];
     return searchInfo["ids"].length - searchInfo["totalCalls"];
   }
   

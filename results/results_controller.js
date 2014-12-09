@@ -15,14 +15,25 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
   
   this.nextPage = function() {
     currentPage += 1;
+    resultsService.checkBuffer();
   }
   
   this.previousPage = function() {
     currentPage -= 1;
+    resultsService.checkBuffer();
   }
   
   this.setPage = function(pageNum) {
-    currentPage = pageNum
+    currentPage = pageNum;
+    resultsService.checkBuffer();
+  }
+  
+  this.doShowPrevious = function() {
+    return currentPage !== 1;
+  }
+  
+  this.doShowNext = function() {
+    return true;
   }
   
 }]);
