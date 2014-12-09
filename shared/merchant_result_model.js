@@ -3,7 +3,7 @@ var app = angular.module('merchantExplorer');
 app.service('merchantResultModel', function() {
   function hashSearchParams(params) {
     //TODO do this
-    return Math.floor(Math.random(10));
+    return String(Math.floor(Math.random(10)));
   }
   
   /*
@@ -34,11 +34,14 @@ app.service('merchantResultModel', function() {
     var startPos = (pageNum - 1) * perPage,
         endPos = pageNum * perPage;
     
-    var idList = searchInfo[currentSearch]["ids"].slice( startPos, endPos )
+    var idList = this.searchInfo[this.currentSearch]["ids"].slice( startPos, endPos )
       
-    var results = [];
+    var results = [],
+        model = this;
     idList.forEach( function( id ) {
-      results.push( dataCache[id] );
+      if ( model.dataCache[id] ) {
+        results.push( model.dataCache[id] );
+      }
     });
     
     return results;
@@ -78,13 +81,13 @@ app.service('merchantResultModel', function() {
   this.addResults = function(merchantResults) {
     var model = this;
     
-    merchantResults.forEach( function( result ) ) {
+    merchantResults.forEach( function( result ) {
       //TODO make sure we get id with results
       model.dataCache[result.id] = result;
-    }
+    } );
     
     //Update the current search index
-    this.searchResults[this.currentSearch]["totalCalls"] += merchantResults.length;
+    this.searchInfo[this.currentSearch]["totalCalls"] += merchantResults.length;
   }
   
   this.clear = function() {

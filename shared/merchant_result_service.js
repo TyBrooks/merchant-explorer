@@ -10,18 +10,21 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     // probably click time with a loading screen
     results.clear();
     results.setCurrentSearchParams(searchParams);
-    api.getIds(queryParams).then( angular.bind( this, handleInitialCall ) );
+    api.getIds(searchParams).then( angular.bind( this, handleInitialCall ) );
   }
   
   function handleInitialCall(ids) {
     results.setIds(ids);
+    
+    //TODO check if you have enough
+    this.batchCall();
   }
   
   this.batchCall = function() {
     var nextIds = results.getNextIds(batchSize);
     
     //TODO check cache in results first
-    api.batchCall(nextIds).then( angular.bind( this, handleBatchCall ) );
+    api.getMerchantData(nextIds).then( angular.bind( this, handleBatchCall ) );
   }
   
   function handleBatchCall(merchantData) {

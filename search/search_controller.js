@@ -1,8 +1,8 @@
 var app = angular.module('merchantExplorer');
   
-app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultsService", "$log", function(searchParamsFactory, merchantResultsService, $log) {
+app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", "$log", function(searchParamsFactory, merchantResultService, $log) {
   var params = searchParamsFactory.createDefault(),
-      lastSearch = "";
+    lastSearch = "";
   
   //Tab management
   this.activeTab = "search";
@@ -36,11 +36,11 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultsService", "
       lastSearch = this.searchParams["phrase"];
     }
     
-    merchantResultsService.search(this.activeParams);
+    merchantResultService.makeInitialCall(this.activeParams);
   }
   
   this.currentResults = function() {
-    merchantResultsService.getResults();
+    merchantResultService.getResults();
   }
   
   this.isSearchable = function() {

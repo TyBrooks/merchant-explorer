@@ -1,36 +1,28 @@
 var app = angular.module('merchantExplorer');
 
-app.controller('ResultsCtrl', ['merchantResultsService', function(resultsService) {
+app.controller('ResultsCtrl', ['merchantResultService', 'merchantResultModel', function(resultsService, resultsModel) {
   var currentPage = 1,
       perPage = 10,
       results = [];
   
   this.getCurrentPageData = function() {
-    return resultsService.getPageData(currentPage);
+    var results = resultsModel.getCurrentPageData(currentPage, perPage);
+    console.log(results);
+    return results;
   }
   
-  this.getCurrentResults = function() {
-    
+  //Page Methods
+  
+  this.nextPage = function() {
+    currentPage += 1;
   }
   
-  
-  
-  
-  //pass through functions
-  this.refreshResults = function() {
-    resultsService.addPendingToResults();
+  this.previousPage = function() {
+    currentPage -= 1;
   }
   
-  this.isPendingResults = function() {
-    return resultsService.isPendingResults();
-  }
-  
-  this.getCurrentResults = function() {
-    return resultsService.getResults();
-  }
-  
-  this.getCallCountInfo = function() {
-    return resultsService.getCallCountInfo();
+  this.setPage = function(pageNum) {
+    currentPage = pageNum
   }
   
 }]);
