@@ -30,14 +30,11 @@ app.service('merchantResultModel', function() {
   this.currentSearch = ""; //hash of the current search
 
   //Main Data retrieval method
-  this.getCurrentPageData = function(pageNum, perPage) {
-    var startPos = (pageNum - 1) * perPage,
-        endPos = pageNum * perPage;
-    
-    var idList = this.searchInfo[this.currentSearch]["ids"].slice( startPos, endPos )
-      
+  this.getDataForIdRange = function(startPos, endPos) {
     var results = [],
-        model = this;
+        model = this,
+        idList = this.searchInfo[this.currentSearch]["ids"].slice( startPos, endPos );
+
     idList.forEach( function( id ) {
       if ( model.dataCache[id] ) {
         results.push( model.dataCache[id] );

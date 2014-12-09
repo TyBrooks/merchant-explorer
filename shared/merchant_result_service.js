@@ -31,4 +31,13 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     results.addResults(merchantData);
   }
   
+  //Main Data retrieval method
+  this.getCurrentPageData = function(pageNum, perPage) {
+    var startPos = (pageNum - 1) * perPage,
+        endPos = pageNum * perPage;
+    
+    return results.getDataForIdRange(startPos, endPos);
+  }
+  
+  
 }])

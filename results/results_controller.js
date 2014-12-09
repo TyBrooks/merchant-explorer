@@ -1,12 +1,12 @@
 var app = angular.module('merchantExplorer');
 
-app.controller('ResultsCtrl', ['merchantResultService', 'merchantResultModel', function(resultsService, resultsModel) {
+app.controller('ResultsCtrl', ['merchantResultService', function(resultsService) {
   var currentPage = 1,
       perPage = 10,
       results = [];
   
   this.getCurrentPageData = function() {
-    var results = resultsModel.getCurrentPageData(currentPage, perPage);
+    var results = resultsService.getCurrentPageData(currentPage, perPage);
     console.log(results);
     return results;
   }
