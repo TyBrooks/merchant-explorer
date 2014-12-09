@@ -1,107 +1,31 @@
 var app = angular.module('merchantExplorer');
 
-app.service('merchantResultsService', ["merchantApi", function(merchantApi) {
-  //TODO make private methods private.
+
+app.service('merchantResultService', ["merchantApi", "merchantResultModel", function(api, results) {
   
-  var idUrl = "",
-      batchUrl = "",
-      batchSize = 20,
-      resultsService = this,
-      totalCalls = 0,
-      currentCalls = 0,
-      data = [],
-      pending = [],
-      ids = [];
+  var batchSize = 20;
   
-  
-  //public getter methods
-  
-  this.getResults = function() {
-    return data;
+  this.makeInitialCall = function(searchParams) {
+    //TODO decide whether to clear the results at click time, or api time.
+    // probably click time with a loading screen
+    results.clear();
+    results.setCurrentSearchParams(searchParams);
+    api.getIds(queryParams).then( angular.bind( this, handleInitialCall ) );
   }
   
-  this.getPageData = function(paqe) {
-    return results.data( ( currentPage - 1 ) * perPage, perPage);
+  function handleInitialCall(ids) {
+    results.setIds(ids);
   }
   
-  this.getCallCountInfo = function() {
-    return {
-      totalCalls: totalCalls,
-      currentCalls: currentCalls
-    }
-  }
-  
-  this.isPendingResults = function() {
-    return pending.length > 0;
-  }
-  
-  this.isDone = function() {
-    return totalCalls === currentCalls;
-  };
-  
-  //Search methods
-  
-  this.search = function(searchParams) {
-    this.resetSearchData();
-    this.idCall(searchParams);
+  this.batchCall = function() {
+    var nextIds = results.getNextIds(batchSize);
     
-  };
-  
-  this.resetSearchData = function() {
-    data = [];
-    pending = [];
-    currentCalls = 0;
-    totalCalls = 0;
-    
-    merchantApi.cancelCurrentCall();
+    //TODO check cache in results first
+    api.batchCall(nextIds).then( angular.bind( this, handleBatchCall ) );
   }
   
-  //Methods for handling pending data
-  
-  this.addPendingToResults = function() {
-    data = data.concat(pending);
-    pending = [];
-  };
-  
-  this.addToPending = function(results) {
-    var isInitialData = ( data.length === 0 ) ? true : false;
-    pending = pending.concat(results);
-    
-    if ( isInitialData ) {
-      this.addPendingToResults();
-    }
+  function handleBatchCall(merchantData) {
+    results.addResults(merchantData);
   }
   
-  //API internal methods
-  
-  this.idCall = function(searchParams) {
-    merchantApi.getIds(searchParams).then(this.handleIdResponse.bind(this));
-  }
-  
-  this.handleIdResponse = function(responseIds) {
-    ids = responseIds;
-    totalCalls = ids.length;
-    
-    this.batchCall(ids);
-  }
-  
-  this.batchCall = function(ids) {
-    var min = currentCalls,
-        max = Math.min(currentCalls + batchSize, currentCalls);
-    
-    var batchIds = ids.slice(min, max);
-    
-    merchantApi.batchCall(batchIds).then(this.handleBatchResponse.bind(this));
-  }
-  
-  this.handleBatchResponse = function(response) {
-    currentCalls += response.length;
-    
-    this.addToPending(response);
-    
-    if ( currentCalls < totalCalls ) {
-      this.batchCall(ids);
-    }
-  }
-   
 }])

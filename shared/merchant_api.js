@@ -17,7 +17,7 @@ app.service('merchantApi', ["$q", function($q) {
     return deferred.promise;
   }
   
-  this.batchCall = function(ids) {
+  this.getMerchantData = function(ids) {
     //TODO make actual calls
     var deferred = $q.defer();
     currentPromise = deferred;

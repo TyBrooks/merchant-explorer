@@ -24,7 +24,6 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultsService", "
     return tabName === this.activeTab;
   }
   
-  
   //Param Methods
   this.activeParams = function() {
     return angular.extend(this.params[this.activeTab], this.params["shared"]);
