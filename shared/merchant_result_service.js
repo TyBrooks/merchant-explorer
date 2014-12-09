@@ -3,7 +3,8 @@ var app = angular.module('merchantExplorer');
 
 app.service('merchantResultService', ["merchantApi", "merchantResultModel", function(api, results) {
   
-  var batchSize = 20;
+  var batchSize = 20,
+      minBuffer = 20;
   
   this.makeInitialCall = function(searchParams) {
     //TODO decide whether to clear the results at click time, or api time.
@@ -37,6 +38,14 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
         endPos = pageNum * perPage;
     
     return results.getDataForIdRange(startPos, endPos);
+  }
+  
+  this.checkBuffer = function(pageNum) {
+    var buffer = results.getNumPreLoaded();
+    if ( buffer > minBuffer && results.getNumNotLoaded > 0 ) {
+      var newIds = results.getNextIds(batchSize);
+      api.getMerchantData(nextIds).then( angular.bind( this, handleBatchCall ) );
+    }
   }
   
   
