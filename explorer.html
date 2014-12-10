@@ -88,6 +88,13 @@
     </table>
     
     <button ng-click='results.previousPage()' ng-disabled='!results.doShowPrevious()'>Previous</button>
+    <div id='page-nums'>
+      <a ng-repeat='pageNum in [results.currentPage() - 2, results.currentPage() - 1, results.currentPage(), results.currentPage() + 1, results.currentPage() + 2]'
+         ng-show='(pageNum > 0) && (pageNum <= results.getTotalPages())' ng-click='results.setPage(pageNum)'
+         ng-class='{ "page-selected": results.currentPage() === pageNum }'>
+        {{pageNum}}
+      </a>
+    </div>
     <button ng-click='results.nextPage()' ng-disabled='!results.doShowNext()'>Next</button>
   </section>
   

@@ -1,5 +1,8 @@
 var app = angular.module('merchantExplorer');
 
+//PROBLEMS:
+// how to know when the search button is clicked
+
 app.controller('ResultsCtrl', ['merchantResultService', function(resultsService) {
   var currentPage = 1,
       perPage = 10;
@@ -17,6 +20,10 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
   
 
   //Page Methods
+  
+  this.currentPage = function() {
+    return currentPage;
+  }
   
   this.nextPage = function() {
     currentPage += 1;

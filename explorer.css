@@ -4,6 +4,6 @@
   margin: 20px auto;
 }
 
-.ng-table {
-  
+.page-selected {
+  color: red;
 }
