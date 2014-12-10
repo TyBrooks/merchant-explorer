@@ -47,7 +47,11 @@ app.service('merchantResultModel', function() {
   // Other getter/setter methods
   
   this.getTotalCalls = function() {
-    this.searchInfo[this.currentSearch]["totalCalls"];
+    return this.searchInfo[this.currentSearch]["totalCalls"];
+  }
+  
+  this.getNumIds = function() {
+    return this.searchInfo[this.currentSearch]["ids"].length;
   }
   
   this.getNextIds = function(num) {
@@ -94,8 +98,9 @@ app.service('merchantResultModel', function() {
   // Methods to get meta search data
   
   // number of merchants loaded but after the currently viewed page
+  //TODO replace with generic info... resultService handles all page calculations!
   this.getNumPreloaded = function(pageNum, perPage) {
-    return Math.ceil( this.searchInfo[this.currentSearch]["totalCalls"] - (pageNum * perPage), 0 )
+    return Math.max( this.searchInfo[this.currentSearch]["totalCalls"] - (pageNum * perPage), 0 )
   }
   
   // number of remaining merchants that haven't been loaded yet.

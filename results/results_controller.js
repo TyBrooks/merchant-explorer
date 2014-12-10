@@ -2,15 +2,20 @@ var app = angular.module('merchantExplorer');
 
 app.controller('ResultsCtrl', ['merchantResultService', function(resultsService) {
   var currentPage = 1,
-      perPage = 10,
-      results = [];
+      perPage = 10;
+  
+  // Pass through methods
   
   this.getCurrentPageData = function() {
     var results = resultsService.getCurrentPageData(currentPage, perPage);
-    console.log(results);
     return results;
   }
   
+  this.getTotalPages = function() {
+    return resultsService.getTotalPages(perPage);
+  }
+  
+
   //Page Methods
   
   this.nextPage = function() {
@@ -33,7 +38,8 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
   }
   
   this.doShowNext = function() {
-    return true;
+    var numPages = this.getTotalPages();
+    return (currentPage < numPages);
   }
   
 }]);
