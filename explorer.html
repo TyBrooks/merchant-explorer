@@ -68,7 +68,7 @@
   </section>
   
   <section id='results' ng-controller='ResultsCtrl as results'>
-    <table>
+    <table id='results-table'>
       <tr>
         <th>Merchant Name</th>
         <th>Domain</th>
@@ -77,6 +77,7 @@
         <th>Aff Status</th>
         <th>Commission</th>
       </tr>
+      <tr id='loading' ng-show='results.isLoading()'><div>
       <tr ng-repeat='result in results.getCurrentPageData()'>
         <td>{{result.name}}</td>
         <td>{{result.domain}}</td>
