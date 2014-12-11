@@ -13,7 +13,7 @@ app.service('merchantApi', ["$q", function($q) {
     currentPromise = deferred;
     
     var pending = [];
-    for (var i = 0; i < 35; i++) {
+    for (var i = 0; i < 85; i++) {
       pending.push(Math.floor(Math.random() * 10000));
     }
     ids.concat(pending);
