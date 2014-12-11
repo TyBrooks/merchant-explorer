@@ -18,6 +18,10 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
     return resultsService.getTotalPages(perPage);
   }
   
+  this.isLoading = function() {
+    return resultsService.isLoading(currentPage, perPage);
+  }
+  
 
   //Page Methods
   
@@ -36,8 +40,10 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
   }
   
   this.setPage = function(pageNum) {
-    currentPage = pageNum;
-    resultsService.checkBuffer();
+    if ( this.pageLoadable(pageNum) ) {
+      currentPage = pageNum;
+      resultsService.checkBuffer();
+    }
   }
   
   this.doShowPrevious = function() {
@@ -46,7 +52,15 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
   
   this.doShowNext = function() {
     var numPages = this.getTotalPages();
-    return (currentPage < numPages) && (this.getCurrentPageData().length > 0);
+    return (currentPage < numPages && !this.isLoading());
+  }
+  
+  this.pageLoadable = function(pageNum) {
+    if (pageNum > currentPage) {
+      return !this.isLoading();
+    } else {
+      return true;
+    }
   }
   
 }]);

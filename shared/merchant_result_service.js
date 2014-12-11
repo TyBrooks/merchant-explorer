@@ -57,8 +57,12 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     return Math.ceil(results.getNumIds() / perPage);
   }
   
-  this.isLoading = function() {
-    results.get
+  this.isLoading = function(pageNum, perPage) {
+    var totalLoaded = results.getTotalCalls();
+    var needed = pageNum * perPage;
+    var stillToLoad = results.getNumNotLoaded();
+    console.log('loading ', totalLoaded < needed && stillToLoad > 0)
+    return (totalLoaded < needed && stillToLoad > 0)
   }
   
   this.checkBuffer = function(pageNum, perPage) {
@@ -77,7 +81,6 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     var buffer = results.getNumPreloaded(pageNum, perPage);
     
     if ( buffer < minBuffer && results.getNumNotLoaded() > 0 ) {
-      console.log("BUFFER CHECK FAILED: loading new data")
       var nextIds = results.getNextIds(batchSize);
       //Check if a batch call is in process, if not make one.
       pendingPromise = api.getMerchantData(nextIds)

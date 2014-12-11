@@ -11,3 +11,8 @@
 .page-number {
   cursor: pointer;
 }
+
+.page-disabled {
+  color: grey;
+  cursor: default;
+}

@@ -94,7 +94,7 @@ app.service('merchantResultModel', function() {
   this.clear = function() {
     this.currentSearch = "";
   }
-  
+
   // Methods to get meta search data
   
   // number of merchants loaded but after the currently viewed page
