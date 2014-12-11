@@ -7,3 +7,7 @@
 .page-selected {
   color: red;
 }
+
+.page-number {
+  cursor: pointer;
+}

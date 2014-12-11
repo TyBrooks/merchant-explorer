@@ -91,7 +91,7 @@
     <div id='page-nums'>
       <a ng-repeat='pageNum in [results.currentPage() - 2, results.currentPage() - 1, results.currentPage(), results.currentPage() + 1, results.currentPage() + 2]'
          ng-show='(pageNum > 0) && (pageNum <= results.getTotalPages())' ng-click='results.setPage(pageNum)'
-         ng-class='{ "page-selected": results.currentPage() === pageNum }'>
+         ng-class='{ "page-selected": results.currentPage() === pageNum, "page-number": true }'>
         {{pageNum}}
       </a>
     </div>

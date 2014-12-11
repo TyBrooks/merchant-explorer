@@ -46,7 +46,7 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
   
   this.doShowNext = function() {
     var numPages = this.getTotalPages();
-    return (currentPage < numPages);
+    return (currentPage < numPages) && (this.getCurrentPageData().length > 0);
   }
   
 }]);

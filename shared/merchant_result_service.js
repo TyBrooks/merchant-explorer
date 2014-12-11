@@ -1,5 +1,6 @@
 var app = angular.module('merchantExplorer');
 
+//TODO get page logic out of here!!!
 
 app.service('merchantResultService', ["merchantApi", "merchantResultModel", function(api, results) {
   
@@ -54,6 +55,10 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
   
   this.getTotalPages = function(perPage) {
     return Math.ceil(results.getNumIds() / perPage);
+  }
+  
+  this.isLoading = function() {
+    results.get
   }
   
   this.checkBuffer = function(pageNum, perPage) {
