@@ -50,7 +50,13 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     
     this.checkBuffer(pageNum, perPage);
     
-    return results.getDataForIdRange(startPos, endPos);
+    var returned = results.getDataForIdRange(startPos, endPos);
+    
+    if ( returned.length < perPage ) {
+      return returned.concat( this.getBlankResults().slice(0, perPage - returned.length) );
+    } else {
+      return returned;
+    }
   }
   
   this.getTotalPages = function(perPage) {

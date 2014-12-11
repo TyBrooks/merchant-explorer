@@ -23,6 +23,7 @@ section#results {
 
 #results-table {
   border-collapse: collapse;
+  empty-cells: show;
 }
 
 #results-table td, #results-table th {
