@@ -10,8 +10,13 @@ app.controller('ResultsCtrl', ['merchantResultService', function(resultsService)
   // Pass through methods
   
   this.getCurrentPageData = function() {
-    var results = resultsService.getCurrentPageData(currentPage, perPage);
-    return results;
+    if ( this.isLoading() ) {
+      console.log(resultsService.getBlankResults())
+      return resultsService.getBlankResults();
+    } else {
+      var results = resultsService.getCurrentPageData(currentPage, perPage);
+      return results;
+    }
   }
   
   this.getTotalPages = function() {

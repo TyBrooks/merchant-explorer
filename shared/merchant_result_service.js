@@ -57,11 +57,30 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     return Math.ceil(results.getNumIds() / perPage);
   }
   
+  this.getBlankResults = ( function() {
+    //TODO fix this
+    var results = []
+    for ( var i = 0; i < 10; i++ ) {
+      results.push({
+        name: " ",
+        id: " ",
+        domain: " ",
+        country: " ",
+        cpc: " ",
+        aff_status: " ",
+        commission: " "
+      })
+    }
+    return function() {
+      return results;
+    }
+  } )();
+  
   this.isLoading = function(pageNum, perPage) {
-    var totalLoaded = results.getTotalCalls();
-    var needed = pageNum * perPage;
-    var stillToLoad = results.getNumNotLoaded();
-    console.log('loading ', totalLoaded < needed && stillToLoad > 0)
+    var totalLoaded = results.getTotalCalls(),
+        needed = pageNum * perPage,
+        stillToLoad = results.getNumNotLoaded();
+    
     return (totalLoaded < needed && stillToLoad > 0)
   }
   

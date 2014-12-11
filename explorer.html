@@ -68,24 +68,35 @@
   </section>
   
   <section id='results' ng-controller='ResultsCtrl as results'>
+    <div id='loading' ng-show='results.isLoading()'>LOADING...</div>
     <table id='results-table'>
-      <tr>
-        <th>Merchant Name</th>
-        <th>Domain</th>
-        <th>Country</th>
-        <th>CPC/CPA</th>
-        <th>Aff Status</th>
-        <th>Commission</th>
-      </tr>
-      <tr id='loading' ng-show='results.isLoading()'><div>
-      <tr ng-repeat='result in results.getCurrentPageData()'>
-        <td>{{result.name}}</td>
-        <td>{{result.domain}}</td>
-        <td>{{result.country}}</td>
-        <td>{{result.cpc}}</td>
-        <td>{{result.aff_status}}</td>
-        <td>{{result.commission}}</td>
-      </tr>
+      <col class='col-name'>
+      <col class='col-domain'>
+      <col class='col-country'>
+      <col class='col-cpc'>
+      <col class='col-aff'>
+      <col class='col-commission'>
+      <thead>
+        <tr>
+          <th>Merchant Name</th>
+          <th>Domain</th>
+          <th>Country</th>
+          <th>CPC/CPA</th>
+          <th>Aff Status</th>
+          <th>Commission</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat='result in results.getCurrentPageData()'>
+          <!-- A little hacky but lets the blank table display-->
+          <td>{{result.name}}&nbsp;</td>
+          <td>{{result.domain}}</td>
+          <td>{{result.country}}</td>
+          <td>{{result.cpc}}</td>
+          <td>{{result.aff_status}}</td>
+          <td>{{result.commission}}</td>
+        </tr>
+      </tbody>
     </table>
     
     <button ng-click='results.previousPage()' ng-disabled='!results.doShowPrevious()'>Previous</button>
