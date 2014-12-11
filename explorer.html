@@ -24,9 +24,22 @@
   <script src='shared/merchant_result_service.js'></script>
   <script src='shared/merchant_result_model.js'></script>
   <script src='search/search_filters.js'></script>
+  <script src='showcase/showcase_service.js'></script>
+  <script src='showcase/showcase_controller.js'></script>
    
 </head>
 <body>
+  <section id='showcase' ng-controller='ShowcaseCtrl as showcase'>
+    <div class='showcase-wrapper' ng-repeat='merchant in showcase.getMerchants()'>
+      <div>
+        <img ng-src='merchant.image_src'
+             ng-class='merchant.commission ? "showcase-image" "showcase-image-no-commission"'>
+        </img>
+      </div>
+      <div class='showcase-commission' ng-show='merchant.commission'>{{merchant.comission}}</div>
+    </div>
+  </section>
+  
   <section id='search' ng-controller='SearchCtrl as search'>
     <!-- <search-tabs></search-tabs> -->
     <div id='search-buttons'>
