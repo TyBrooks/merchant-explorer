@@ -1,5 +1,7 @@
 var app = angular.module('merchantExplorer');
 
+//TODO make the data stores themselves private
+
 app.service('merchantResultModel', function() {
   var model = this;
   
