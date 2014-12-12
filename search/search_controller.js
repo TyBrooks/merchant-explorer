@@ -1,6 +1,6 @@
 var app = angular.module('merchantExplorer');
   
-app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", "$log", function(searchParamsFactory, merchantResultService, $log) {
+app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", function(searchParamsFactory, merchantResultService) {
   var params = searchParamsFactory.createDefault(),
     lastSearch = "";
   

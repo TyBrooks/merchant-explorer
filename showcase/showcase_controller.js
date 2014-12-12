@@ -1,6 +1,6 @@
 var app = angular.module('merchantExplorer');
 
-app.controller('ShowcaseCtrl', ['showcaseService', function(showcaseService) {
+app.controller('ShowcaseCtrl', ['showcaseService', function(showcaseService, config) {
   var merchantData = [],
       numShowcases = 3;
   
