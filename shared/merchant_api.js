@@ -30,6 +30,10 @@ app.service('merchantApi', ["config", "$q", function(config, $q) {
     var deferred = $q.defer();
     currentPromise = deferred;
     
+    var affiliatable = function() {
+      return Boolean( Math.round( Math.random() ) == 0 )
+    }
+    
     toReturn = [];
     ids.forEach(function(id) {
       toReturn.push({
@@ -38,7 +42,7 @@ app.service('merchantApi', ["config", "$q", function(config, $q) {
         domain: "www.whatever.com",
         country: "US",
         cpc: "CPC and CPA",
-        aff_status: true,
+        aff_status: affiliatable(),
         commission: "5% on all products"
       });
     });
