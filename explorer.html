@@ -30,14 +30,16 @@
 </head>
 <body>
   <section id='showcase' ng-controller='ShowcaseCtrl as showcase'>
-    <div class='showcase-wrapper' ng-repeat='merchant in showcase.getMerchants()'>
-      <div>
-        <img ng-src='merchant.image_src'
-             ng-class='merchant.commission ? "showcase-image" "showcase-image-no-commission"'>
-        </img>
-      </div>
-      <div class='showcase-commission' ng-show='merchant.commission'>{{merchant.comission}}</div>
-    </div>
+    <ul>
+      <li ng-repeat='merchant in showcase.getMerchants()'>
+        <a href='#' class='showcase-image'
+           ng-style="{'background-image':'url(' + merchant.img + ')'}"
+           ng-class='{"no-comission": !merchant.commission}'>
+           
+           <span class='showcase-commission'>{{merchant.commission}}</span>
+        </a>
+      </li>
+    <ul>
   </section>
   
   <section id='search' ng-controller='SearchCtrl as search'>

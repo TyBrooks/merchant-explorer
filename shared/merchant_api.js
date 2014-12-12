@@ -20,7 +20,7 @@ app.service('merchantApi', ["$q", function($q) {
     
     setTimeout(function() {
       deferred.resolve(pending);
-    }, 200)
+    }, 200);
     
     return deferred.promise;
   }

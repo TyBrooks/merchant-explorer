@@ -9,7 +9,7 @@ app.controller('ShowcaseCtrl', ['showcaseService', function(showcaseService) {
     var data = [];
     
     for ( var i = 0; i < showcases; i++ ) {
-      data.push({ src: "", commission: "" });
+      data.push({ img: "", commission: "" });
     }
     
     return data;
@@ -17,11 +17,16 @@ app.controller('ShowcaseCtrl', ['showcaseService', function(showcaseService) {
   
   this.getMerchants = function() {
     if (merchantData.length === 0) {
-      showcaseService.getMerchantData();
+      showcaseService.getShowcaseData().then(angular.bind(this, this.handleShowcaseData));
       return initialData;
     } else {
+      console.log("merchantData, ", merchantData)
       return merchantData;
     }
+  }
+  
+  this.handleShowcaseData = function(data) {
+    merchantData = data;
   }
   
 }]);

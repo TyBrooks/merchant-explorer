@@ -42,3 +42,41 @@ section#results {
   width: 100%;
   height: 300px;
 }
+
+#showcase li {
+  display: inline-block;
+  background-color: lightgrey;
+  width: 270px;
+  height: 200px;
+  margin: 20px;
+  text-align: center;
+  padding: 10px;
+  
+  position: relative;
+}
+
+.showcase-image {
+  display: inline-block;
+  width: 220px;
+  height: 150px;
+  
+  background-color: white;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 10px solid white;
+}
+
+#showcase ul {
+  list-style: none;
+}
+
+.showcase-commission {
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  top: auto;
+  right: 0;
+  left: 0;
+}
+
