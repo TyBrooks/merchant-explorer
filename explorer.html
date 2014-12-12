@@ -26,6 +26,9 @@
   <script src='search/search_filters.js'></script>
   <script src='showcase/showcase_service.js'></script>
   <script src='showcase/showcase_controller.js'></script>
+
+  <!-- Okay this is super hacky, but substitute out the config file of your current env here :-( -->
+  <script src='env/dev.js'></script>
    
 </head>
 <body>
@@ -114,7 +117,10 @@
       </tbody>
     </table>
     
-    <button ng-click='results.previousPage()' ng-disabled='!results.doShowPrevious()'>Previous</button>
+    <button class='page-button' ng-click='results.previousPage()'
+            ng-disabled='!results.doShowPrevious()'>
+      Previous
+    </button>
     <div id='page-nums'>
       <a ng-repeat='pageNum in [results.currentPage() - 2, results.currentPage() - 1, results.currentPage(), results.currentPage() + 1, results.currentPage() + 2]'
          ng-show='(pageNum > 0) && (pageNum <= results.getTotalPages())' ng-click='results.setPage(pageNum)'
@@ -122,7 +128,10 @@
         {{pageNum}}
       </a>
     </div>
-    <button ng-click='results.nextPage()' ng-disabled='!results.doShowNext()'>Next</button>
+    <button class='page-button' ng-click='results.nextPage()'
+            ng-disabled='!results.doShowNext()'>
+      Next
+    </button>
   </section>
   
 </body>

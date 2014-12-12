@@ -12,9 +12,17 @@
   cursor: pointer;
 }
 
+#page-nums {
+  display: inline-block;
+}
+
 .page-disabled {
   color: grey;
   cursor: default;
+}
+
+.page-button: {
+  display: inline-block;
 }
 
 section#results {
