@@ -2,13 +2,13 @@ var app = angular.module('merchantExplorer');
 
 //TODO get page logic out of here!!!
 
-app.service('merchantResultService', ["merchantApi", "merchantResultModel", function(api, results) {
+app.service('merchantResultService', ["merchantApi", "merchantResultModel", 'config', function(api, results, config) {
   
-  var batchSize = 10,
-      minBuffer = 20,
-      pendingPromise = null
-      page = 1,
-      numPerPage = 10; // Arg, hacky: page logic should live in the controller
+  var batchSize = config.lookup('batchSize'),
+      minBuffer = config.lookup('minBuffer'),
+      perPage = config.lookup('perPage'),
+      pendingPromise = null,
+      page = 1;
   
   this.makeInitialCall = function(searchParams) {
     //TODO decide whether to clear the results at click time, or api time.
@@ -41,14 +41,13 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
   }
   
   //Main Data retrieval method
-  this.getCurrentPageData = function(pageNum, perPage) {
+  this.getCurrentPageData = function(pageNum) {
     var startPos = (pageNum - 1) * perPage,
         endPos = pageNum * perPage;
     
     page = pageNum;
-    numPerPage = perPage;
     
-    this.checkBuffer(pageNum, perPage);
+    this.checkBuffer(pageNum);
     
     var returned = results.getDataForIdRange(startPos, endPos);
     
@@ -82,7 +81,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     }
   } )();
   
-  this.isLoading = function(pageNum, perPage) {
+  this.isLoading = function(pageNum) {
     var totalLoaded = results.getTotalCalls(),
         needed = pageNum * perPage,
         stillToLoad = results.getNumNotLoaded();
@@ -90,7 +89,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     return (totalLoaded < needed && stillToLoad > 0)
   }
   
-  this.checkBuffer = function(pageNum, perPage) {
+  this.checkBuffer = function(pageNum) {
     if (pendingPromise) {
       // console.log('BUFFER CHECK passed: promise pending');
       return;
@@ -98,9 +97,6 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", func
     
     if (!pageNum) {
       var pageNum = page;
-    }
-    if (!perPage) {
-      var perPage = numPerPage;
     }
 
     var buffer = results.getNumPreloaded(pageNum, perPage);

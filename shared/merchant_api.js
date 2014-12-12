@@ -1,8 +1,8 @@
 var app = angular.module('merchantExplorer');
 
-app.service('merchantApi', ["$q", function($q) {
-  var idUrl = "",
-      batchUrl = "",
+app.service('merchantApi', ["config", "$q", function(config, $q) {
+  var idUrl = config.lookup('merchantApiIdUrl'),
+      batchUrl = config.lookup('merchantApiDataUrl'),
       currentPromise = null,
       ids = [],
       currentIdx = 0;

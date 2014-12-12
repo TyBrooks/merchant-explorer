@@ -4,11 +4,13 @@ var app = angular.module('merchantExplorer');
 
 app.service("config", function() {
   var configInfo = {
-    showcaseApiUrl:   "",
-    merchantApiURL:   "",
-    perPage:          10,
-    batchSize:        10,
-    numShowcases:     3
+    showcaseApiUrl:     "",
+    merchantApiIdUrl:   "",
+    merchantApiDataUrl: "",
+    perPage:            10,
+    batchSize:          10,
+    minBuffer:          20,
+    numShowcases:       3
   }
   
   this.lookup = function(name) {

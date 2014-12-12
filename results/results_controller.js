@@ -11,7 +11,6 @@ app.controller('ResultsCtrl', ['merchantResultService', 'config', function(resul
   
   this.getCurrentPageData = function() {
     if ( this.isLoading() ) {
-      console.log(resultsService.getBlankResults())
       return resultsService.getBlankResults();
     } else {
       var results = resultsService.getCurrentPageData(currentPage, perPage);
