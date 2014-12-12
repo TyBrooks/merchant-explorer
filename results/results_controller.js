@@ -59,6 +59,14 @@ app.controller('ResultsCtrl', ['merchantResultService', 'config', function(resul
     return (currentPage < numPages && !this.isLoading());
   }
   
+  this.doShowLeadingDots = function() {
+    return ( (currentPage - 2) > 1 ) && (this.getTotalPages() > 0);
+  }
+  
+  this.doShowTrailingDots = function() {
+    return (currentPage + 2) < this.getTotalPages();
+  }
+  
   this.pageLoadable = function(pageNum) {
     if (pageNum > currentPage) {
       return !this.isLoading();

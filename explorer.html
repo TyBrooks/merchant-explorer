@@ -122,11 +122,15 @@
       Previous
     </button>
     <div id='page-nums'>
+      <a ng-show='results.doShowLeadingDots()' ng-click='results.setPage(1)' class='page-number'>1</a>
+      <span ng-show='results.doShowLeadingDots()'>...</span>
       <a ng-repeat='pageNum in [results.currentPage() - 2, results.currentPage() - 1, results.currentPage(), results.currentPage() + 1, results.currentPage() + 2]'
-         ng-show='(pageNum > 0) && (pageNum <= results.getTotalPages())' ng-click='results.setPage(pageNum)'
+         ng-show='(pageNum > 0) && (pageNum <= results.getTotalPages())'
+         ng-click='results.setPage(pageNum)'
          ng-class='{ "page-selected": results.currentPage() === pageNum, "page-number": true, "page-disabled": !results.pageLoadable(pageNum) }'>
         {{pageNum}}
       </a>
+      <span ng-show='results.doShowTrailingDots()'>...</span>
     </div>
     <button class='page-button' ng-click='results.nextPage()'
             ng-disabled='!results.doShowNext()'>
