@@ -88,3 +88,14 @@ section#results {
   left: 0;
 }
 
+.aff-status-circle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: grey;
+  border-radius: 100%;
+}
+
+.affiliatable {
+  background-color: green;
+}

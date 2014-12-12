@@ -28,4 +28,12 @@ app.controller('ShowcaseCtrl', ['showcaseService', 'config', function(showcaseSe
     merchantData = data;
   }
   
+  this.ngStyleString = function(imgSrc) {
+    if ( imgSrc.length > 1 ) {
+      return {'background-image':'url(' + imgSrc + ')'};
+    } else {
+      return {};
+    }
+  }
+  
 }]);

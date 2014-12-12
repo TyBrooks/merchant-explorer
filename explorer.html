@@ -36,7 +36,7 @@
     <ul>
       <li ng-repeat='merchant in showcase.getMerchants()'>
         <a href='#' class='showcase-image'
-           ng-style="{'background-image':'url(' + merchant.img + ')'}"
+           ng-style="showcase.ngStyleString(merchant.img)"
            ng-class='{"no-comission": !merchant.commission}'>
            
            <span class='showcase-commission'>{{merchant.commission}}</span>
@@ -111,7 +111,10 @@
           <td>{{result.domain}}</td>
           <td>{{result.country}}</td>
           <td>{{result.cpc}}</td>
-          <td>{{result.aff_status}}</td>
+          <td>
+            <!-- A little hacky -->
+            <div ng-show='result.name !== " "' class='aff-status-circle' ng-class='{ "affiliatable": result.aff_status }'></div>
+          </td>
           <td>{{result.commission}}</td>
         </tr>
       </tbody>
