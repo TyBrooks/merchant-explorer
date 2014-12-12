@@ -5,19 +5,13 @@ app.factory('searchParamsFactory', function() {
   
   factory.createDefault = function() {
     return {
-      search: {
-        phrase: ""
-      },
-      filter: {
-        category: "All Categories",
-        country: "All Countries",
-        cpc: "CPC + CPA"
-      },
-      shared: {
-        affiliatable: true,
-        insider: false,
-        unrestricted: false
-      }
+      phrase: "",
+      category: "All Categories",
+      country: "All Countries",
+      cpc_cat: "CPC + CPA",
+      affiliatable: true,
+      insider: false,
+      unrestricted: false
     }
   }
   

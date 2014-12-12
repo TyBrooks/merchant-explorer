@@ -92,7 +92,7 @@ section#results {
   display: inline-block;
   width: 10px;
   height: 10px;
-  background-color: grey;
+  background-color: lightgrey;
   border-radius: 100%;
 }
 

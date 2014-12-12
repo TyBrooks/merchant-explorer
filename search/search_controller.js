@@ -4,39 +4,15 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", fu
   var params = searchParamsFactory.createDefault(),
     lastSearch = "";
   
-  //Tab management
-  this.activeTab = "search";
-  this.tabs = ["search", "filter"];
-  
-  // Search param groups
-  this.searchParams = params["search"];
-  this.filterParams = params["filter"];
-  this.sharedParams = params["shared"];
-  
-  //Tab methods
-  this.activateTab = function(clicked) {
-    if(this.tabs.indexOf(clicked) !== -1) {
-      this.activeTab = clicked;
-    }
-  };
-  
-  this.isActive = function(tabName) {
-    return tabName === this.activeTab;
+  this.getParams = function() {
+    return params;
   }
-  
-  //Param Methods
-  this.activeParams = function() {
-    return angular.extend(this.params[this.activeTab], this.params["shared"]);
-  };
-  
   
   //Search Methods
   this.search = function() {
-    if ( this.isActive( "search" ) ) {
-      lastSearch = this.searchParams["phrase"];
-    }
+    lastSearch = merchantResultService.hashSearchParams(this.getParams());
     
-    merchantResultService.makeInitialCall(this.activeParams);
+    merchantResultService.makeInitialCall(this.getParams());
   }
   
   this.currentResults = function() {
@@ -44,13 +20,9 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", fu
   }
   
   this.isSearchable = function() {
-    var input = this.searchParams["phrase"];
-    if ( this.isActive( "search" ) ) {
-      return ( input !== "" && input !== lastSearch );
-    } else {
-      //TODO test if any categories selected
-      return true;
-    }
+    var input = this.getParams();
+    
+    return ( merchantResultService.hashSearchParams(input) !== lastSearch)
   }
   
   

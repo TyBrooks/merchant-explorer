@@ -1,11 +1,6 @@
 var app = angular.module('merchantExplorer');
 
 app.service('merchantResultModel', function() {
-  function hashSearchParams(params) {
-    //TODO do this
-    return String(Math.floor(Math.random(10)));
-  }
-  
   /*
    *  Data storage
    *  ------------
@@ -61,8 +56,8 @@ app.service('merchantResultModel', function() {
     return searchInfo["ids"].slice(totalCalls, totalCalls + num);
   }
   
-  this.setCurrentSearchParams = function(queryParams) {
-    this.currentSearch = hashSearchParams(queryParams);
+  this.setCurrentSearchParams = function(hashedSearchParams) {
+    this.currentSearch = hashedSearchParams;
     this.searchInfo[this.currentSearch] = { ids: [], totalCalls: 0 }
   }
   

@@ -46,37 +46,42 @@
   </section>
   
   <section id='search' ng-controller='SearchCtrl as search'>
-    <!-- <search-tabs></search-tabs> -->
-    <div id='search-buttons'>
-      <button ng-repeat='buttonName in search.tabs' ng-click='search.activateTab(buttonName)'>{{buttonName | titleize}}</button>
-    </div>
     
     <form name='searchForm'>
       <!-- <search-input ng-show='{ search.isActive("search") }'> -->
-      <div ng-show='search.isActive("search")'>
-         <input type='text' name='searchPhrase' ng-model='search.searchParams.phrase'>
+      <div>
+         <input type='text' name='searchPhrase' ng-model='search.getParams().phrase'>
       </div>
       
       <!-- <search-filter ng-show='{ search.isActive("filter") }'> -->
-      <div ng-show='search.isActive("filter")'>
-        <select name='category' ng-model='search.filterParams.category' ng-options='category for category in search.categories'>
+      <div>
+        <select name='category' ng-model='search.getParams().category'
+                ng-options='category for category in search.categories'>
         </select>
         
-        <select name='country' ng-model='search.filterParams.country' ng-options='country for country in search.countries'>
+        <select name='country' ng-model='search.getParams().country'
+                ng-options='country for country in search.countries'>
         </select>
         
-        <select name='cpc' ng-model='search.filterParams.cpc' ng-options='cpc for cpc in search.cpc_cats'>
+        <select name='cpc' ng-model='search.getParams().cpc_cat'
+                ng-options='cpc for cpc in search.cpc_cats'>
         </select>
       </div>
       
       <!-- <search-shared> -->
       <div>
         <label for='affiliatable'>Affiliates to Me</label>
-        <input type='checkbox' id='affiliatable' name='affiliatable' ng-model='search.sharedParams.affiliatable'></input>
+        <input type='checkbox' id='affiliatable' name='affiliatable'
+               ng-model='search.getParams().affiliatable'>
+        </input>
         <label for='insider'>Insider Only</label>
-        <input type='checkbox' id='insider'      name='insider'      ng-model='search.sharedParams.insider'></input>
+        <input type='checkbox' id='insider'      name='insider'
+               ng-model='search.getParams().insider'>
+        </input>
         <label for='unrestricted'>Unrestricted Only</label>
-        <input type='checkbox' id='unrestricted' name='unrestricted' ng-model='search.sharedParams.unrestricted'></input>
+        <input type='checkbox' id='unrestricted' name='unrestricted'
+               ng-model='search.getParams().unrestricted'>
+        </input>
       </div>
       
       <button ng-click='search.search()' ng-disabled="!search.isSearchable()">Search</button>

@@ -14,7 +14,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", 'con
     //TODO decide whether to clear the results at click time, or api time.
     // probably click time with a loading screen
     results.clear();
-    results.setCurrentSearchParams(searchParams);
+    results.setCurrentSearchParams( this.hashSearchParams( searchParams ) );
     api.getIds(searchParams).then( angular.bind( this, handleInitialCall ) );
   }
   
@@ -111,5 +111,9 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", 'con
     }
   }
   
+  this.hashSearchParams = function ( params ) {
+    //TODO do this
+    return String( Math.floor( Math.random( 10 ) ) );
+  }
   
 }])
