@@ -2,40 +2,39 @@ var app = angular.module('merchantExplorer');
 
 //TODO get page logic out of here!!!
 
-app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function(api, results, hashedParamsFactory, config) {
+app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function( api, results, hashedParamsFactory, config ) {
   
-  var batchSize = config.lookup('batchSize'),
-      minBuffer = config.lookup('minBuffer'),
-      perPage = config.lookup('perPage'),
+  var batchSize = config.lookup( 'batchSize' ),
+      minBuffer = config.lookup( 'minBuffer' ),
+      perPage = config.lookup( 'perPage' ),
       pendingPromise = null,
       page = 1,
       isNewSearch = false;
   
-  this.makeInitialCall = function(searchParams) {
+  this.makeInitialCall = function( searchParams ) {
     //TODO decide whether to clear the results at click time, or api time.
     // probably click time with a loading screen
     isNewSearch = true;
-    results.clear();
     results.setCurrentSearchParams( this.hashSearchParams( searchParams ) );
-    api.getIds(searchParams).then( angular.bind( this, handleInitialCall ) );
+    api.getIds( searchParams ).then( angular.bind( this, handleInitialCall ) );
   }
   
-  function handleInitialCall(ids) {
-    results.setIds(ids);
+  function handleInitialCall( ids ) {
+    results.setIds( ids );
     
     //TODO check if you have enough
     this.batchCall();
   }
   
   this.batchCall = function() {
-    var nextIds = results.getNextIds(batchSize);
+    var nextIds = results.getNextIds( batchSize );
     
     //TODO check cache in results first
-    pendingPromise = api.getMerchantData(nextIds);
+    pendingPromise = api.getMerchantData( nextIds );
     pendingPromise.then( angular.bind( this, this.handleBatchCall ) );
   }
   
-  this.handleBatchCall = function (merchantData) {
+  this.handleBatchCall = function ( merchantData ) {
     results.addResults(merchantData);
     pendingPromise = null;
     //TODO check buffer...
@@ -43,15 +42,15 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   }
   
   //Main Data retrieval method
-  this.getCurrentPageData = function(pageNum) {
-    var startPos = (pageNum - 1) * perPage,
+  this.getCurrentPageData = function( pageNum ) {
+    var startPos = ( pageNum - 1 ) * perPage,
         endPos = pageNum * perPage;
     
     page = pageNum;
     
-    this.checkBuffer(pageNum);
+    this.checkBuffer( pageNum );
     
-    var returned = results.getDataForIdRange(startPos, endPos);
+    var returned = results.getDataForIdRange( startPos, endPos );
     
     if ( returned.length < perPage ) {
       return returned.concat( this.getBlankResults().slice(0, perPage - returned.length) );
@@ -60,8 +59,8 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     }
   }
   
-  this.getTotalPages = function(perPage) {
-    return Math.ceil(results.getNumIds() / perPage);
+  this.getTotalPages = function( perPage ) {
+    return Math.ceil( results.getNumIds() / perPage );
   }
   
   this.getBlankResults = ( function() {
@@ -83,7 +82,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     }
   } )();
   
-  this.isLoading = function(pageNum) {
+  this.isLoading = function( pageNum ) {
     var totalLoaded = results.getTotalCalls(),
         needed = pageNum * perPage,
         stillToLoad = results.getNumNotLoaded();
@@ -91,22 +90,22 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     return (totalLoaded < needed && stillToLoad > 0)
   }
   
-  this.checkBuffer = function(pageNum) {
-    if (pendingPromise) {
+  this.checkBuffer = function( pageNum ) {
+    if ( pendingPromise ) {
       // console.log('BUFFER CHECK passed: promise pending');
       return;
     }
     
-    if (!pageNum) {
+    if ( !pageNum ) {
       var pageNum = page;
     }
 
-    var buffer = results.getNumPreloaded(pageNum, perPage);
+    var buffer = results.getNumPreloaded( pageNum, perPage );
     
     if ( buffer < minBuffer && results.getNumNotLoaded() > 0 ) {
-      var nextIds = results.getNextIds(batchSize);
+      var nextIds = results.getNextIds( batchSize );
       //Check if a batch call is in process, if not make one.
-      pendingPromise = api.getMerchantData(nextIds)
+      pendingPromise = api.getMerchantData( nextIds )
       pendingPromise.then( angular.bind( this, this.handleBatchCall ) );
     } else {
       // console.log("BUFFER CHECK passed: buffer sufficient OR results already loaded")
@@ -115,7 +114,6 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   
   this.hashSearchParams = function ( params ) {
     //TODO do this
-    console.log( hashedParamsFactory.create( params ))
     return hashedParamsFactory.create( params );
   }
   

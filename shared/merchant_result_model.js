@@ -58,7 +58,10 @@ app.service('merchantResultModel', function() {
   
   this.setCurrentSearchParams = function(hashedSearchParams) {
     this.currentSearch = hashedSearchParams;
-    this.searchInfo[this.currentSearch] = { ids: [], totalCalls: 0 }
+    
+    if ( !this.searchInfo[this.currentSearch] || this.searchInfo[this.currentSearch]["ids"].length === 0 ) {
+       this.searchInfo[this.currentSearch] = { ids: [], totalCalls: 0 }
+    }
   }
   
   //Create a new info hash in the searchInfo object if only the default one exists
@@ -86,9 +89,9 @@ app.service('merchantResultModel', function() {
     this.searchInfo[this.currentSearch]["totalCalls"] += merchantResults.length;
   }
   
-  this.clear = function() {
-    this.currentSearch = "";
-  }
+  // this.clear = function() {
+  //   this.currentSearch = "";
+  // }
 
   // Methods to get meta search data
   
