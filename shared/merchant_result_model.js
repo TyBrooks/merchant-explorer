@@ -1,6 +1,8 @@
 var app = angular.module('merchantExplorer');
 
 app.service('merchantResultModel', function() {
+  var model = this;
+  
   /*
    *  Data storage
    *  ------------
@@ -26,17 +28,11 @@ app.service('merchantResultModel', function() {
 
   //Main Data retrieval method
   this.getDataForIdRange = function(startPos, endPos) {
-    var results = [],
-        model = this,
-        idList = this.searchInfo[this.currentSearch]["ids"].slice( startPos, endPos );
+    var idList = this.searchInfo[this.currentSearch]["ids"].slice( startPos, endPos );
 
-    idList.forEach( function( id ) {
-      if ( model.dataCache[id] ) {
-        results.push( model.dataCache[id] );
-      }
+    return idList.map( function( id ) {
+      return model.dataCache[id];
     });
-    
-    return results;
   }
   
   // Other getter/setter methods
@@ -54,6 +50,12 @@ app.service('merchantResultModel', function() {
         totalCalls = searchInfo["totalCalls"];
     
     return searchInfo["ids"].slice(totalCalls, totalCalls + num);
+  }
+  
+  this.filterCachedIds = function( ids ) {
+    return ids.filter( function( id ) {
+      return !model.dataCache[id];
+    } )
   }
   
   this.setCurrentSearchParams = function(hashedSearchParams) {
@@ -77,16 +79,13 @@ app.service('merchantResultModel', function() {
     }
   }
   
-  this.addResults = function(merchantResults) {
-    var model = this;
-    
+  this.addResults = function(merchantResults, numCached) {
     merchantResults.forEach( function( result ) {
       //TODO make sure we get id with results
       model.dataCache[result.id] = result;
     } );
-    
     //Update the current search index
-    this.searchInfo[this.currentSearch]["totalCalls"] += merchantResults.length;
+    this.searchInfo[this.currentSearch]["totalCalls"] += ( merchantResults.length + numCached);
   }
   
   // this.clear = function() {

@@ -14,7 +14,7 @@ app.service('merchantApi', ["config", "$q", function(config, $q) {
     
     var pending = [];
     for (var i = 0; i < 85; i++) {
-      pending.push(Math.floor(Math.random() * 10000));
+      pending.push(Math.floor(Math.random() * 1000));
     }
     ids.concat(pending);
     

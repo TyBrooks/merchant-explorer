@@ -1,6 +1,7 @@
 var app = angular.module('merchantExplorer');
 
 //TODO get page logic out of here!!!
+//TODO pending promise cancel
 
 app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function( api, results, hashedParamsFactory, config ) {
   
@@ -9,7 +10,8 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
       perPage = config.lookup( 'perPage' ),
       pendingPromise = null,
       page = 1,
-      isNewSearch = false;
+      isNewSearch = false,
+      numCached = 0; // A little hacky, using top level var for async callback
   
   this.makeInitialCall = function( searchParams ) {
     //TODO decide whether to clear the results at click time, or api time.
@@ -27,15 +29,19 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   }
   
   this.batchCall = function() {
-    var nextIds = results.getNextIds( batchSize );
+    var nextIds = results.getNextIds( batchSize ),
+        toFetch = results.filterCachedIds( nextIds );
+    
+    numCached = nextIds.length - toFetch.length;
     
     //TODO check cache in results first
-    pendingPromise = api.getMerchantData( nextIds );
+    pendingPromise = api.getMerchantData( toFetch );
     pendingPromise.then( angular.bind( this, this.handleBatchCall ) );
   }
   
   this.handleBatchCall = function ( merchantData ) {
-    results.addResults(merchantData);
+    results.addResults( merchantData, numCached );
+    numCached = 0;
     pendingPromise = null;
     //TODO check buffer...
     this.checkBuffer();
@@ -103,10 +109,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     var buffer = results.getNumPreloaded( pageNum, perPage );
     
     if ( buffer < minBuffer && results.getNumNotLoaded() > 0 ) {
-      var nextIds = results.getNextIds( batchSize );
-      //Check if a batch call is in process, if not make one.
-      pendingPromise = api.getMerchantData( nextIds )
-      pendingPromise.then( angular.bind( this, this.handleBatchCall ) );
+      this.batchCall();
     } else {
       // console.log("BUFFER CHECK passed: buffer sufficient OR results already loaded")
     }
