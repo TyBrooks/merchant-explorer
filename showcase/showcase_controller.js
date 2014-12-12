@@ -1,8 +1,8 @@
 var app = angular.module('merchantExplorer');
 
-app.controller('ShowcaseCtrl', ['showcaseService', function(showcaseService, config) {
+app.controller('ShowcaseCtrl', ['showcaseService', 'config', function(showcaseService, config) {
   var merchantData = [],
-      numShowcases = 3;
+      numShowcases = config.lookup('numShowcases');
   
   //Build initial blank data array based on num of showcases
   var initialData = ( function(showcases) {
@@ -20,7 +20,6 @@ app.controller('ShowcaseCtrl', ['showcaseService', function(showcaseService, con
       showcaseService.getShowcaseData().then(angular.bind(this, this.handleShowcaseData));
       return initialData;
     } else {
-      console.log("merchantData, ", merchantData)
       return merchantData;
     }
   }
