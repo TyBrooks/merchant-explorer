@@ -10,9 +10,9 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", fu
   
   //Search Methods
   this.search = function() {
-    lastSearch = merchantResultService.hashSearchParams(this.getParams());
+    lastSearch = merchantResultService.hashSearchParams( this.getParams() );
     
-    merchantResultService.makeInitialCall(this.getParams());
+    merchantResultService.makeInitialCall( this.getParams() );
   }
   
   this.currentResults = function() {
@@ -22,7 +22,7 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", fu
   this.isSearchable = function() {
     var input = this.getParams();
     
-    return ( merchantResultService.hashSearchParams(input) !== lastSearch)
+    return ( merchantResultService.hashSearchParams( input) !== lastSearch )
   }
   
   

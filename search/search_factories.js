@@ -17,3 +17,23 @@ app.factory('searchParamsFactory', function() {
   
   return factory;
 });
+
+app.factory('hashedSearchParamsFactory', function() {
+  var factory = {};
+  
+  factory.create = function( searchParams ) {
+    var affiliatable = ( searchParams.affiliatable ) ? "1" : "0";
+    var insider = ( searchParams.insider ) ? "1" : "0";
+    var unrestricted = ( searchParams.unrestricted ) ? "1" : "0";
+    
+    return searchParams.phrase +
+      searchParams.category +
+      searchParams.country +
+      searchParams.cpc_cat +
+      affiliatable +
+      insider +
+      unrestricted;
+  }
+  
+  return factory;
+})

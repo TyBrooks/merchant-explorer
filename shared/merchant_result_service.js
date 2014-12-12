@@ -2,17 +2,19 @@ var app = angular.module('merchantExplorer');
 
 //TODO get page logic out of here!!!
 
-app.service('merchantResultService', ["merchantApi", "merchantResultModel", 'config', function(api, results, config) {
+app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function(api, results, hashedParamsFactory, config) {
   
   var batchSize = config.lookup('batchSize'),
       minBuffer = config.lookup('minBuffer'),
       perPage = config.lookup('perPage'),
       pendingPromise = null,
-      page = 1;
+      page = 1,
+      isNewSearch = false;
   
   this.makeInitialCall = function(searchParams) {
     //TODO decide whether to clear the results at click time, or api time.
     // probably click time with a loading screen
+    isNewSearch = true;
     results.clear();
     results.setCurrentSearchParams( this.hashSearchParams( searchParams ) );
     api.getIds(searchParams).then( angular.bind( this, handleInitialCall ) );
@@ -113,7 +115,17 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", 'con
   
   this.hashSearchParams = function ( params ) {
     //TODO do this
-    return String( Math.floor( Math.random( 10 ) ) );
+    console.log( hashedParamsFactory.create( params ))
+    return hashedParamsFactory.create( params );
+  }
+  
+  this.isNewSearch = function() {
+    if ( isNewSearch ) {
+      isNewSearch = false;
+      return true;
+    } else {
+      return false;
+    }
   }
   
 }])
