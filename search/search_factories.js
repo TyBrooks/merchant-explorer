@@ -37,3 +37,40 @@ app.factory('hashedSearchParamsFactory', function() {
   
   return factory;
 })
+
+app.factory('filterFactory', function() {
+  var factory = {};
+  
+  factory.create = function( filter_options ) {
+    //all filter values
+    var affilitable = Boolean( filter_object.affiliatable );
+    
+    return {
+      // doFilter<attribute> section
+      
+      this.doFilterAffiliatable = function() {
+        return affiliatable;
+      }
+      
+      // create a unique, deterministic value for the filter options (necessary for caching)
+      
+      this.hashFilters = function() {
+        var hashed = "";
+        
+        if ( this.doFilterAffiliatable() ) {
+          hashed += "aff";
+        }
+        
+        return hashed;
+      }
+      
+      // So we know if we should filter at all
+      
+      this.hasAnyFilters = function() {
+        return ( this.doFilterAffiliatable() ) // in future, add other front end filters here
+      }
+      
+    }
+    
+  }
+})
