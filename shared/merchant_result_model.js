@@ -2,26 +2,12 @@ var app = angular.module('merchantExplorer');
 
 //TODO make the data stores themselves private
 
-app.service('merchantResultModel', function() {
+app.service('merchantResultModel', ["dataCacheFactory", function( dataCacheFactory ) {
   var model = this;
-  
-  /*
-   *  Data storage
-   *  ------------
-   *
-   *  searchInfo:
-   *  {
-   *    <hashedSearchParam> : {
-   *      ids: [<id>, <id>, ...],
-   *      totalCalls: <#>
-   *    }, ...
-   *  }
-   *
-   *  dataCache = { <id> : <dataObj>, ... }
-   *
-   */
+
+  // The data storage models
   this.searchInfo = {};
-  this.dataCache = {};
+  var dataCache = dataCacheFactory.create();
 
   //initialize results for when no query exists
   this.searchInfo[""] = { ids: [], totalCalls: 0 }
@@ -29,10 +15,7 @@ app.service('merchantResultModel', function() {
   //Main Data retrieval method
   this.getDataForIdRange = function( startPos, endPos, currentSearch ) {
     var idList = this.searchInfo[currentSearch]["ids"].slice( startPos, endPos );
-
-    return idList.map( function( id ) {
-      return model.dataCache[id];
-    });
+    return dataCache.lookup( idList );
   }
   
   // Other getter/setter methods
@@ -53,9 +36,7 @@ app.service('merchantResultModel', function() {
   }
   
   this.filterCachedIds = function( ids ) {
-    return ids.filter( function( id ) {
-      return !model.dataCache[id];
-    } )
+    return dataCache.filterExisting( ids );
   }
   
   this.ensureSearchExists = function( currentSearch ) {
@@ -78,10 +59,7 @@ app.service('merchantResultModel', function() {
   }
   
   this.addResults = function( merchantResults, numCached, currentSearch ) {
-    merchantResults.forEach( function( result ) {
-      //TODO make sure we get id with results
-      model.dataCache[result.id] = result;
-    } );
+    dataCache.add( merchantResults );
     //Update the current search index
     this.searchInfo[currentSearch]["totalCalls"] += ( merchantResults.length + numCached);
   }
@@ -100,4 +78,4 @@ app.service('merchantResultModel', function() {
     return searchInfo["ids"].length - searchInfo["totalCalls"];
   }
   
-})
+}])

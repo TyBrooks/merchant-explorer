@@ -60,7 +60,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     page = pageNum;
     
     this.checkBuffer( pageNum );
-    
+
     var returned = results.getDataForIdRange( startPos, endPos, currentSearch );
     
     if ( returned.length < perPage ) {
