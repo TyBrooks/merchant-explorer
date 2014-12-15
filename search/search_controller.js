@@ -10,12 +10,12 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", "f
   
   //Search Methods
   this.search = function() {
-    var params = this.getParams(),
-        filterInfo = filterFactory.create( params );
+    var params = this.getParams();//,
+        // filterInfo = filterFactory.create( params );
     
     lastSearch = merchantResultService.hashSearchParams( params );
     
-    merchantResultService.makeInitialCall( params, filterInfo );
+    merchantResultService.makeInitialCall( params ); //, filterInfo
   }
   
   this.currentResults = function() {

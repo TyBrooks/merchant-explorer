@@ -48,13 +48,13 @@ app.factory('filterInfoFactory', function() {
     return {
       // doFilter<attribute> section
       
-      this.doFilterAffiliatable = function() {
+      doFilterAffiliatable: function() {
         return affiliatable;
-      }
+      },
       
       // create a unique, deterministic value for the filter options (necessary for caching)
       
-      this.hashFilters = function() {
+      hashFilters: function() {
         var hashed = "";
         
         if ( this.doFilterAffiliatable() ) {
@@ -62,11 +62,11 @@ app.factory('filterInfoFactory', function() {
         }
         
         return hashed;
-      }
+      },
       
       // So we know if we should filter at all
       
-      this.hasAnyFilters = function() {
+      hasAnyFilters: function() {
         return ( this.doFilterAffiliatable() ) // in future, add other front end filters here
       }
       

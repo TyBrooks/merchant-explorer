@@ -11,27 +11,30 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
       perPage = config.lookup( 'perPage' ),
       pendingPromise = null,
       page = 1,
+      
       isNewSearch = false,
+      currentSearch = "",
+      currentFilter = "",
+    
       numCached = 0; // A little hacky, using top level var for async callback
   
   this.makeInitialCall = function( searchParams, filterInfo ) {
     isNewSearch = true;
       
-    //TODO probably store this logic here instead
-    results.setCurrentFilterParams( filterInfo );
-    results.setCurrentSearchParams( this.hashSearchParams( searchParams ) );
+    // results.setCurrentFilterParams( filterInfo );
+    this.setCurrentSearchParams( searchParams );
     api.getIds( searchParams ).then( angular.bind( this, handleInitialCall ) );
   }
   
   function handleInitialCall( ids ) {
-    results.setIds( ids );
+    results.setIds( ids, currentSearch );
     
     //TODO check if you have enough
     this.batchCall();
   }
   
   this.batchCall = function() {
-    var nextIds = results.getNextIds( batchSize ),
+    var nextIds = results.getNextIds( batchSize, currentSearch ),
         toFetch = results.filterCachedIds( nextIds );
     
     numCached = nextIds.length - toFetch.length;
@@ -42,7 +45,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   }
   
   this.handleBatchCall = function ( merchantData ) {
-    results.addResults( merchantData, numCached );
+    results.addResults( merchantData, numCached, currentSearch );
     numCached = 0;
     pendingPromise = null;
     //TODO check buffer...
@@ -58,7 +61,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     
     this.checkBuffer( pageNum );
     
-    var returned = results.getDataForIdRange( startPos, endPos );
+    var returned = results.getDataForIdRange( startPos, endPos, currentSearch );
     
     if ( returned.length < perPage ) {
       return returned.concat( this.getBlankResults().slice(0, perPage - returned.length) );
@@ -68,7 +71,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   }
   
   this.getTotalPages = function( perPage ) {
-    return Math.ceil( results.getNumIds() / perPage );
+    return Math.ceil( results.getNumIds( currentSearch ) / perPage );
   }
   
   this.getBlankResults = ( function() {
@@ -91,9 +94,9 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   } )();
   
   this.isLoading = function( pageNum ) {
-    var totalLoaded = results.getTotalCalls(),
+    var totalLoaded = results.getTotalCalls( currentSearch ),
         needed = pageNum * perPage,
-        stillToLoad = results.getNumNotLoaded();
+        stillToLoad = results.getNumNotLoaded( currentSearch );
     
     return (totalLoaded < needed && stillToLoad > 0)
   }
@@ -108,9 +111,9 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
       var pageNum = page;
     }
 
-    var buffer = results.getNumPreloaded( pageNum, perPage );
+    var buffer = results.getNumPreloaded( pageNum, perPage, currentSearch );
     
-    if ( buffer < minBuffer && results.getNumNotLoaded() > 0 ) {
+    if ( buffer < minBuffer && results.getNumNotLoaded( currentSearch ) > 0 ) {
       this.batchCall();
     } else {
       // console.log("BUFFER CHECK passed: buffer sufficient OR results already loaded")
@@ -129,6 +132,12 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     } else {
       return false;
     }
+  }
+  
+  this.setCurrentSearchParams = function( searchParams ) {
+    currentSearch = this.hashSearchParams( searchParams );
+    
+    results.ensureSearchExists( currentSearch );
   }
   
 }])
