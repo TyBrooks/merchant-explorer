@@ -38,12 +38,12 @@ app.factory('hashedSearchParamsFactory', function() {
   return factory;
 })
 
-app.factory('filterFactory', function() {
+app.factory('filterInfoFactory', function() {
   var factory = {};
   
-  factory.create = function( filter_options ) {
+  factory.create = function( searchParams ) {
     //all filter values
-    var affilitable = Boolean( filter_object.affiliatable );
+    var affilitable = Boolean( searchParams.affiliatable );
     
     return {
       // doFilter<attribute> section

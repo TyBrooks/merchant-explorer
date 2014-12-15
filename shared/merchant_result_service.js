@@ -2,6 +2,7 @@ var app = angular.module('merchantExplorer');
 
 //TODO get page logic out of here!!!
 //TODO pending promise cancel
+//TODO search state here or in model?
 
 app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function( api, results, hashedParamsFactory, config ) {
   
@@ -13,10 +14,11 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
       isNewSearch = false,
       numCached = 0; // A little hacky, using top level var for async callback
   
-  this.makeInitialCall = function( searchParams ) {
-    //TODO decide whether to clear the results at click time, or api time.
-    // probably click time with a loading screen
+  this.makeInitialCall = function( searchParams, filterInfo ) {
     isNewSearch = true;
+      
+    //TODO probably store this logic here instead
+    results.setCurrentFilterParams( filterInfo );
     results.setCurrentSearchParams( this.hashSearchParams( searchParams ) );
     api.getIds( searchParams ).then( angular.bind( this, handleInitialCall ) );
   }
