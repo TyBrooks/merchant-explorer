@@ -2,7 +2,6 @@ var app = angular.module('merchantExplorer');
 
 //TODO get page logic out of here!!!
 //TODO pending promise cancel
-//TODO search state here or in model?
 
 app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function( api, results, hashedParamsFactory, config ) {
   
@@ -36,7 +35,7 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   this.batchCall = function() {
     var nextIds = results.getNextIds( batchSize, currentSearch ),
         toFetch = results.filterCachedIds( nextIds );
-    
+  
     numCached = nextIds.length - toFetch.length;
     
     //TODO check cache in results first
@@ -135,9 +134,9 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   }
   
   this.setCurrentSearchParams = function( searchParams ) {
-    currentSearch = this.hashSearchParams( searchParams );
+    var hashed = this.hashSearchParams( searchParams );
     
-    results.ensureSearchExists( currentSearch );
+    currentSearch = hashed;
   }
   
 }])

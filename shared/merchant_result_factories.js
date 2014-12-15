@@ -1,14 +1,56 @@
 var app = angular.module('merchantExplorer');
 
-app.factory('searchInfoFactory', function() {
+app.factory('searchCacheFactory', function() {
   var factory = {};
   
   factory.create = function() {
+    //The actual data store -- initialized with empty search data
+    var searchMetaData = {
+      "": {
+        ids: [],
+        numLoaded: 0
+      }
+    };
+    
+    return {
+      _ensureExists: function( searchName ) {
+        if ( !searchMetaData[searchName] ) {
+          searchMetaData[searchName] = { ids: [], numLoaded: 0 };
+        }
+      },
+      
+      addToNumLoaded: function( numToAdd, searchName ) {
+        this._ensureExists( searchName );
+        searchMetaData[searchName].numLoaded += numToAdd;
+      },
+      
+      getIds: function( startPos, endPos, searchName ) {
+        this._ensureExists( searchName );
+        return searchMetaData[searchName].ids.slice( startPos, endPos );
+      },
+      
+      getNumLoaded: function( searchName ) {
+        this._ensureExists( searchName );
+        return searchMetaData[searchName].numLoaded;
+      },
+      
+      getNumIds: function( searchName ) {
+        this._ensureExists( searchName );
+        return searchMetaData[searchName].ids.length;
+      },
+      
+      initializeIds: function( ids, searchName ) {
+        this._ensureExists( searchName );
+        searchMetaData[searchName].ids = ids;
+      }
+      
+    }
     
   }
+  return factory;
 })
 
-app.factory('dataCacheFactory', function() {
+app.factory('merchantCacheFactory', function() {
   var dataCache = {},
       factory = {};
   
@@ -22,7 +64,6 @@ app.factory('dataCacheFactory', function() {
        */
       add: function( input ) {
         var cache = this;
-        
         if ( angular.isArray( input ) ) {
           input.forEach( function( dataObj ) {
             cache.add( dataObj );
@@ -62,9 +103,14 @@ app.factory('dataCacheFactory', function() {
       lookup: function( input ) {
         var cache = this;
         if ( angular.isArray( input ) ) {
-          return input.map( function( id ) {
-            return cache.lookup( id );
-          })
+          var toReturn = [];
+          
+          input.forEach( function( id ) {
+            if ( dataCache[id] ) {
+              toReturn.push( dataCache[id] );
+            }
+          });
+          return toReturn;
         } else {
           return dataCache[input];
         }
