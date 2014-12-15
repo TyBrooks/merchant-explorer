@@ -69,8 +69,8 @@ app.factory('filterInfoFactory', function() {
       hasAnyFilters: function() {
         return ( this.doFilterAffiliatable() ) // in future, add other front end filters here
       }
-      
     }
-    
   }
+  
+  return factory;
 })

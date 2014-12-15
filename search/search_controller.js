@@ -1,6 +1,10 @@
 var app = angular.module('merchantExplorer');
   
-app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", "filterInfoFactory", function(searchParamsFactory, merchantResultService, filterFactory) {
+app.controller( 'SearchCtrl',
+  ["searchParamsFactory", "hashedSearchParamsFactory", "filterInfoFactory", "merchantResultService",
+  function( searchParamsFactory, hashedParamsFactory, filterInfoFactory, merchantResultService ) {
+  
+  
   var params = searchParamsFactory.createDefault(),
     lastSearch = "";
   
@@ -8,14 +12,20 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", "f
     return params;
   }
   
+  this.getFilters = function() {
+    return { affiliatable: false }
+  }
+  
   //Search Methods
   this.search = function() {
-    var params = this.getParams();//,
-        // filterInfo = filterFactory.create( params );
+    var params = this.getParams(),
+        hashedParams = this.hashSearchParams( params ),
+        filterObj = this.getFilters(),
+        filterInfo = filterInfoFactory.create( filterObj );
+      
+    lastSearch = hashedParams;
     
-    lastSearch = merchantResultService.hashSearchParams( params );
-    
-    merchantResultService.makeInitialCall( params ); //, filterInfo
+    merchantResultService.makeInitialCall( hashedParams, filterInfo ); //, filterInfo
   }
   
   this.currentResults = function() {
@@ -24,11 +34,14 @@ app.controller('SearchCtrl', ["searchParamsFactory", "merchantResultService", "f
   
   this.isSearchable = function() {
     var input = this.getParams(),
-        hashedCurrent = merchantResultService.hashSearchParams( input );
+        hashedCurrent = this.hashSearchParams( input );
     
     return hashedCurrent !== lastSearch;
   }
   
+  this.hashSearchParams = function( params ) {
+    return hashedParamsFactory.create( params );
+  }
   
   //Dropdown options
   //TODO complete these

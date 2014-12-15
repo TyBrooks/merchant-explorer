@@ -3,7 +3,9 @@ var app = angular.module('merchantExplorer');
 //TODO get page logic out of here!!!
 //TODO pending promise cancel
 
-app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function( api, results, hashedParamsFactory, config ) {
+app.service('merchantResultService',
+  ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "filterInfoFactory", "config",
+  function( api, results, hashedParamsFactory, filterInfoFactory, config ) {
   
       // Constants loaded from config
   var batchSize = config.lookup( 'batchSize' ),
@@ -17,19 +19,19 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     
       // Store data about the filters and params of the current search
       currentSearch = "",
-      currentFilter = "",
+      currentFilterInfo = null,
       
       // Slightly hacky vars that should probably eventually be refactored out. :-(
       numCached = 0, //needed as workaround to scope issue w/ async function
       isNewSearch = false; // Needed to pass info about button press to the results controller from search controller
       
   
-  this.makeInitialCall = function( searchParams, filterInfo ) {
+  this.makeInitialCall = function( searchName, filterInfo ) {
     isNewSearch = true;
-      
-    // results.setCurrentFilterParams( filterInfo );
-    setCurrentSearchParams( searchParams );
-    api.getIds( searchParams ).then( angular.bind( this, handleInitialCall ) );
+    currentSearch = searchName;
+    currentFilterInfo = filterInfo;
+    
+    api.getIds( currentSearch ).then( angular.bind( this, handleInitialCall ) );
   }
   
   function handleInitialCall( ids ) {
@@ -119,10 +121,6 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     }
   }
   
-  this.hashSearchParams = function( params ) {
-    return hashedParamsFactory.create( params );
-  }
-  
   this.isNewSearch = function() {
     if ( isNewSearch ) {
       isNewSearch = false;
@@ -132,10 +130,5 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     }
   }
   
-  function setCurrentSearchParams( searchParams ) {
-    var hashed = service.hashSearchParams( searchParams );
-    
-    currentSearch = hashed;
-  }
   
 }])
