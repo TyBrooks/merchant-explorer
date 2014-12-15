@@ -40,18 +40,15 @@ app.controller('ResultsCtrl', ['merchantResultService', 'config', function( resu
   
   this.nextPage = function() {
     currentPage += 1;
-    resultsService.checkBuffer();
   }
   
   this.previousPage = function() {
     currentPage -= 1;
-    resultsService.checkBuffer();
   }
   
   this.setPage = function( pageNum ) {
     if ( this.pageLoadable( pageNum ) ) {
       currentPage = pageNum;
-      resultsService.checkBuffer();
     }
   }
   

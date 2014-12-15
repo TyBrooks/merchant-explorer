@@ -5,17 +5,22 @@ var app = angular.module('merchantExplorer');
 
 app.service('merchantResultService', ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "config", function( api, results, hashedParamsFactory, config ) {
   
+      // Constants loaded from config
   var batchSize = config.lookup( 'batchSize' ),
       minBuffer = config.lookup( 'minBuffer' ),
-      perPage = config.lookup( 'perPage' ),
+      perPage = config.lookup( 'perPage' )
+    
+      // A pointer in case we need to cancel a pending call
       pendingPromise = null,
-      page = 1,
-      
-      isNewSearch = false,
+    
+      // Store data about the filters and params of the current search
       currentSearch = "",
       currentFilter = "",
-    
-      numCached = 0; // A little hacky, using top level var for async callback
+      
+      // Slightly hacky vars that should probably eventually be refactored out. :-(
+      numCached = 0, //needed as workaround to scope issue w/ async function
+      isNewSearch = false; // Needed to pass info about button press to the results controller from search controller
+      
   
   this.makeInitialCall = function( searchParams, filterInfo ) {
     isNewSearch = true;
@@ -28,7 +33,6 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
   function handleInitialCall( ids ) {
     results.setIds( ids, currentSearch );
     
-    //TODO check if you have enough
     this.batchCall();
   }
   
@@ -47,16 +51,12 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
     results.addResults( merchantData, numCached, currentSearch );
     numCached = 0;
     pendingPromise = null;
-    //TODO check buffer...
-    this.checkBuffer();
   }
   
   //Main Data retrieval method
   this.getCurrentPageData = function( pageNum ) {
     var startPos = ( pageNum - 1 ) * perPage,
         endPos = pageNum * perPage;
-    
-    page = pageNum;
     
     this.checkBuffer( pageNum );
 
@@ -105,17 +105,11 @@ app.service('merchantResultService', ["merchantApi", "merchantResultModel", "has
       // console.log('BUFFER CHECK passed: promise pending');
       return;
     }
-    
-    if ( !pageNum ) {
-      var pageNum = page;
-    }
 
     var buffer = results.getNumPreloaded( pageNum, perPage, currentSearch );
     
     if ( buffer < minBuffer && results.getNumNotLoaded( currentSearch ) > 0 ) {
       this.batchCall();
-    } else {
-      // console.log("BUFFER CHECK passed: buffer sufficient OR results already loaded")
     }
   }
   
