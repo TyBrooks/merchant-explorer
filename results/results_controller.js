@@ -15,12 +15,7 @@ app.controller('ResultsCtrl', ['merchantResultService', 'config', function( resu
       currentPage = 1;
     }
     
-    if ( this.isLoading() ) {
-      return resultsService.getBlankResults();
-    } else {
-      var results = resultsService.getCurrentPageData( currentPage, perPage );
-      return results;
-    }
+    return resultsService.getCurrentPageData( currentPage, perPage );
   }
   
   this.getTotalPages = function() {
