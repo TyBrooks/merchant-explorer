@@ -111,7 +111,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat='result in results.getCurrentPageData()'>
+        <tr ng-repeat='result in results.getCurrentPageData() track by $index'>
           <!-- A little hacky but lets the blank table display-->
           <td>{{result.name}}&nbsp;</td>
           <td>{{result.domain}}</td>

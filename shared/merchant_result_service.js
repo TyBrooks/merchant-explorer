@@ -26,12 +26,13 @@ app.service('merchantResultService',
       isNewSearch = false; // Needed to pass info about button press to the results controller from search controller
       
   
-  this.makeInitialCall = function( searchName, filterInfo ) {
+  this.makeInitialCall = function( searchParams, searchName, filterInfo ) {
+    
     isNewSearch = true;
     currentSearch = searchName;
     currentFilterInfo = filterInfo;
     
-    api.getIds( currentSearch ).then( angular.bind( this, handleInitialCall ) );
+    api.getIds( searchParams ).then( angular.bind( this, handleInitialCall ) );
   }
   
   function handleInitialCall( ids ) {
@@ -43,7 +44,7 @@ app.service('merchantResultService',
   function batchCall() {
     var nextIds = results.getNextIds( batchSize, currentSearch ),
         toFetch = results.filterCachedIds( nextIds );
-  
+    
     numCached = nextIds.length - toFetch.length;
     
     //TODO check cache in results first
@@ -59,7 +60,7 @@ app.service('merchantResultService',
   
   //Main Data retrieval method
   this.getCurrentPageData = function( pageNum ) {
-    if ( this.isLoading() ) {
+    if ( this.isLoading( pageNum ) ) {
       return getBlankResults();
     }
     

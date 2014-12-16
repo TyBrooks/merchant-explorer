@@ -25,7 +25,7 @@ app.controller( 'SearchCtrl',
       
     lastSearch = hashedParams;
     
-    merchantResultService.makeInitialCall( hashedParams, filterInfo ); //, filterInfo
+    merchantResultService.makeInitialCall( params, hashedParams, filterInfo ); //, filterInfo
   }
   
   this.currentResults = function() {

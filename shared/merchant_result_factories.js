@@ -41,7 +41,11 @@ app.factory('searchCacheFactory', function() {
       
       initializeIds: function( ids, searchName ) {
         this._ensureExists( searchName );
-        searchMetaData[searchName].ids = ids;
+        
+        //TODO currently this only sets the data if it doens't exist. Change this?
+        if ( searchMetaData[searchName].ids.length === 0 ) {
+          searchMetaData[searchName].ids = ids;
+        }
       }
       
     }
