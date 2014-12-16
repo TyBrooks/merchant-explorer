@@ -5,22 +5,16 @@ app.controller( 'SearchCtrl',
   function( searchParamsFactory, hashedParamsFactory, filterInfoFactory, merchantResultService ) {
   
   
-  var params = searchParamsFactory.createDefault(),
-    lastSearch = "";
-  
-  this.getParams = function() {
-    return params;
-  }
-  
-  this.getFilters = function() {
-    return { affiliatable: false }
-  }
+  this.params = searchParamsFactory.createDefault();
+  this.filters = { affiliatable: true };
+    
+  var lastSearch = "";
   
   //Search Methods
   this.search = function() {
-    var params = this.getParams(),
+    var params = this.params,
         hashedParams = this.hashSearchParams( params ),
-        filterObj = this.getFilters(),
+        filterObj = this.filters,
         filterInfo = filterInfoFactory.create( filterObj );
       
     lastSearch = hashedParams;
@@ -33,7 +27,7 @@ app.controller( 'SearchCtrl',
   }
   
   this.isSearchable = function() {
-    var input = this.getParams(),
+    var input = this.params,
         hashedCurrent = this.hashSearchParams( input );
     
     return hashedCurrent !== lastSearch;

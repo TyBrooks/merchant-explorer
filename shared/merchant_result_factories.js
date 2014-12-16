@@ -19,14 +19,40 @@ app.factory('searchCacheFactory', function() {
         }
       },
       
+      _ensureFilter: function( searchName, filterName ) {
+        this._ensureExists( searchName );
+          
+        if ( !searchMetaData[ searchName ][ "filters" ] ) {
+          searchMetaData[ searchName ][ "filters" ] = {};
+        }
+        
+        if ( !searchMetaData[ searchName ][ "filters" ][ filterName ] ) {
+          searchMetaData[ searchName ][ "filters" ][ filterName ] = {
+            ids: []
+          };
+        }
+        
+      },
+      
       addToNumLoaded: function( numToAdd, searchName ) {
         this._ensureExists( searchName );
         searchMetaData[searchName].numLoaded += numToAdd;
       },
       
-      getIds: function( startPos, endPos, searchName ) {
+      getIds: function( startPos, endPos, searchName, filterName ) {
         this._ensureExists( searchName );
-        return searchMetaData[searchName].ids.slice( startPos, endPos );
+        
+        if ( filterName ) {
+          return searchMetaData[ searchName ][ "filters" ][ filterName ].ids.slice( startPos, endPos );
+        } else {
+          return searchMetaData[searchName].ids.slice( startPos, endPos );
+        }
+        
+      },
+      
+      getAllLoadedIds: function( searchName ) {
+        var numLoaded = this.getNumLoaded( searchName );
+        return this.getIds( 0, numLoaded, searchName );
       },
       
       getNumLoaded: function( searchName ) {
@@ -46,8 +72,15 @@ app.factory('searchCacheFactory', function() {
         if ( searchMetaData[searchName].ids.length === 0 ) {
           searchMetaData[searchName].ids = ids;
         }
-      }
+      },
       
+      setFilteredIds: function( ids, searchName, filterName ) {
+        this._ensureFilter( searchName, filterName );
+        
+        //TODO, keep track of how many we've done so far, instead of doing this every time.
+        searchMetaData[ searchName ][ "filters" ][ filterName ][ "ids" ] = ids;
+
+      }
     }
     
   }

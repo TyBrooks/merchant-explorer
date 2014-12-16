@@ -1,5 +1,7 @@
 var app = angular.module('merchantExplorer')
 
+//TODO just combine these into a single object
+
 app.factory('searchParamsFactory', function() {
   var factory = {};
   
@@ -9,7 +11,6 @@ app.factory('searchParamsFactory', function() {
       category: "All Categories",
       country: "All Countries",
       cpc_cat: "CPC + CPA",
-      affiliatable: true,
       insider: false,
       unrestricted: false
     }
@@ -22,7 +23,6 @@ app.factory('hashedSearchParamsFactory', function() {
   var factory = {};
   
   factory.create = function( searchParams ) {
-    var affiliatable = ( searchParams.affiliatable ) ? "1" : "0";
     var insider = ( searchParams.insider ) ? "1" : "0";
     var unrestricted = ( searchParams.unrestricted ) ? "1" : "0";
     
@@ -30,7 +30,6 @@ app.factory('hashedSearchParamsFactory', function() {
       searchParams.category +
       searchParams.country +
       searchParams.cpc_cat +
-      affiliatable +
       insider +
       unrestricted;
   }
@@ -43,7 +42,7 @@ app.factory('filterInfoFactory', function() {
   
   factory.create = function( searchParams ) {
     //all filter values
-    var affilitable = Boolean( searchParams.affiliatable );
+    var affiliatable = Boolean( searchParams.affiliatable );
     
     return {
       // doFilter<attribute> section
@@ -68,6 +67,31 @@ app.factory('filterInfoFactory', function() {
       
       hasAnyFilters: function() {
         return ( this.doFilterAffiliatable() ) // in future, add other front end filters here
+      },
+      
+      filter: function( merchantDataArr ) {
+        var filteredIds = [],
+            filterInfo = this;
+        
+        merchantDataArr.forEach( function( merchantData ) {
+          var doAdd = true;
+          //Filter section... need one for every filter.
+          //  so far it's just affiliatable though
+          
+          if ( filterInfo.doFilterAffiliatable() ) {
+            if ( !merchantData.aff_status ) {
+              doAdd = false;
+            }
+          }
+          // end filter section
+          
+          if ( doAdd ) {
+            filteredIds.push( merchantData.id );
+          }
+          
+        });
+        
+        return filteredIds;
       }
     }
   }

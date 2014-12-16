@@ -69,7 +69,7 @@ app.service('merchantResultService',
     
     checkBuffer( pageNum );
 
-    var returned = results.getDataForIdRange( startPos, endPos, currentSearch );
+    var returned = results.getDataForIdRange( startPos, endPos, currentSearch, currentFilterInfo );
     
     if ( returned.length < perPage ) {
       return returned.concat( getBlankResults().slice(0, perPage - returned.length) );
@@ -79,6 +79,11 @@ app.service('merchantResultService',
   }
   
   this.getTotalPages = function( perPage ) {
+    //TODO this is where I left off
+    if ( currentFilterInfo.hasAnyFilters() ) {
+      // return results.
+    }
+    
     return Math.ceil( results.getNumIds( currentSearch ) / perPage );
   }
   
@@ -102,7 +107,7 @@ app.service('merchantResultService',
   } )();
   
   this.isLoading = function( pageNum ) {
-    var totalLoaded = results.getTotalCalls( currentSearch ),
+    var totalLoaded = results.getTotalCalls( currentSearch, currentFilterInfo ),
         needed = pageNum * perPage,
         stillToLoad = results.getNumNotLoaded( currentSearch );
     
@@ -115,7 +120,7 @@ app.service('merchantResultService',
       return;
     }
 
-    var buffer = results.getNumPreloaded( pageNum, perPage, currentSearch );
+    var buffer = results.getNumPreloaded( pageNum, perPage, currentSearch, currentFilterInfo );
     
     if ( buffer < minBuffer && results.getNumNotLoaded( currentSearch ) > 0 ) {
       batchCall();

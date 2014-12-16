@@ -51,20 +51,20 @@
     <form name='searchForm'>
       <!-- <search-input ng-show='{ search.isActive("search") }'> -->
       <div>
-         <input type='text' name='searchPhrase' ng-model='search.getParams().phrase'>
+         <input type='text' name='searchPhrase' ng-model='search.params.phrase'>
       </div>
       
       <!-- <search-filter ng-show='{ search.isActive("filter") }'> -->
       <div>
-        <select name='category' ng-model='search.getParams().category'
+        <select name='category' ng-model='search.params.category'
                 ng-options='category for category in search.categories'>
         </select>
         
-        <select name='country' ng-model='search.getParams().country'
+        <select name='country' ng-model='search.params.country'
                 ng-options='country for country in search.countries'>
         </select>
         
-        <select name='cpc' ng-model='search.getParams().cpc_cat'
+        <select name='cpc' ng-model='search.params.cpc_cat'
                 ng-options='cpc for cpc in search.cpc_cats'>
         </select>
       </div>
@@ -73,15 +73,15 @@
       <div>
         <label for='affiliatable'>Affiliates to Me</label>
         <input type='checkbox' id='affiliatable' name='affiliatable'
-               ng-model='search.getParams().affiliatable'>
+               ng-model='search.filters.affiliatable'>
         </input>
         <label for='insider'>Insider Only</label>
         <input type='checkbox' id='insider'      name='insider'
-               ng-model='search.getParams().insider'>
+               ng-model='search.params.insider'>
         </input>
         <label for='unrestricted'>Unrestricted Only</label>
         <input type='checkbox' id='unrestricted' name='unrestricted'
-               ng-model='search.getParams().unrestricted'>
+               ng-model='search.params.unrestricted'>
         </input>
       </div>
       

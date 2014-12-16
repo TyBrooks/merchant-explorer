@@ -10,8 +10,22 @@ app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory"
       merchantCache = merchantCacheFactory.create();
 
   //Main Data retrieval method
-  this.getDataForIdRange = function( startPos, endPos, currentSearch ) {
-    var idList = searchCache.getIds( startPos, endPos, currentSearch );
+  this.getDataForIdRange = function( startPos, endPos, searchName, filterInfo ) {
+    var args = [ startPos, endPos, searchName ];
+    
+    // Ensure that we have the latest filtered data
+    if ( filterInfo && filterInfo.hasAnyFilters() ) {
+      var allLoadedIds = searchCache.getAllLoadedIds( searchName );
+      var merchantData = merchantCache.lookup( allLoadedIds );
+      var filteredIds = filterInfo.filter( merchantData );
+      var filterName = filterInfo.hashFilters();
+      
+      searchCache.setFilteredIds( filteredIds, searchName, filterName );
+      
+      args.push( filterName );
+    }
+    
+    var idList = searchCache.getIds.apply( searchCache, args );
     return merchantCache.lookup( idList );
   }
   
