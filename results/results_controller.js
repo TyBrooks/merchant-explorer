@@ -1,7 +1,13 @@
-var app = angular.module('merchantExplorer');
+/*
+ * Responsibilities
+ * --------
+ *
+ * 1. Handle all logic necessary for the view/html layer
+ *
+ */
 
-//PROBLEMS:
-// how to know when the search button is clicked
+
+var app = angular.module('merchantExplorer');
 
 app.controller('ResultsCtrl', ['merchantResultService', 'config', function( resultsService, config ) {
   var currentPage = 1,

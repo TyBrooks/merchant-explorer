@@ -1,3 +1,14 @@
+/*
+ * Responsibilities
+ * -----
+ *
+ * 1. Handle all communication between the Merchant Data cache and the Search Info cache
+ * 2. Provide an API the results service can use to fetch data while abstracting away details
+ * 3. Handle filter logic
+ *
+ */
+
+
 var app = angular.module('merchantExplorer');
 
 //TODO make the data stores themselves private
@@ -5,80 +16,109 @@ var app = angular.module('merchantExplorer');
 app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory", function( merchantCacheFactory, searchCacheFactory ) {
   var model = this;
 
-  // The data storage models
+  /*
+   * Data storage models
+   * Look in merchant_result_factories.js for more details
+   */
   var searchCache = searchCacheFactory.create(),
       merchantCache = merchantCacheFactory.create();
 
-  //Main Data retrieval method
+  /*
+   * The main data retrieval method
+   * Retrieves either a range of ids for a given search
+   * OR a range of filtered ids, if the optional filter object is present
+   */
   this.getDataForIdRange = function( startPos, endPos, searchName, filterInfo ) {
-    var args = [ startPos, endPos, searchName ];
-    
-    // Ensure that we have the latest filtered data
+    var idList;
     if ( filterInfo && filterInfo.hasAnyFilters() ) {
-      var allLoadedIds = searchCache.getAllLoadedIds( searchName );
-      var merchantData = merchantCache.lookup( allLoadedIds );
-      var filteredIds = filterInfo.filter( merchantData );
-      var filterName = filterInfo.hashFilters();
-      
-      searchCache.setFilteredIds( filteredIds, searchName, filterName );
-      
-      args.push( filterName );
+      idList = searchCache.getFilteredIds( startPos, endPos, searchName, filterInfo.hashFilters() );
+    } else {
+      idList = searchCache.getIds( startPos, endPos, searchName );
     }
     
-    var idList = searchCache.getIds.apply( searchCache, args );
     return merchantCache.lookup( idList );
   }
   
-  // Other getter/setter methods
-  
-  this.getTotalCalls = function( currentSearch ) {
-    return searchCache.getNumLoaded( currentSearch );
+  /*
+   * A method for determining the number of ids that have currently been loaded
+   * If the filterInfo obj is present, returns number of loaded filtered Ids
+   */
+  this.getNumIdsLoaded = function( currentSearch, filterInfo ) {
+    if ( filterInfo && filterInfo.hasAnyFilters() ) {
+      return searchCache.getNumFilteredLoaded( currentSearch, filterInfo.hashFilters() );
+    } else {
+      return searchCache.getNumLoaded( currentSearch );
+    }
   }
   
-  this.getNumIds = function( currentSearch ) {
-    return searchCache.getNumIds( currentSearch );
+  /*
+   * A method for determining the number of ids still to load
+   * Note - this shouldn't be affected by any filters
+   */
+  this.getNumIdsNotLoaded = function( currentSearch ) {
+    var numIds = searchCache.getNumIds( currentSearch ),
+        numLoaded = searchCache.getNumLoaded( currentSearch );
+  
+    return numIds - numLoaded;
   }
   
-  this.getNextIds = function( numIds, currentSearch ) {
+  /* 
+   * A method to get the total number of ids
+   *   If a filter is passed, this will be the number of filtered ids + ALL unloaded ids (don't know their status)
+   */
+  this.getTotalIdCount = function( currentSearch, filterInfo ) {
+    if ( filterInfo && filterInfo.hasAnyFilters() ) {
+      return searchCache.getNumFilteredLoaded( currentSearch, filterInfo.hashFilters() ) + this.getNumNotLoaded( currentSearch );
+    } else {
+      return searchCache.getNumIds( currentSearch );
+    }
+  }
+  
+  /* 
+   * A method to get the next set of Ids to load
+   */
+  this.getNextIdsForBatch = function( numIds, currentSearch ) {
     var numLoaded = searchCache.getNumLoaded( currentSearch );
     return searchCache.getIds( numLoaded, numLoaded + numIds, currentSearch );
   }
   
-  this.filterCachedIds = function( ids ) {
-    return merchantCache.filterExisting( ids );
+  /*
+   * This takes an array of ids, and removes any that we already have data for
+   */
+  this.removeCachedIds = function( ids ) {
+    return merchantCache.removeCachedIds( ids );
   }
   
-  //Create a new info hash in the searchInfo object if only the default one exists
-  // otherwise use existing for caching effect
-  this.setIds = function( ids, currentSearch ) {
+  
+  /*
+   * This one sets the ids for a given search
+   */
+  this.initializeIdsForSearch = function( ids, currentSearch ) {
     searchCache.initializeIds( ids, currentSearch );
   }
   
-  this.addResults = function( merchantResults, numCached, currentSearch ) {
+  /*
+   * This one takes the results of an api call to grab merchant data
+   * .. and updates both the merchant data cache and the search metadata cache
+   */
+  this.addResults = function( merchantResults, numCached, searchName, filterInfo ) {
     merchantCache.add( merchantResults );
     
     var additionalLoaded = merchantResults.length + numCached;
-    //Update the current search index
-    searchCache.addToNumLoaded( additionalLoaded, currentSearch );
-  }
-
-  // Methods to get meta search data
-  
-  // number of merchants loaded but after the currently viewed page
-  //TODO replace with generic info... resultService handles all page calculations!
-  this.getNumPreloaded = function( pageNum, perPage, currentSearch ) {
-    var numLoaded = searchCache.getNumLoaded( currentSearch ),
-        numAlreadyDisplayed = pageNum * perPage;
+    searchCache.addToNumLoaded( additionalLoaded, searchName );
     
-    return Math.max( numLoaded - numAlreadyDisplayed, 0 );
+    if ( filterInfo && filterInfo.hasAnyFilters() ) {
+      this._updateFilteredData( searchName, filterInfo );
+    }
   }
   
-  // number of remaining merchants that haven't been loaded yet.
-  this.getNumNotLoaded = function( currentSearch ) {
-    var numIds = searchCache.getNumIds( currentSearch ),
-        numLoaded = searchCache.getNumLoaded( currentSearch );
+  this._updateFilteredData = function( searchName, filterInfo ) {
+    var filterName = filterInfo.hashFilters();
+  
+    var unfilteredIds = searchCache.getNotYetFilteredIds( searchName, filterName ),
+        merchantData = merchantCache.lookup( unfilteredIds ),
+        filteredIds = filterInfo.filter( merchantData );
     
-    return numIds - numLoaded;
+    searchCache.addFilteredIds( filteredIds, searchName, filterName );
   }
-  
 }])

@@ -1,3 +1,14 @@
+/*
+ * Responsibilities
+ * ------
+ *
+ * 1. Keep track of state of the search params and filters
+ * 2. Convert that state into objects and pass through to the results service
+ * 3. Store the drop down lists
+ *
+ */
+
+
 var app = angular.module('merchantExplorer');
   
 app.controller( 'SearchCtrl',

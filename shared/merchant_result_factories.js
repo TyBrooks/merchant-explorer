@@ -28,7 +28,8 @@ app.factory('searchCacheFactory', function() {
         
         if ( !searchMetaData[ searchName ][ "filters" ][ filterName ] ) {
           searchMetaData[ searchName ][ "filters" ][ filterName ] = {
-            ids: []
+            ids: [],
+            lastNumLoaded: 0
           };
         }
         
@@ -36,28 +37,46 @@ app.factory('searchCacheFactory', function() {
       
       addToNumLoaded: function( numToAdd, searchName ) {
         this._ensureExists( searchName );
+        // console.log('numToAdd, searchName, searchData :', numToAdd, searchName, searchMetaData[searchName])
         searchMetaData[searchName].numLoaded += numToAdd;
       },
       
-      getIds: function( startPos, endPos, searchName, filterName ) {
+      getIds: function( startPos, endPos, searchName ) {
         this._ensureExists( searchName );
         
-        if ( filterName ) {
-          return searchMetaData[ searchName ][ "filters" ][ filterName ].ids.slice( startPos, endPos );
-        } else {
-          return searchMetaData[searchName].ids.slice( startPos, endPos );
-        }
-        
+        return searchMetaData[searchName].ids.slice( startPos, endPos );
       },
       
-      getAllLoadedIds: function( searchName ) {
-        var numLoaded = this.getNumLoaded( searchName );
-        return this.getIds( 0, numLoaded, searchName );
+      getFilteredIds: function( startPos, endPos, searchName, filterName ) {
+        this._ensureFilter( searchName, filterName );
+        // console.log( 'searchname, filtername, searchdata:', searchName, filterName, searchMetaData)
+        return searchMetaData[ searchName ][ "filters" ][ filterName ].ids.slice( startPos, endPos );
+      },
+      
+      getNotYetFilteredIds: function( searchName, filterName ) {
+        this._ensureFilter( searchName, filterName );
+        
+        // console.log('searchname, filtername :', searchName, filterName)
+        
+        var lastNumLoaded = searchMetaData[ searchName ]["filters"][filterName].lastNumLoaded,
+          newNumLoaded = searchMetaData[ searchName ].numLoaded;
+        
+        // console.log('lastNumLoaded, newNumLoaded :', lastNumLoaded, newNumLoaded)
+      
+        return this.getIds( lastNumLoaded, newNumLoaded, searchName );
       },
       
       getNumLoaded: function( searchName ) {
         this._ensureExists( searchName );
+        
         return searchMetaData[searchName].numLoaded;
+      },
+      
+      getNumFilteredLoaded: function( searchName, filterName ) {
+        this._ensureFilter( searchName, filterName);
+        // console.log('getting number of filtered loaded, filter = ', filterName)
+        // console.log(searchMetaData[searchName])
+        return searchMetaData[ searchName ][ "filters" ][ filterName ].ids.length
       },
       
       getNumIds: function( searchName ) {
@@ -74,12 +93,18 @@ app.factory('searchCacheFactory', function() {
         }
       },
       
-      setFilteredIds: function( ids, searchName, filterName ) {
+      // TODO: just automatically filter incoming data instead of using lastNumLoaded?
+      addFilteredIds: function( newIds, searchName, filterName ) {
         this._ensureFilter( searchName, filterName );
-        
-        //TODO, keep track of how many we've done so far, instead of doing this every time.
-        searchMetaData[ searchName ][ "filters" ][ filterName ][ "ids" ] = ids;
 
+        var numLoaded = searchMetaData[ searchName ].numLoaded;
+         
+        searchMetaData[ searchName ][ "filters" ][ filterName ].ids =
+          searchMetaData[ searchName][ "filters" ][ filterName ].ids.concat( newIds );
+          
+        searchMetaData[ searchName ][ "filters" ][ filterName ].lastNumLoaded = numLoaded;
+        // console.log( 'ids', newIds)
+        // console.log( searchMetaData[searchName])
       }
     }
     
@@ -124,7 +149,7 @@ app.factory('merchantCacheFactory', function() {
       /*
        * Given an array of ids, return all ids that aren't in the cache
        */
-      filterExisting: function( ids ) {
+      removeCachedIds: function( ids ) {
         var cache = this;
         
         return ids.filter( function( id ) {
