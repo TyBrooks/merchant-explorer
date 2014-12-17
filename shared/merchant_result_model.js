@@ -108,17 +108,13 @@ app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory"
     searchCache.addToNumLoaded( additionalLoaded, searchName );
     
     if ( filterInfo && filterInfo.hasAnyFilters() ) {
-      this._updateFilteredData( searchName, filterInfo );
+      var previousIdx = searchCache.getNumLoaded( searchName ) - additionalLoaded;
+      var addedIds = searchCache.getIds( previousIdx, previousIdx + additionalLoaded, searchName );
+      var merchantData = merchantCache.lookup( addedIds );
+      var filteredIds = filterInfo.filter( merchantData );
+
+      searchCache.addFilteredIds( filteredIds, searchName, filterInfo.hashFilters() );
     }
   }
   
-  this._updateFilteredData = function( searchName, filterInfo ) {
-    var filterName = filterInfo.hashFilters();
-  
-    var unfilteredIds = searchCache.getNotYetFilteredIds( searchName, filterName ),
-        merchantData = merchantCache.lookup( unfilteredIds ),
-        filteredIds = filterInfo.filter( merchantData );
-    
-    searchCache.addFilteredIds( filteredIds, searchName, filterName );
-  }
 }])

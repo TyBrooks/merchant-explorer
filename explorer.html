@@ -14,9 +14,14 @@
   <!-- Library Scripts -->
   <script src='lib/angular.js'></script>
   <script src='lib/ng-table.js'></script>
+  <script src='lib/angular-route.js'></script>
   
   <!-- My Scripts -->
   <script src='app.js'></script>
+  <script src='config/routes.js'></script>
+  <!-- Okay this is super hacky, but substitute out the config file of your current env here :-( -->
+  <script src='config/env/dev.js'></script>
+  
   <script src='search/search_controller.js'></script>
   <script src='search/search_factories.js'></script>
   <script src='results/results_controller.js'></script>
@@ -27,9 +32,8 @@
   <script src='search/search_filters.js'></script>
   <script src='showcase/showcase_service.js'></script>
   <script src='showcase/showcase_controller.js'></script>
-
-  <!-- Okay this is super hacky, but substitute out the config file of your current env here :-( -->
-  <script src='env/dev.js'></script>
+  
+  
    
 </head>
 <body>
@@ -52,6 +56,11 @@
       <!-- <search-input ng-show='{ search.isActive("search") }'> -->
       <div>
          <input type='text' name='searchPhrase' ng-model='search.params.phrase'>
+         
+         <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
+         <select name='campaign' id='campaign' ng-model='search.selectedCampaign'
+                 ng-options='campaign for campaign in search.campaigns'>
+         </select>
       </div>
       
       <!-- <search-filter ng-show='{ search.isActive("filter") }'> -->
@@ -113,7 +122,7 @@
       <tbody>
         <tr ng-repeat='result in results.getCurrentPageData() track by $index'>
           <!-- A little hacky but lets the blank table display-->
-          <td>{{result.name}}&nbsp;</td>
+          <td ng-click='results.redirectToMerchantPage(result.id)'>{{result.name}}&nbsp;</td>
           <td>{{result.domain}}</td>
           <td>{{result.country}}</td>
           <td>{{result.cpc}}</td>

@@ -38,14 +38,17 @@ app.service('merchantResultService',
       
   /*
    * Triggered when the user clicks the search button
+   *   checks to see if the given search has already been made, if not, fetches an id list via the api
    */
   this.makeInitialCall = function( searchParams, searchName, filterInfo ) {
-    //TODO only grab ids if search doesn't already exist. Remove that logic from the model
     isNewSearch = true;
     currentSearch = searchName;
     currentFilterInfo = filterInfo;
     
-    api.getIds( searchParams ).then( angular.bind( this, this._handleInitialCall ) );
+    
+    if ( results.getNumIdsLoaded( currentSearch, currentFilterInfo ) === 0 ) {
+      api.getIds( searchParams ).then( angular.bind( this, this._handleInitialCall ) );
+    }
   }
   
   /*

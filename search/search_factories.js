@@ -12,7 +12,7 @@ app.factory('searchParamsFactory', function() {
       country: "All Countries",
       cpc_cat: "CPC + CPA",
       insider: false,
-      unrestricted: false
+      unrestricted: false,
     }
   }
   

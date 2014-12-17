@@ -18,6 +18,7 @@ app.controller( 'SearchCtrl',
   
   this.params = searchParamsFactory.createDefault();
   this.filters = { affiliatable: true };
+  this.selectedCampaign = "Ty's Campaign";
     
   var lastSearch = "";
   
@@ -39,9 +40,10 @@ app.controller( 'SearchCtrl',
   
   this.isSearchable = function() {
     var input = this.params,
-        hashedCurrent = this.hashSearchParams( input );
-    
-    return hashedCurrent !== lastSearch;
+        hashedCurrent = this.hashSearchParams( input ),
+        hashedDefault = this.hashSearchParams( searchParamsFactory.createDefault() );
+
+    return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrent !== hashedDefault ) );
   }
   
   this.hashSearchParams = function( params ) {
@@ -53,4 +55,7 @@ app.controller( 'SearchCtrl',
   this.categories = ["All Categories", "Automotive", "Consumer Electronics"];
   this.countries = ["All Countries", "US|International", "Brazil|International"];
   this.cpc_cats = ["CPC + CPA", "CPC Only", "CPA Only"];
+  
+  //TODO bootstrap this data from Rails
+  this.campaigns = ["Ty's Campaign", "Shoe Campaign", "Dress Campaign" ]
 }]);

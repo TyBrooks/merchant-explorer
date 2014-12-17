@@ -37,7 +37,7 @@ app.factory('searchCacheFactory', function() {
       
       addToNumLoaded: function( numToAdd, searchName ) {
         this._ensureExists( searchName );
-        // console.log('numToAdd, searchName, searchData :', numToAdd, searchName, searchMetaData[searchName])
+        
         searchMetaData[searchName].numLoaded += numToAdd;
       },
       
@@ -49,19 +49,15 @@ app.factory('searchCacheFactory', function() {
       
       getFilteredIds: function( startPos, endPos, searchName, filterName ) {
         this._ensureFilter( searchName, filterName );
-        // console.log( 'searchname, filtername, searchdata:', searchName, filterName, searchMetaData)
+
         return searchMetaData[ searchName ][ "filters" ][ filterName ].ids.slice( startPos, endPos );
       },
       
       getNotYetFilteredIds: function( searchName, filterName ) {
         this._ensureFilter( searchName, filterName );
         
-        // console.log('searchname, filtername :', searchName, filterName)
-        
         var lastNumLoaded = searchMetaData[ searchName ]["filters"][filterName].lastNumLoaded,
           newNumLoaded = searchMetaData[ searchName ].numLoaded;
-        
-        // console.log('lastNumLoaded, newNumLoaded :', lastNumLoaded, newNumLoaded)
       
         return this.getIds( lastNumLoaded, newNumLoaded, searchName );
       },
@@ -74,8 +70,7 @@ app.factory('searchCacheFactory', function() {
       
       getNumFilteredLoaded: function( searchName, filterName ) {
         this._ensureFilter( searchName, filterName);
-        // console.log('getting number of filtered loaded, filter = ', filterName)
-        // console.log(searchMetaData[searchName])
+
         return searchMetaData[ searchName ][ "filters" ][ filterName ].ids.length
       },
       
@@ -87,24 +82,15 @@ app.factory('searchCacheFactory', function() {
       initializeIds: function( ids, searchName ) {
         this._ensureExists( searchName );
         
-        //TODO currently this only sets the data if it doens't exist. Change this?
-        if ( searchMetaData[searchName].ids.length === 0 ) {
-          searchMetaData[searchName].ids = ids;
-        }
+        searchMetaData[ searchName ].ids = ids;
       },
       
-      // TODO: just automatically filter incoming data instead of using lastNumLoaded?
       addFilteredIds: function( newIds, searchName, filterName ) {
         this._ensureFilter( searchName, filterName );
-
-        var numLoaded = searchMetaData[ searchName ].numLoaded;
+        
+        var newIdArr = searchMetaData[ searchName][ "filters" ][ filterName ].ids.concat( newIds );
          
-        searchMetaData[ searchName ][ "filters" ][ filterName ].ids =
-          searchMetaData[ searchName][ "filters" ][ filterName ].ids.concat( newIds );
-          
-        searchMetaData[ searchName ][ "filters" ][ filterName ].lastNumLoaded = numLoaded;
-        // console.log( 'ids', newIds)
-        // console.log( searchMetaData[searchName])
+        searchMetaData[ searchName ][ "filters" ][ filterName ].ids = newIdArr;
       }
     }
     

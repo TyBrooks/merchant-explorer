@@ -9,7 +9,7 @@
 
 var app = angular.module('merchantExplorer');
 
-app.controller('ResultsCtrl', ['merchantResultService', 'config', function( resultsService, config ) {
+app.controller('ResultsCtrl', ['merchantResultService', '$location', 'config', function( resultsService, $location, config ) {
   var currentPage = 1,
       perPage = config.lookup('perPage');
   
@@ -76,6 +76,12 @@ app.controller('ResultsCtrl', ['merchantResultService', 'config', function( resu
     } else {
       return true;
     }
+  }
+  
+  this.redirectToMerchantPage = function( id ) {
+    console.log(id);
+    $location.path('/merchants/' + id);
+    $location.replace();
   }
   
 }]);
