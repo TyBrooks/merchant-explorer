@@ -9,9 +9,9 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
   
   $routeProvider
   .when('/merchants/:id', {
-    templateUrl: "../merchant.html"
+    templateUrl: "../show/merchant.html"
   })
   .when('/merchants', {
-    templateUrl: "../explorer.html",
+    templateUrl: "../search/explorer.html",
   })
 }])
