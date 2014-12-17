@@ -9,10 +9,9 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
   
   $routeProvider
   .when('/merchants/:id', {
-    controller: "MerchantCtrl",
-    templateUrl: "merchant.html"
+    templateUrl: "../merchant.html"
   })
-    // .when('/merchants', {
-    //   templateUrl: 'explorer.html'
-    // })
+  .when('/merchants', {
+    templateUrl: "../explorer.html",
+  })
 }])

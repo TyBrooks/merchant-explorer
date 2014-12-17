@@ -1,1 +1,38 @@
-You're on the merchant page!
+<div ng-controller='MerchantCtrl as merchant'>
+  <section id='merchant-info'>
+    <div class='merchant-name'>{{merchant.name}}</div>
+    <div class='insider-badge' ng-show='result.isInsider'>Insider</div>
+    
+    <div class='merchant-description'>{{merchant.description}}</div>
+    <img class='merchant-logo' alt='The logo of the merchant' ng-src='{{merchant.logoSrc}}'>
+  </section>
+  
+  <section id='merchant-group-info'>
+    <ul class='commission-list'>
+      <li ng-repeat='rate in merchant.rates'>{{rate}}</li>
+    </ul>
+    
+    <ul class='country-list'>
+      <li ng-repeat='country in merchant.countries'>{{country}}</li>
+    </ul>
+  </section>
+  
+  <section id='domains-info'>
+    <table class='domain-info-table'>
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>CPC / CPA<th>
+          <th>Can I make money with this</th>
+        </tr>
+      </tead>
+      <tbody>
+        <tr ng-repeat='domain in merchant.domains'>
+          <td>{{domain.domain}}</td>
+          <td>{{domain.cpc}}</td>
+          <td>{{domain.aff}}</td>
+      </tbody>
+    </table>
+  </section>
+  
+</div>
