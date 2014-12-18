@@ -15,11 +15,14 @@ var app = angular.module('merchantExplorer');
 //TODO pending promise cancel
 
 app.service('merchantResultService',
-  ["merchantApi", "merchantResultModel", "hashedSearchParamsFactory", "filterInfoFactory", "config",
-  function( api, results, hashedParamsFactory, filterInfoFactory, config ) {
+  ["merchantApi", "merchantResultModel", "config",
+  function( api, results, config ) {
   
-      // Constants loaded from config
-  var batchSize = config.lookup( 'batchSize' ),
+  /*
+   * All the variables / state info for the service
+   */
+  var // Constants loaded from config
+      batchSize = config.lookup( 'batchSize' ),
       minBuffer = config.lookup( 'minBuffer' ),
       perPage = config.lookup( 'perPage' ),
     
@@ -28,9 +31,10 @@ app.service('merchantResultService',
       // A pointer in case we need to cancel a pending call
       pendingPromise = null,
     
-      // Store data about the filters and params of the current search
-      currentSearch = "",
-      currentFilterInfo = null,
+      // Information about the CURRENT search and its state
+      searchState = null,
+      searchName = "",
+      filterState = null,
       
       // Slightly hacky vars that should probably eventually be refactored out. :-(
       numCached = 0, //needed as workaround to scope issue w/ async function
@@ -40,14 +44,16 @@ app.service('merchantResultService',
    * Triggered when the user clicks the search button
    *   checks to see if the given search has already been made, if not, fetches an id list via the api
    */
-  this.makeInitialCall = function( searchParams, searchName, filterInfo ) {
+  this.makeInitialCall = function( searchParams ) {
     isNewSearch = true;
-    currentSearch = searchName;
-    currentFilterInfo = filterInfo;
-    
-    
-    if ( results.getNumIdsLoaded( currentSearch, currentFilterInfo ) === 0 ) {
-      api.getIds( searchParams ).then( angular.bind( this, this._handleInitialCall ) );
+    searchState = searchParams;
+    searchName = searchParams.hash();
+    filterState = searchParams.getFilterState();
+      
+    if ( results.getNumIdsLoaded( searchName, filterState ) === 0 ) {
+      var apiSearchParams = searchParams.asApiSearchParams();
+      
+      api.getIds( apiSearchParams ).then( angular.bind( this, this._handleInitialCall ) );
     }
   }
   
@@ -55,7 +61,7 @@ app.service('merchantResultService',
    * Handle the id's returned from the api and go ahead and fetch the first batch
    */
   this._handleInitialCall = function( returnedIds ) {
-    results.initializeIdsForSearch( returnedIds, currentSearch );
+    results.initializeIdsForSearch( returnedIds, searchName );
     
     this._batchCall();
   }
@@ -65,7 +71,7 @@ app.service('merchantResultService',
    */
   this._batchCall = function() {
     //TODO add an optional batch size param for initial call?
-    var nextIds = results.getNextIdsForBatch( batchSize, currentSearch ),
+    var nextIds = results.getNextIdsForBatch( batchSize, searchName ),
         toFetch = results.removeCachedIds( nextIds );
     
     numCached = nextIds.length - toFetch.length;
@@ -78,7 +84,7 @@ app.service('merchantResultService',
    * Process the merchant data returned from a batch call
    */
   this._handleBatchCall = function( merchantData ) {
-    results.addResults( merchantData, numCached, currentSearch, currentFilterInfo );
+    results.addResults( merchantData, numCached, searchName, filterState );
     numCached = 0;
     pendingPromise = null;
   }
@@ -102,7 +108,7 @@ app.service('merchantResultService',
     }
 
 
-    var returned = results.getDataForIdRange( startPos, endPos, currentSearch, currentFilterInfo );
+    var returned = results.getDataForIdRange( startPos, endPos, searchName, filterState );
     
     if ( returned.length < perPage ) {
       return returned.concat( getBlankResults().slice(0, perPage - returned.length) );
@@ -116,9 +122,9 @@ app.service('merchantResultService',
    */
   this.getTotalPages = function() {
     //TODO see below
-    if ( currentFilterInfo && currentFilterInfo.hasAnyFilters() ) {
-      var loadedIds = results.getNumIdsLoaded( currentSearch, currentFilterInfo ),
-          notLoadedIds = results.getNumIdsNotLoaded( currentSearch, currentFilterInfo );
+    if ( filterState && filterState.hasAnyFilters() ) {
+      var loadedIds = results.getNumIdsLoaded( searchName, filterState ),
+          notLoadedIds = results.getNumIdsNotLoaded( searchName, filterState );
       
       var ensuredPages = Math.floor( loadedIds / perPage ),
           leftover = loadedIds % perPage;
@@ -135,7 +141,7 @@ app.service('merchantResultService',
       }
       return ensuredPages + estimatedPossiblePages;
     } else {
-      return Math.ceil( results.getTotalIdCount( currentSearch ) / perPage ); 
+      return Math.ceil( results.getTotalIdCount( searchName ) / perPage ); 
     }
   }
   
@@ -165,9 +171,9 @@ app.service('merchantResultService',
    * returns a boolean corresponding to whether or not the page is in the process of loading data for that page
    */
   this.isLoading = function( pageNum ) {
-    var totalLoaded = results.getNumIdsLoaded( currentSearch, currentFilterInfo ),
+    var totalLoaded = results.getNumIdsLoaded( searchName, filterState ),
         needed = pageNum * perPage,
-        stillToLoad = results.getNumIdsNotLoaded( currentSearch );
+        stillToLoad = results.getNumIdsNotLoaded( searchName );
     
     
     // console.log('lading check: loaded, needed', totalLoaded, needed)
@@ -184,7 +190,7 @@ app.service('merchantResultService',
 
     var buffer = this.getNumIdsPreLoaded( pageNum );
     
-    if ( buffer < minBuffer && results.getNumIdsNotLoaded( currentSearch ) > 0 ) {
+    if ( buffer < minBuffer && results.getNumIdsNotLoaded( searchName ) > 0 ) {
       this._batchCall();
     }
   }
@@ -206,7 +212,7 @@ app.service('merchantResultService',
    * Returns the number of ids that have been loaded but aren't yet being displayed
    */
   this.getNumIdsPreLoaded = function( pageNum ) {
-    var numLoaded = results.getNumIdsLoaded( currentSearch, currentFilterInfo ),
+    var numLoaded = results.getNumIdsLoaded( searchName, filterState ),
         numAlreadyDisplayed = pageNum * perPage;
     
     return Math.max( numLoaded - numAlreadyDisplayed, 0 );

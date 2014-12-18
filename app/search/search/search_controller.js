@@ -12,8 +12,8 @@
 var app = angular.module('merchantExplorer');
   
 app.controller( 'SearchCtrl',
-  ["searchParamsFactory", "hashedSearchParamsFactory", "filterInfoFactory", "merchantResultService",
-  function( searchParamsFactory, hashedParamsFactory, filterInfoFactory, merchantResultService ) {
+  ["searchParamsFactory", "merchantResultService",
+  function( searchParamsFactory, merchantResultService ) {
   
   
   this.params = searchParamsFactory.createDefault();
@@ -24,14 +24,9 @@ app.controller( 'SearchCtrl',
   
   //Search Methods
   this.search = function() {
-    var params = this.params,
-        hashedParams = this.hashSearchParams( params ),
-        filterObj = this.filters,
-        filterInfo = filterInfoFactory.create( filterObj );
-      
-    lastSearch = hashedParams;
+    lastSearch = this.params.hash();
     
-    merchantResultService.makeInitialCall( params, hashedParams, filterInfo ); //, filterInfo
+    merchantResultService.makeInitialCall( this.params );
   }
   
   this.currentResults = function() {
@@ -40,9 +35,9 @@ app.controller( 'SearchCtrl',
   
   this.isSearchable = function() {
     var input = this.params,
-        hashedCurrent = this.hashSearchParams( input ),
-        hashedDefault = this.hashSearchParams( searchParamsFactory.createDefault() );
-
+        hashedCurrent = this.params.hash();
+        hashedDefault = searchParamsFactory.createDefault().hash();
+        
     return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrent !== hashedDefault ) );
   }
   
