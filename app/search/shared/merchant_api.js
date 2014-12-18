@@ -18,12 +18,13 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
       return this._getMockIds();
     }
     
-    return $http({
+    currentPromise = $http({
       method: "GET",
       url: searchUrl,
       data: apiSearchParams
     })
     
+    return currentPromise;
   }
   
   /*
@@ -35,11 +36,22 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
       return this._getMockMerchantData( apiRetrieveParams.merchantGroupIds );
     }
     
-    return $http({
+    currentPromise = $http({
       method: "GET",
       url: retrieveUrl,
       data: apiRetrieveParams
     })
+    
+    return currentPromise;
+  }
+  
+  /*
+   * Rejects an in-flight promise
+   */
+  this.cancelCurrentCall = function() {
+    if ( currentPromise ) {
+      currentPromise.reject();
+    }
   }
   
   
@@ -103,11 +115,5 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
     }, 1000);
     
     return deferred.promise;
-  }
-  
-  this.cancelCurrentCall = function() {
-    if ( currentPromise ) {
-      currentPromise.reject();
-    }
   }
 }]);
