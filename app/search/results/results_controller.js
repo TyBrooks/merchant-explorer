@@ -79,7 +79,6 @@ app.controller('ResultsCtrl', ['merchantResultService', '$location', 'config', f
   }
   
   this.redirectTo = function( result ) {
-    console.log(result);
     $location.path('/merchants/' + result.id);
     $location.replace();
   }

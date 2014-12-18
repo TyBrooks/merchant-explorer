@@ -1,5 +1,8 @@
 <div ng-controller='MerchantCtrl as merchant'>
+  
   <section id='merchant-info'>
+    <button ng-click='merchant.back()' class='back-button'>Back to Search</button>
+    
     <div class='merchant-text'>
       <div class='merchant-name'>{{merchant.name}}</div>
       <div class='merchant-description'>{{merchant.description}}</div>

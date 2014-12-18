@@ -1,6 +1,6 @@
 var app = angular.module('merchantExplorer');
 
-app.controller("MerchantCtrl", function() {
+app.controller("MerchantCtrl", ['$location', function($location) {
   this.name = "Firestone";
   this.description = "Firestone Complete Auto Care is the leading industry provider for vehicle maintenance, tires, batteries and repairs. Since 1926, when Harvey Firestone opened the doors to Firestone Tire and Rubber Company, we have provided the right solutions for our customers' vehicles. Through almost 90 years in the industry we understand that no one looks forward to the time when their vehicle needs attention, but with the help from our affiliate partners, high quality services, and dedicated teammates we can help alleviate this experience for them. We have about 1,700 conveniently located stores across the country which can easily be found by your visitors.";
   this.isInsider = true;
@@ -12,4 +12,9 @@ app.controller("MerchantCtrl", function() {
     cpc: "CPC / CPA",
     aff: true
   }]
-})
+  
+  this.back = function() {
+    $location.path('/merchants');
+    $location.replace();
+  }
+}])

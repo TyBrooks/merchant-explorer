@@ -9,6 +9,7 @@
 
 #merchant-info {
   max-height: 500px;
+  position: relative;
 }
 
 .merchant-text {
@@ -100,4 +101,19 @@
 .domain-info-table {
   border-collapse: collapse;
   empty-cells: show;
+}
+
+
+/* Other stuff */
+
+.back-button {
+  position: absolute;
+  width: 100px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  background-color: red;
+  
+  top: 0;
+  right: 0;
 }
