@@ -53,7 +53,8 @@ app.service('merchantResultService',
     if ( results.getNumIdsLoaded( searchName, filterState ) === 0 ) {
       var apiSearchParams = searchParams.asApiSearchParams();
       
-      api.getIds( apiSearchParams ).then( angular.bind( this, this._handleInitialCall ) );
+      pendingPromise = api.searchApiCall( apiSearchParams );
+      pendingPromise.then( angular.bind( this, this._handleInitialCall ) );
     }
   }
   
@@ -72,11 +73,13 @@ app.service('merchantResultService',
   this._batchCall = function() {
     //TODO add an optional batch size param for initial call?
     var nextIds = results.getNextIdsForBatch( batchSize, searchName ),
-        toFetch = results.removeCachedIds( nextIds );
+        toFetch = results.removeCachedIds( nextIds ),
+        apiRetrieveParams = searchState.asApiRetrieveParams( toFetch );
     
+    //TODO.. might be problematic if batch size is less than sent size
     numCached = nextIds.length - toFetch.length;
     
-    pendingPromise = api.getMerchantData( toFetch );
+    pendingPromise = api.retrieveApiCall( apiRetrieveParams );
     pendingPromise.then( angular.bind( this, this._handleBatchCall ) );
   }
   

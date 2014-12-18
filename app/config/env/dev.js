@@ -5,12 +5,13 @@ var app = angular.module('merchantExplorer');
 app.service("config", function() {
   var configInfo = {
     showcaseApiUrl:     "",
-    merchantApiIdUrl:   "",
-    merchantApiDataUrl: "",
+    searchApiUrl:       "",
+    retrieveApiUrl:     "",
     perPage:            10,
     batchSize:          10,
     minBuffer:          20,
-    numShowcases:       3
+    numShowcases:       3,
+    useMockData:        true
   }
   
   this.lookup = function(name) {
