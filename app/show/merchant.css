@@ -1,0 +1,103 @@
+#merchant-info, #merchant-group-info, #domains-info {
+  width: 1000px;
+  margin-left: 20px;
+  background-color: darkgrey;
+  margin-bottom: 10px;
+  
+}
+
+
+#merchant-info {
+  max-height: 500px;
+}
+
+.merchant-text {
+  display: inline-block;
+  margin-top: 0;
+  width: 600px;
+  max-height: 500px;
+  
+  background-color: lightgrey;
+  
+  vertical-align: top;
+}
+
+.merchant-name {
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+
+.merchant-description {
+  
+}
+
+
+.merchant-imgs {
+  display: inline-block;
+  width: 300px;
+  max-height: 500px;
+  margin-left: 40px;
+  background-color: lightgrey;
+  
+  vertical-align: top;
+}
+
+.insider-badge {
+  text-align: center;
+  line-height: 50px;
+  
+  margin-bottom: 40px;
+  display: inline-block;
+  width: 140px;
+  height: 50px;
+  background-color: yellow;
+  
+  border-radius: 20px;
+}
+
+.merchant-logo {
+  height: 55px;
+  width: 240px;
+}
+
+/* Merchant group level section */
+
+#merchant-group-info {
+}
+
+.commissions {
+  display: inline-block;
+  width: 450px;
+  background-color: lightgrey;
+}
+
+
+
+.countries {
+  display: inline-block;
+  width: 450px;
+  background-color: lightgrey;
+  margin-left: 50px;
+}
+
+
+
+
+/* Domains table section */
+
+#domains-info {
+}
+
+.domain-info-table td, .domain-info-table th {
+  border: 1px solid #444;
+  padding: 3px 5px;
+  height: 20px;
+  min-width: 150px;
+  background-color: lightgrey;
+  text-align: center;
+}
+
+.domain-info-table {
+  border-collapse: collapse;
+  empty-cells: show;
+}

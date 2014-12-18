@@ -1,20 +1,30 @@
 <div ng-controller='MerchantCtrl as merchant'>
   <section id='merchant-info'>
-    <div class='merchant-name'>{{merchant.name}}</div>
-    <div class='insider-badge' ng-show='result.isInsider'>Insider</div>
+    <div class='merchant-text'>
+      <div class='merchant-name'>{{merchant.name}}</div>
+      <div class='merchant-description'>{{merchant.description}}</div>
+    </div>
     
-    <div class='merchant-description'>{{merchant.description}}</div>
-    <img class='merchant-logo' alt='The logo of the merchant' ng-src='{{merchant.logoSrc}}'>
+    <div class='merchant-imgs'>
+      <div class='insider-badge' ng-show='merchant.isInsider'>Insider</div>
+      <img class='merchant-logo' alt='The logo of the merchant' ng-src='{{merchant.logoSrc}}'>
+    </div>
   </section>
   
   <section id='merchant-group-info'>
-    <ul class='commission-list'>
-      <li ng-repeat='rate in merchant.rates'>{{rate}}</li>
-    </ul>
+    <div class='commissions'>
+      <header>Commissions Offered</header>
+      <ul class='commission-list'>
+        <li ng-repeat='rate in merchant.rates'>{{rate}}</li>
+      </ul>
+    </div>
     
-    <ul class='country-list'>
-      <li ng-repeat='country in merchant.countries'>{{country}}</li>
-    </ul>
+    <div class='countries'>
+      <header>Accepts traffic from these countries:</header>
+      <ul class='country-list'>
+        <li ng-repeat='country in merchant.countries'>{{country}}</li>
+      </ul>
+    </div>
   </section>
   
   <section id='domains-info'>
@@ -22,7 +32,7 @@
       <thead>
         <tr>
           <th>Domain</th>
-          <th>CPC / CPA<th>
+          <th>CPC / CPA</th>
           <th>Can I make money with this</th>
         </tr>
       </tead>
