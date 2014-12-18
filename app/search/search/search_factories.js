@@ -66,7 +66,7 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
       },
       
       getFilterState: function() {
-        filterStateFactory.create({
+        return filterStateFactory.create({
           affiliatableOnly: this.affiliatableOnly
         })
       }

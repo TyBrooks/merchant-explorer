@@ -28,10 +28,10 @@ app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory"
    * Retrieves either a range of ids for a given search
    * OR a range of filtered ids, if the optional filter object is present
    */
-  this.getDataForIdRange = function( startPos, endPos, searchName, filterInfo ) {
+  this.getDataForIdRange = function( startPos, endPos, searchName, filterState ) {
     var idList;
-    if ( filterInfo && filterInfo.hasAnyFilters() ) {
-      idList = searchCache.getFilteredIds( startPos, endPos, searchName, filterInfo.hashFilters() );
+    if ( filterState && filterState.hasAnyFilters() ) {
+      idList = searchCache.getFilteredIds( startPos, endPos, searchName, filterState.hash() );
     } else {
       idList = searchCache.getIds( startPos, endPos, searchName );
     }
@@ -41,11 +41,11 @@ app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory"
   
   /*
    * A method for determining the number of ids that have currently been loaded
-   * If the filterInfo obj is present, returns number of loaded filtered Ids
+   * If the filterState obj is present, returns number of loaded filtered Ids
    */
-  this.getNumIdsLoaded = function( currentSearch, filterInfo ) {
-    if ( filterInfo && filterInfo.hasAnyFilters() ) {
-      return searchCache.getNumFilteredLoaded( currentSearch, filterInfo.hashFilters() );
+  this.getNumIdsLoaded = function( currentSearch, filterState ) {
+    if ( filterState && filterState.hasAnyFilters() ) {
+      return searchCache.getNumFilteredLoaded( currentSearch, filterState.hash() );
     } else {
       return searchCache.getNumLoaded( currentSearch );
     }
@@ -66,9 +66,9 @@ app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory"
    * A method to get the total number of ids
    *   If a filter is passed, this will be the number of filtered ids + ALL unloaded ids (don't know their status)
    */
-  this.getTotalIdCount = function( currentSearch, filterInfo ) {
-    if ( filterInfo && filterInfo.hasAnyFilters() ) {
-      return searchCache.getNumFilteredLoaded( currentSearch, filterInfo.hashFilters() ) + this.getNumNotLoaded( currentSearch );
+  this.getTotalIdCount = function( currentSearch, filterState ) {
+    if ( filterState && filterState.hasAnyFilters() ) {
+      return searchCache.getNumFilteredLoaded( currentSearch, filterState.hash() ) + this.getNumNotLoaded( currentSearch );
     } else {
       return searchCache.getNumIds( currentSearch );
     }
@@ -101,19 +101,19 @@ app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory"
    * This one takes the results of an api call to grab merchant data
    * .. and updates both the merchant data cache and the search metadata cache
    */
-  this.addResults = function( merchantResults, numCached, searchName, filterInfo ) {
+  this.addResults = function( merchantResults, numCached, searchName, filterState ) {
     merchantCache.add( merchantResults );
     
     var additionalLoaded = merchantResults.length + numCached;
     searchCache.addToNumLoaded( additionalLoaded, searchName );
     
-    if ( filterInfo && filterInfo.hasAnyFilters() ) {
+    if ( filterState && filterState.hasAnyFilters() ) {
       var previousIdx = searchCache.getNumLoaded( searchName ) - additionalLoaded;
       var addedIds = searchCache.getIds( previousIdx, previousIdx + additionalLoaded, searchName );
       var merchantData = merchantCache.lookup( addedIds );
-      var filteredIds = filterInfo.filter( merchantData );
+      var filteredIds = filterState.getFilteredIdsFromData( merchantData );
 
-      searchCache.addFilteredIds( filteredIds, searchName, filterInfo.hashFilters() );
+      searchCache.addFilteredIds( filteredIds, searchName, filterState.hash() );
     }
   }
   
