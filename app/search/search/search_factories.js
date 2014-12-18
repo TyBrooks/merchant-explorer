@@ -7,35 +7,50 @@ app.factory('searchParamsFactory', function() {
   
   factory.createDefault = function() {
     return {
-      phrase: "",
-      category: "All Categories",
-      country: "All Countries",
-      cpc_cat: "CPC + CPA",
-      insider: false,
-      unrestricted: false,
+      keyword: "",
+      industryIds: 100, // Figure out these ids
+      countryIds: 100,
+      coverage: "B",
+      starsOnly: false,
+      unrestrictedOnly: false,
+      affiliatableOnly: true,
+      
+      hash: function() {
+        var insider = ( this.starsOnly ) ? "1" : "0",
+            unrestricted = ( this.unrestrictedOnly ) ? "1" : "0",
+            affiliated = ( this.affiliatableOnly ) ? "1" : "0";
+        
+        return  insider +
+                unrestricted +
+                affiliated +
+                this.keyword +
+                this.industryIds +
+                this.country +
+                this.coverage;
+      },
+      
+      asApiParams: function() {
+        return {
+          keyword:      this.keyword,
+          industryIds:  [ this.industryIds ],
+          countryIds:   [ this.countryIds ],
+          coverage:     this.coverage,
+          starsOnly:    this.starsOnly,
+          unrestrictedOnly:  this.unrestrictedOnly,
+        }
+      },
+      
+      asFilterObject: function() {
+        return {
+          affilitable: this.affiliatableOnly
+        }
+      }
+      
     }
   }
   
   return factory;
 });
-
-app.factory('hashedSearchParamsFactory', function() {
-  var factory = {};
-  
-  factory.create = function( searchParams ) {
-    var insider = ( searchParams.insider ) ? "1" : "0";
-    var unrestricted = ( searchParams.unrestricted ) ? "1" : "0";
-    
-    return searchParams.phrase +
-      searchParams.category +
-      searchParams.country +
-      searchParams.cpc_cat +
-      insider +
-      unrestricted;
-  }
-  
-  return factory;
-})
 
 app.factory('filterInfoFactory', function() {
   var factory = {};
