@@ -31,7 +31,11 @@ app.service('merchantApi', ["config", "$q", function(config, $q) {
     currentPromise = deferred;
     
     var affiliatable = function() {
-      return Boolean( Math.round( Math.random() ) == 0 )
+      return Boolean( Math.round( Math.random() ) == 0 );
+    }
+    
+    var insider = function() {
+      return Boolean( Math.round( Math.random() ) == 0 );
     }
     
     toReturn = [];
@@ -43,7 +47,8 @@ app.service('merchantApi', ["config", "$q", function(config, $q) {
         country: "US",
         cpc: "CPC and CPA",
         aff_status: affiliatable(),
-        commission: "5% on all products"
+        commission: "5% on all products",
+        insider: insider()
       });
     });
     

@@ -83,7 +83,11 @@
       <tbody>
         <tr ng-repeat='result in results.getCurrentPageData() track by $index'>
           <!-- A little hacky but lets the blank table display-->
-          <td ng-click='results.redirectTo(result)'>{{result.name}}&nbsp;</td>
+          <td class='result-name-cell' ng-click='results.redirectTo(result)'>
+            <span class='result-name'>{{result.name}}</span>
+            &nbsp;
+            <div ng-show='result.insider' class='result-insider-badge'>Insider!</div>
+          </td>
           <td>{{result.domain}}</td>
           <td>{{result.country}}</td>
           <td>{{result.cpc}}</td>
