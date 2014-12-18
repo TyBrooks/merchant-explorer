@@ -14,44 +14,45 @@
   <section id='search' ng-controller='SearchCtrl as search'>
     
     <form name='searchForm'>
-      <!-- <search-input ng-show='{ search.isActive("search") }'> -->
       <div>
-         <input type='text' name='searchPhrase' ng-model='search.params.phrase'>
+         <input type='text' name='searchPhrase' ng-model='search.params.keyword'>
          
-         <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
-         <select name='campaign' id='campaign' ng-model='search.selectedCampaign'
-                 ng-options='campaign for campaign in search.campaigns'>
-         </select>
+         <div ng-show='search.params.affiliatableOnly'>
+           <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
+           <select name='campaign' id='campaign' ng-model='search.params.userId'
+                   ng-options='campaign for campaign in search.campaigns'>
+           </select>
+         </div>
       </div>
       
-      <!-- <search-filter ng-show='{ search.isActive("filter") }'> -->
+      
       <div>
-        <select name='category' ng-model='search.params.category'
+        <select name='category' ng-model='search.params.industryIds'
                 ng-options='category for category in search.categories'>
         </select>
         
-        <select name='country' ng-model='search.params.country'
+        <select name='country' ng-model='search.params.countryIds'
                 ng-options='country for country in search.countries'>
         </select>
         
-        <select name='cpc' ng-model='search.params.cpc_cat'
-                ng-options='cpc for cpc in search.cpc_cats'>
+        <select name='cpc' ng-model='search.params.coverage'
+                ng-options='coverage for coverage in search.coverages'>
         </select>
       </div>
       
-      <!-- <search-shared> -->
+
       <div>
         <label for='affiliatable'>Affiliates to Me</label>
         <input type='checkbox' id='affiliatable' name='affiliatable'
-               ng-model='search.filters.affiliatable'>
+               ng-model='search.params.affiliatableOnly'>
         </input>
         <label for='insider'>Insider Only</label>
         <input type='checkbox' id='insider'      name='insider'
-               ng-model='search.params.insider'>
+               ng-model='search.params.starsOnly'>
         </input>
         <label for='unrestricted'>Unrestricted Only</label>
         <input type='checkbox' id='unrestricted' name='unrestricted'
-               ng-model='search.params.unrestricted'>
+               ng-model='search.params.unrestrictedOnly'>
         </input>
       </div>
       

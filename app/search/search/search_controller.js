@@ -26,7 +26,7 @@ app.controller( 'SearchCtrl',
   this.search = function() {
     lastSearch = this.params.hash();
     
-    merchantResultService.makeInitialCall( this.params );
+    merchantResultService.makeInitialCall( angular.copy( this.params ) );
   }
   
   this.currentResults = function() {
@@ -49,7 +49,7 @@ app.controller( 'SearchCtrl',
   //TODO complete these
   this.categories = ["All Categories", "Automotive", "Consumer Electronics"];
   this.countries = ["All Countries", "US|International", "Brazil|International"];
-  this.cpc_cats = ["CPC + CPA", "CPC Only", "CPA Only"];
+  this.coverages = ["CPC + CPA", "CPC Only", "CPA Only"];
   
   //TODO bootstrap this data from Rails
   this.campaigns = ["Ty's Campaign", "Shoe Campaign", "Dress Campaign" ]
