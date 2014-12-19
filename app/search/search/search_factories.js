@@ -13,7 +13,7 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
        * The actual params themselves, which will be set by the UI on the frontend.
        */
       keyword: "",
-      industryIds: 100, // Figure out these ids
+      industryIds: "", // Figure out these ids
       countryIds: 100,
       coverage: "B",
       starsOnly: false,
@@ -24,12 +24,15 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
       /*
        * Returns a hash representation of the current search
        * Necessary for caching search metadata
+       * Note: for cacheing search metadata, we want the hash without the affiliability status....
+       * ... but for testing whether the search button is active, we do want to include it
        */
-      hash: function() {
+      hash: function( withAffiliatable ) {
         var insider = ( this.starsOnly ) ? "1" : "0",
             unrestricted = ( this.unrestrictedOnly ) ? "1" : "0",
-            affiliated = ( this.affiliatableOnly ) ? "1" : "0";
-        
+            affiliated = ( this.affiliatableOnly ) ? "1" : "0",
+        affiliated = ( withAffiliatable ) ? affiliated : "";
+            
         return  insider +
                 unrestricted +
                 affiliated +

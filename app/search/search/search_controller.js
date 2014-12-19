@@ -7,50 +7,48 @@
  * 3. Store the drop down lists
  *
  */
-
-
 var app = angular.module('merchantExplorer');
   
 app.controller( 'SearchCtrl',
-  ["searchParamsFactory", "merchantResultService",
-  function( searchParamsFactory, merchantResultService ) {
+  ["searchParamsFactory", "merchantResultService", "bootstrapService",
+  function( searchParamsFactory, merchantResultService, bootstrap ) {
+  
+  /*
+   * This section contains the data for the select boxes. However, it probably needs to be bootstrapped from rails.
+   * this.params.userId = __ needs to reference that bootstrap as well
+   */
+  this.categories = [ ["All Categories", ""] ].concat( bootstrap.categories );
+  this.countries = [ [ "All Countries", 100 ], [ "US|International", 101 ], [ "Brazil|International", 102 ] ];
+  this.coverages = [ [ "CPC + CPA", "B" ], [ "CPC Only", "C" ], [ "CPA Only", "A" ] ];
+  this.campaigns = ["Ty's Campaign", "Shoe Campaign", "Dress Campaign" ]
   
   
+  // Search parameters initialization
   this.params = searchParamsFactory.createDefault();
-  this.filters = { affiliatable: true };
-  this.selectedCampaign = "Ty's Campaign";
+  this.params.userId = this.campaigns[0];
     
+  //Information needed for the search button display logic
   var lastSearch = "";
   
-  //Search Methods
+  /*
+   * Kicks off the search process by sending the result service a copy of the current search state
+   */
   this.search = function() {
     lastSearch = this.params.hash();
     
     merchantResultService.makeInitialCall( angular.copy( this.params ) );
   }
   
-  this.currentResults = function() {
-    merchantResultService.getResults();
-  }
-  
+  /*
+   * Whether or not we should disable the search button
+   * Returns a boolean
+   */
   this.isSearchable = function() {
     var input = this.params,
-        hashedCurrent = this.params.hash();
-        hashedDefault = searchParamsFactory.createDefault().hash();
+        hashedCurrent = this.params.hash( true );
+        hashedDefault = searchParamsFactory.createDefault().hash( true );
         
     return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrent !== hashedDefault ) );
   }
   
-  this.hashSearchParams = function( params ) {
-    return hashedParamsFactory.create( params );
-  }
-  
-  //Dropdown options
-  //TODO complete these
-  this.categories = ["All Categories", "Automotive", "Consumer Electronics"];
-  this.countries = ["All Countries", "US|International", "Brazil|International"];
-  this.coverages = ["CPC + CPA", "CPC Only", "CPA Only"];
-  
-  //TODO bootstrap this data from Rails
-  this.campaigns = ["Ty's Campaign", "Shoe Campaign", "Dress Campaign" ]
 }]);

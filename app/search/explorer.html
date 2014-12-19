@@ -28,15 +28,15 @@
       
       <div>
         <select name='category' ng-model='search.params.industryIds'
-                ng-options='category for category in search.categories'>
+                ng-options='category[1] as category[0] for category in search.categories'>
         </select>
         
         <select name='country' ng-model='search.params.countryIds'
-                ng-options='country for country in search.countries'>
+                ng-options='country[1] as country[0] for country in search.countries'>
         </select>
         
         <select name='cpc' ng-model='search.params.coverage'
-                ng-options='coverage for coverage in search.coverages'>
+                ng-options='coverage[1] as coverage[0] for coverage in search.coverages'>
         </select>
       </div>
       
