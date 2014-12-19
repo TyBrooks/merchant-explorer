@@ -131,4 +131,11 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
     }
   }
   
+  /*
+   * A simple method for adding merchant data to the cache without any other operations
+   */
+  this.cacheMerchantData = function( merchantData ) {
+    merchantCache.add( merchantData );
+  }
+  
 }])
