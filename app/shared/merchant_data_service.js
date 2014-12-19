@@ -13,7 +13,7 @@ var app = angular.module('merchantExplorer');
 
 //TODO make the data stores themselves private
 
-app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory", function( merchantCacheFactory, searchCacheFactory ) {
+app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory", function( merchantCacheFactory, searchCacheFactory ) {
   var model = this;
 
   /*

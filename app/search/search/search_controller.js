@@ -10,8 +10,8 @@
 var app = angular.module('merchantExplorer');
   
 app.controller( 'SearchCtrl',
-  ["searchParamsFactory", "merchantResultService", "bootstrapService",
-  function( searchParamsFactory, merchantResultService, bootstrap ) {
+  ["searchParamsFactory", "merchantResultsService", "bootstrapService",
+  function( searchParamsFactory, merchantResultsService, bootstrap ) {
   
   /*
    * This section contains the data for the select boxes. However, it probably needs to be bootstrapped from rails.
@@ -36,7 +36,7 @@ app.controller( 'SearchCtrl',
   this.search = function() {
     lastSearch = this.params.hash();
     
-    merchantResultService.makeInitialCall( angular.copy( this.params ) );
+    merchantResultsService.makeInitialCall( angular.copy( this.params ) );
   }
   
   /*

@@ -14,9 +14,9 @@ var app = angular.module('merchantExplorer');
 
 //TODO pending promise cancel
 
-app.service('merchantResultService',
-  ["merchantApi", "merchantResultModel", "config",
-  function( api, results, config ) {
+app.service('merchantResultsService',
+  ["merchantApi", "merchantDataService", "config",
+  function( api, dataService, config ) {
   
   /*
    * All the variables / state info for the service
@@ -50,7 +50,7 @@ app.service('merchantResultService',
     searchName = searchParams.hash();
     filterState = searchParams.getFilterState();
       
-    if ( results.getNumIdsLoaded( searchName, filterState ) === 0 ) {
+    if ( dataService.getNumIdsLoaded( searchName, filterState ) === 0 ) {
       var apiSearchParams = searchParams.asApiSearchParams();
       
       pendingPromise = api.searchApiCall( apiSearchParams );
@@ -62,7 +62,7 @@ app.service('merchantResultService',
    * Handle the id's returned from the api and go ahead and fetch the first batch
    */
   this._handleInitialCall = function( returnedIds ) {
-    results.initializeIdsForSearch( returnedIds, searchName );
+    dataService.initializeIdsForSearch( returnedIds, searchName );
     
     this._batchCall();
   }
@@ -72,8 +72,8 @@ app.service('merchantResultService',
    */
   this._batchCall = function() {
     //TODO add an optional batch size param for initial call?
-    var nextIds = results.getNextIdsForBatch( batchSize, searchName ),
-        toFetch = results.removeCachedIds( nextIds ),
+    var nextIds = dataService.getNextIdsForBatch( batchSize, searchName ),
+        toFetch = dataService.removeCachedIds( nextIds ),
         apiRetrieveParams = searchState.asApiRetrieveParams( toFetch );
     
     //TODO.. might be problematic if batch size is less than sent size
@@ -87,7 +87,7 @@ app.service('merchantResultService',
    * Process the merchant data returned from a batch call
    */
   this._handleBatchCall = function( merchantData ) {
-    results.addResults( merchantData, numCached, searchName, filterState );
+    dataService.addResults( merchantData, numCached, searchName, filterState );
     numCached = 0;
     pendingPromise = null;
   }
@@ -111,7 +111,7 @@ app.service('merchantResultService',
     }
 
 
-    var returned = results.getDataForIdRange( startPos, endPos, searchName, filterState );
+    var returned = dataService.getDataForIdRange( startPos, endPos, searchName, filterState );
     
     if ( returned.length < perPage ) {
       return returned.concat( getBlankResults().slice(0, perPage - returned.length) );
@@ -126,8 +126,8 @@ app.service('merchantResultService',
   this.getTotalPages = function() {
     //TODO see below
     if ( filterState && filterState.hasAnyFilters() ) {
-      var loadedIds = results.getNumIdsLoaded( searchName, filterState ),
-          notLoadedIds = results.getNumIdsNotLoaded( searchName, filterState );
+      var loadedIds = dataService.getNumIdsLoaded( searchName, filterState ),
+          notLoadedIds = dataService.getNumIdsNotLoaded( searchName, filterState );
       
       var ensuredPages = Math.floor( loadedIds / perPage ),
           leftover = loadedIds % perPage;
@@ -144,7 +144,7 @@ app.service('merchantResultService',
       }
       return ensuredPages + estimatedPossiblePages;
     } else {
-      return Math.ceil( results.getTotalIdCount( searchName ) / perPage ); 
+      return Math.ceil( dataService.getTotalIdCount( searchName ) / perPage ); 
     }
   }
   
@@ -174,9 +174,9 @@ app.service('merchantResultService',
    * returns a boolean corresponding to whether or not the page is in the process of loading data for that page
    */
   this.isLoading = function( pageNum ) {
-    var totalLoaded = results.getNumIdsLoaded( searchName, filterState ),
+    var totalLoaded = dataService.getNumIdsLoaded( searchName, filterState ),
         needed = pageNum * perPage,
-        stillToLoad = results.getNumIdsNotLoaded( searchName );
+        stillToLoad = dataService.getNumIdsNotLoaded( searchName );
     
     
     // console.log('lading check: loaded, needed', totalLoaded, needed)
@@ -193,7 +193,7 @@ app.service('merchantResultService',
 
     var buffer = this.getNumIdsPreLoaded( pageNum );
     
-    if ( buffer < minBuffer && results.getNumIdsNotLoaded( searchName ) > 0 ) {
+    if ( buffer < minBuffer && dataService.getNumIdsNotLoaded( searchName ) > 0 ) {
       this._batchCall();
     }
   }
@@ -215,7 +215,7 @@ app.service('merchantResultService',
    * Returns the number of ids that have been loaded but aren't yet being displayed
    */
   this.getNumIdsPreLoaded = function( pageNum ) {
-    var numLoaded = results.getNumIdsLoaded( searchName, filterState ),
+    var numLoaded = dataService.getNumIdsLoaded( searchName, filterState ),
         numAlreadyDisplayed = pageNum * perPage;
     
     return Math.max( numLoaded - numAlreadyDisplayed, 0 );
