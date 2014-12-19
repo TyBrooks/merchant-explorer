@@ -133,7 +133,7 @@ app.factory('filterStateFactory', function() {
           
           // The idea is that we'll have one block per filter.
           if ( filterInfo.doFilterAffiliatable() ) {
-            if ( !merchantData.aff_status ) {
+            if ( !merchantData.overallAffiliable ) {
               doAdd = false;
             }
           }

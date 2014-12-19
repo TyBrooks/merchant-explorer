@@ -87,16 +87,16 @@
           <td class='result-name-cell' ng-click='results.redirectTo(result)'>
             <span class='result-name'>{{result.name}}</span>
             &nbsp;
-            <div ng-show='result.insider' class='result-insider-badge'>Insider!</div>
+            <div ng-show='results.isInsider( result )' class='result-insider-badge'>Insider!</div>
           </td>
-          <td>{{result.domain}}</td>
-          <td>{{result.country}}</td>
-          <td>{{result.cpc}}</td>
+          <td>{{result.displayDomain}}</td>
+          <td>{{result.countries[0]}}</td>
+          <td>{{result.overallCoverage}}</td>
           <td>
             <!-- A little hacky -->
-            <div ng-show='result.name !== " "' class='aff-status-circle' ng-class='{ "affiliatable": result.aff_status }'></div>
+            <div ng-show='result.name !== " "' class='aff-status-circle' ng-class='{ "affiliatable": result.overallAffiliable }'></div>
           </td>
-          <td>{{result.commission}}</td>
+          <td>{{result.displayCommission}}</td>
         </tr>
       </tbody>
     </table>

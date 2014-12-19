@@ -4,13 +4,13 @@
     <button ng-click='merchant.back()' class='back-button'>Back to Search</button>
     
     <div class='merchant-text'>
-      <div class='merchant-name'>{{merchant.name}}</div>
-      <div class='merchant-description'>{{merchant.description}}</div>
+      <div class='merchant-name'>{{merchant.selected.name}}</div>
+      <div class='merchant-description'>{{merchant.selected.description}}</div>
     </div>
     
     <div class='merchant-imgs'>
-      <div class='insider-badge' ng-show='merchant.isInsider'>Insider</div>
-      <img class='merchant-logo' alt='The logo of the merchant' ng-src='{{merchant.logoSrc}}'>
+      <div class='insider-badge' ng-show='merchant.isInsider()'>Insider</div>
+      <img class='merchant-logo' alt='The logo of the merchant' ng-src='{{merchant.logoSrc()}}'>
     </div>
   </section>
   
@@ -18,14 +18,14 @@
     <div class='commissions'>
       <header>Commissions Offered</header>
       <ul class='commission-list'>
-        <li ng-repeat='rate in merchant.rates'>{{rate}}</li>
+        <li ng-repeat='rate in merchant.buildCommissionRates()'>{{rate}}</li>
       </ul>
     </div>
     
     <div class='countries'>
       <header>Accepts traffic from these countries:</header>
       <ul class='country-list'>
-        <li ng-repeat='country in merchant.countries'>{{country}}</li>
+        <li ng-repeat='country in merchant.selected.countries'>{{country}}</li>
       </ul>
     </div>
   </section>
@@ -36,14 +36,16 @@
         <tr>
           <th>Domain</th>
           <th>CPC / CPA</th>
-          <th>Can I make money with this</th>
+          <th>Affiliates to Me?</th>
+          <th>Can I make money with this?</th>
         </tr>
       </tead>
       <tbody>
-        <tr ng-repeat='domain in merchant.domains'>
-          <td>{{domain.domain}}</td>
-          <td>{{domain.cpc}}</td>
-          <td>{{domain.aff}}</td>
+        <tr ng-repeat='domain in merchant.selected.domains'>
+          <td>{{domain.name}}</td>
+          <td>{{domain.coverage}}</td>
+          <td>{{domain.affiliable}}</td>
+          <td>{{domain.restricted ? "Network Restricted" : "Yes!" }}
       </tbody>
     </table>
   </section>

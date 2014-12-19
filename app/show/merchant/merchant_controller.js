@@ -1,20 +1,47 @@
 var app = angular.module('merchantExplorer');
 
-app.controller("MerchantCtrl", ['$location', function($location) {
-  this.name = "Firestone";
-  this.description = "Firestone Complete Auto Care is the leading industry provider for vehicle maintenance, tires, batteries and repairs. Since 1926, when Harvey Firestone opened the doors to Firestone Tire and Rubber Company, we have provided the right solutions for our customers' vehicles. Through almost 90 years in the industry we understand that no one looks forward to the time when their vehicle needs attention, but with the help from our affiliate partners, high quality services, and dedicated teammates we can help alleviate this experience for them. We have about 1,700 conveniently located stores across the country which can easily be found by your visitors.";
-  this.isInsider = true;
-  this.logoSrc = "http://localhost:3000/mock_data/firestone.gif";
-  this.rates = ["5% on all commissions", "10% during December"];
-  this.countries = ["US|International", "Canada"];
-  this.domains = [{
-    domain: "www.firestone.com",
-    cpc: "CPC / CPA",
-    aff: true
-  }]
+app.controller("MerchantCtrl", ['selectedMerchantService', '$location', function(selectedService, $location) {
+  var controller = this;
+  
+  
+  this.selected = {};
+  
+  
+  this.buildCommissionRates = function() {
+    return _.map( this.selected.rates, function( rate ) {
+      if ( rate.min === rate.max ) {
+        return "" + rate.min + rate.type + " " + rate.description;
+      } else {
+        return "" + rate.min + " - " + rate.max + rate.type + " " + rate.description;
+      }
+    })
+  }
+  
+  this.isInsider = function() {
+    return this.selected.promotionType && this.selected.promotionType.toLowerCase() === "star";
+  }
+  
+  this.logoSrc = function() {
+    //TODO - derive the url from the path (it's just the url.gif)
+    
+    return "//localhost:3000/mock_data/firestone.gif";
+  }
+  
+  //TODO how to set this?
+  this.userId = 1111;
+  this.id = 10;
+  
+  var dataPromise = selectedService.getDataPromiseForSelected( this.id, this.userId );
+  
+  dataPromise.then( function( merchantData ) {
+    controller.selected = merchantData;
+  });
   
   this.back = function() {
     $location.path('/merchants');
     $location.replace();
   }
+  
+  
+  
 }])

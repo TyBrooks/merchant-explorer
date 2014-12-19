@@ -89,7 +89,9 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
     }
     
     var insider = function() {
-      return Boolean( Math.round( Math.random() ) == 0 );
+      var isInsider = Boolean( Math.round( Math.random() ) == 0 );
+      
+      return isInsider ? "STAR" : "NONE";
     }
     
     toReturn = [];
@@ -97,16 +99,31 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
       toReturn.push({
         name: "Merchant " + id,
         id: id,
-        domain: "www.whatever.com",
-        country: "US",
-        cpc: "CPC and CPA",
-        aff_status: affiliatable(),
-        commission: "5% on all products",
-        insider: insider()
+        displayDomain: "www.merchant" + id + ".com",
+        displayCommission: "5% on all products",
+        overallCoverage: "CPC Only",
+        overallRestricted: false,
+        overallAffiliable: affiliatable(),
+        description: "Firestone Complete Auto Care is the leading industry provider for vehicle maintenance, tires, batteries and repairs. Since 1926, when Harvey Firestone opened the doors to Firestone Tire and Rubber Company, we have provided the right solutions for our customers' vehicles. Through almost 90 years in the industry we understand that no one looks forward to the time when their vehicle needs attention, but with the help from our affiliate partners, high quality services, and dedicated teammates we can help alleviate this experience for them. We have about 1,700 conveniently located stores across the country which can easily be found by your visitors.",
+        rates: [{
+      			"min": 10.0000,
+      			"max": 12.0000,
+      			"type": "%",
+      			"description": "commission on completed stay",
+      			"typeName": "%"
+      		}, {
+      			"min": 1.0000,
+      			"max": 2.0000,
+      			"type": "%",
+      			"description": "commission on booking",
+      			"typeName": "%"
+      		}],
+        countries: ["US", "Canada"],
+        domains: [ { name: "www.firestone.com", restricted: false, affiliable: true,  coverage: "CPC Only"},
+                   { name: "www.tires.com",     restricted: true,  affiliable: false, coverage: "CPA Only" }],
+        promotionType: insider()
       });
     });
-    
-
     
     currentIdx += 16;
     
@@ -116,4 +133,5 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
     
     return deferred.promise;
   }
+
 }]);

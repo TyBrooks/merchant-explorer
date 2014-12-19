@@ -9,7 +9,10 @@
 
 var app = angular.module('merchantExplorer');
 
-app.controller('ResultsCtrl', ['merchantResultsService', '$location', 'config', function( resultsService, $location, config ) {
+app.controller('ResultsCtrl',
+  ['merchantResultsService', 'selectedMerchantService', '$location', 'config',
+  function( resultsService, selectedService, $location, config ) {
+  
   var currentPage = 1,
       perPage = config.lookup('perPage');
   
@@ -30,6 +33,10 @@ app.controller('ResultsCtrl', ['merchantResultsService', '$location', 'config', 
   
   this.isLoading = function() {
     return resultsService.isLoading( currentPage, perPage );
+  }
+  
+  this.isInsider = function( merchantData ) {
+    return merchantData.promotionType === "STAR";
   }
   
 
@@ -79,6 +86,7 @@ app.controller('ResultsCtrl', ['merchantResultsService', '$location', 'config', 
   }
   
   this.redirectTo = function( result ) {
+    selectedService.setSelected( result );
     $location.path('/merchants/' + result.id);
     $location.replace();
   }

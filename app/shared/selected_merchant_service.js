@@ -1,35 +1,39 @@
 var app = angular.module('merchantExplorer');
 
-app.service('selectedMerchantService', ['merchantDataService', 'merchantApi', '$q' function(dataService, api, $q) {
+app.service('selectedMerchantService', ['merchantDataService', 'merchantApi', '$q', function(dataService, api, $q) {
   var selected = {},
       service = this;
   
   this.setSelected = function( results ) {
-    this.selected = results;
+    selected = results;
   }
   
   this.getDataPromiseForSelected = function( id, userId ) {
-    var dataPromise = $q.defer();
+    var deferred = $q.defer();
+    var dataPromise;
     
     switch( true ) {
       case ( !_.isEmpty( selected ) ):
-        dataPromise.resolve( selected );
+        dataPromise = deferred.promise;
+        deferred.resolve( selected );
         break;
       case ( dataService.hasDataForId( id ) ):
-        dataPromise.resolve( dataService.getDataForId( id ) );
+        //TODO is this necessary? Maybe once we start using local storage
+        dataPromise = deferred.promise;
+        deferred.resolve( dataService.getDataForId( id ) );
         break;
       default:
         //TODO arg, logic for userId vs unrestricted
-        var dataPromise = api.retrieveApiCall({
+        unformattedDataPromise = api.retrieveApiCall({
           unrestrictedOnly: false,
           userId: userId,
           merchantGroupIds: [id]
         });
-        
-        dataPromise.then( function( data ) {
-          dataService.cacheMerchantData( data );
+        // Perform cleanup on this service and format the data like the other cases
+        dataPromise = unformattedDataPromise.then( function( data ) {
+          dataService.cacheMerchantData( data[0] );
           service.setSelected( {} );
-          return data;
+          return data[0];
         } )
     }
     
