@@ -10,15 +10,15 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
-  <link rel="stylesheet" href="//localhost:3000/search/explorer.css">
-  <link rel="stylesheet" href="//localhost:3000/show/merchant.css">
+  <link rel="stylesheet" href="//localhost:3000/search/search.css">
+  <link rel="stylesheet" href="//localhost:3000/show/show.css">
   
   <!-- Library Scripts -->
   <script src='//localhost:3000/lib/angular.js'></script>
   <script src='//localhost:3000/lib/ng-table.js'></script>
   <script src='//localhost:3000/lib/angular-route.js'></script>
   
-  <!-- My Scripts -->
+  <!-- General App Scripts -->
   <script src='//localhost:3000/app.js'></script>
   <script src='//localhost:3000/config/routes.js'></script>
   <!-- Okay this is super hacky, but substitute out the config file of your current env here :-( -->
@@ -28,16 +28,17 @@
   <script src='//localhost:3000/search/search/search_controller.js'></script>
   <script src='//localhost:3000/search/search/search_factories.js'></script>
   <script src='//localhost:3000/search/results/results_controller.js'></script>
-  <script src='//localhost:3000/search/shared/merchant_api.js'></script>
-  <script src='//localhost:3000/search/shared/merchant_result_service.js'></script>
-  <script src='//localhost:3000/search/shared/merchant_result_model.js'></script>
-  <script src='//localhost:3000/search/shared/merchant_result_factories.js'></script>
-  <script src='//localhost:3000/search/search/search_filters.js'></script>
   <script src='//localhost:3000/search/showcase/showcase_service.js'></script>
   <script src='//localhost:3000/search/showcase/showcase_controller.js'></script>
+  <script src='//localhost:3000/search/shared/merchant_result_service.js'></script>
   
   <!-- Individual Merchant Page scripts -->
   <script src='//localhost:3000/show/merchant/merchant_controller.js'></script>
+  
+  <!-- Shared Scripts -->
+  <script src='//localhost:3000/shared/merchant_api.js'></script>
+  <script src='//localhost:3000/shared/merchant_data_service.js'></script>
+  <script src='//localhost:3000/shared/merchant_data_factories.js'></script>
   
   <!-- TODO remove this when we migrate to rails; This script is to mimic bootsrapping of data -->
   <script src='//localhost:3000/mock_data/bootstrap_service.js'></script>
@@ -48,12 +49,3 @@
   <div ng-view></div>
 </body>
 </html>
-
-
-<!--Style Notes
-1. $scope vs _ as _
-2. Angular structure
-3. ng-table default values
-4. How to make private methods in controllers
-
- -->
