@@ -1,4 +1,5 @@
 <div ng-controller='MerchantCtrl as merchant'>
+  <section ng-show=' merchant.isLoading ' id='loading-screen'>Loading....</section>
   
   <section id='merchant-info'>
     <button ng-click='merchant.back()' class='back-button'>Back to Search</button>
