@@ -20,12 +20,13 @@ app.controller( 'SearchCtrl',
   this.categories = [ ["All Categories", ""] ].concat( bootstrap.categories );
   this.countries = [ [ "All Countries", "" ], [ "US|International", 101 ], [ "Brazil|International", 102 ] ];
   this.coverages = [ [ "CPC + CPA", "" ], [ "CPC Only", "C" ], [ "CPA Only", "A" ] ];
-  this.campaigns = ["Ty's Campaign", "Shoe Campaign", "Dress Campaign" ]
+  this.campaigns = bootstrap.userIds;
   
   
   // Search parameters initialization
   this.params = searchParamsFactory.createDefault();
-  this.params.userId = this.campaigns[0];
+  this.params.userId = this.campaigns[0][1];
+  // this.params.userId = angular.element( document.findElementById( "campaign" ) ).find( "option" ).first().val();
     
   //Information needed for the search button display logic
   var lastSearch = "";

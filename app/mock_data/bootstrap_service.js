@@ -56,5 +56,8 @@ app.service('bootstrapService', function() {
   
   this.categories = categories;
   
+  //TODO make a call to /account/users?
+  this.userIds = [ [ "Ty's Campaign", 1569178 ], [ "Shoe Campaign", 1569934 ], [ "Dress Campaign", 1573667 ] ];
+  
   
 })

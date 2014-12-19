@@ -20,7 +20,7 @@
          <div ng-show='search.params.affiliatableOnly'>
            <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
            <select name='campaign' id='campaign' ng-model='search.params.userId'
-                   ng-options='campaign for campaign in search.campaigns'>
+                   ng-options='campaign[1] as campaign[0] for campaign in search.campaigns'>
            </select>
          </div>
       </div>
