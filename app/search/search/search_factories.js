@@ -14,8 +14,8 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
        */
       keyword: "",
       industryIds: "", // Figure out these ids
-      countryIds: 100,
-      coverage: "B",
+      countryIds: "",
+      coverage: "",
       starsOnly: false,
       unrestrictedOnly: false,
       affiliatableOnly: true,
@@ -47,31 +47,37 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
        * ... for the initial fetch Id's request
        */
       asApiSearchParams: function() {
-        return {
+        return this._filterEmptyParams({
           keyword:      this.keyword,
           industryIds:  [ this.industryIds ],
           countryIds:   [ this.countryIds ],
           coverage:     this.coverage,
           starsOnly:    this.starsOnly,
           unrestrictedOnly:  this.unrestrictedOnly,
-        }
+        });
       },
       
       /*
        * Returns object representing the filters needed for retrieving merchant data in a batch call
        */
       asApiRetrieveParams: function( ids ) {
-        return {
+        return this._filterEmptyParams({
           unrestrictedOnly: this.unrestrictedOnly,
           userId: this.userId,
           merchantGroupIds: ids
-        }
+        });
       },
       
       getFilterState: function() {
         return filterStateFactory.create({
           affiliatableOnly: this.affiliatableOnly
         })
+      },
+      
+      _filterEmptyParams: function( params ) {
+        return _.omit( params, function( value ) {
+          return value === "" || value === false || ( value.length === 1 && value[0] === "" ) ;
+        } )
       }
     }
   }

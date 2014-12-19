@@ -18,8 +18,8 @@ app.controller( 'SearchCtrl',
    * this.params.userId = __ needs to reference that bootstrap as well
    */
   this.categories = [ ["All Categories", ""] ].concat( bootstrap.categories );
-  this.countries = [ [ "All Countries", 100 ], [ "US|International", 101 ], [ "Brazil|International", 102 ] ];
-  this.coverages = [ [ "CPC + CPA", "B" ], [ "CPC Only", "C" ], [ "CPA Only", "A" ] ];
+  this.countries = [ [ "All Countries", "" ], [ "US|International", 101 ], [ "Brazil|International", 102 ] ];
+  this.coverages = [ [ "CPC + CPA", "" ], [ "CPC Only", "C" ], [ "CPA Only", "A" ] ];
   this.campaigns = ["Ty's Campaign", "Shoe Campaign", "Dress Campaign" ]
   
   

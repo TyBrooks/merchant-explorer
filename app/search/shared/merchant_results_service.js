@@ -53,6 +53,7 @@ app.service('merchantResultsService',
     if ( dataService.getNumIdsLoaded( searchName, filterState ) === 0 ) {
       var apiSearchParams = searchParams.asApiSearchParams();
       
+      console.log(apiSearchParams);
       pendingPromise = api.searchApiCall( apiSearchParams );
       pendingPromise.then( angular.bind( this, this._handleInitialCall ) );
     }
