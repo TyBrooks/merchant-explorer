@@ -35,7 +35,7 @@ app.controller( 'SearchCtrl',
    * Kicks off the search process by sending the result service a copy of the current search state
    */
   this.search = function() {
-    lastSearch = this.params.hash();
+    lastSearch = this.params.hash( true );
     
     merchantResultsService.makeInitialCall( angular.copy( this.params ) );
   }
@@ -46,10 +46,11 @@ app.controller( 'SearchCtrl',
    */
   this.isSearchable = function() {
     var input = this.params,
-        hashedCurrent = this.params.hash( true );
-        hashedDefault = searchParamsFactory.createDefault().hash( true );
+        hashedCurrent = this.params.hash( true ),
+        hashedCurrentNoUserId = this.params.hash( true, true ),
+        hashedDefaultNoUserId = searchParamsFactory.createDefault().hash( true, true );
         
-    return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrent !== hashedDefault ) );
+    return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrentNoUserId !== hashedDefaultNoUserId ) );
   }
   
 }]);
