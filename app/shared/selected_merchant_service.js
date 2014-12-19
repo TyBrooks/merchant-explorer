@@ -17,10 +17,10 @@ app.service('selectedMerchantService', ['merchantDataService', 'merchantApi', '$
         dataPromise = deferred.promise;
         deferred.resolve( selected );
         break;
-      case ( dataService.hasDataForId( id ) ):
+      case ( dataService.hasDataForId( id, userId ) ):
         //TODO is this necessary? Maybe once we start using local storage
         dataPromise = deferred.promise;
-        deferred.resolve( dataService.getDataForId( id ) );
+        deferred.resolve( dataService.getDataForId( id, userId ) );
         break;
       default:
         //TODO arg, logic for userId vs unrestricted

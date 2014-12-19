@@ -11,6 +11,8 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
     return {
       /*
        * The actual params themselves, which will be set by the UI on the frontend.
+       * "" and false values will be filtered
+       * Default options for select dropdowns need to have these values to initialize with the option selected
        */
       keyword: "",
       industryIds: "", // Figure out these ids
@@ -19,7 +21,7 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
       starsOnly: false,
       unrestrictedOnly: false,
       affiliatableOnly: true,
-      userId: 0,
+      userId: "",
       
       /*
        * Returns a hash representation of the current search
@@ -36,6 +38,7 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
         return  insider +
                 unrestricted +
                 affiliated +
+                this.userId +
                 this.keyword +
                 this.industryIds +
                 this.country +

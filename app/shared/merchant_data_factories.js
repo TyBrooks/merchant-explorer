@@ -98,8 +98,17 @@ app.factory('searchCacheFactory', function() {
   return factory;
 })
 
+
+/*
+ * A data structure designed to hold merchant data
+ *
+ * Format:  { <userId> : { <merchantId> : <merchantDataObj> } }
+ * This allows caching by userId
+ * userId 0 === when user isn't signed in
+ * TODO cache data separate from aff status (which is the only thing that depends on userId)
+ */
 app.factory('merchantCacheFactory', function() {
-  var dataCache = {},
+  var dataCache = { 0: {} },
       factory = {};
   
   
@@ -110,57 +119,80 @@ app.factory('merchantCacheFactory', function() {
        *  If input is object, adds to cache using object's id
        *  If input is array, loops through array and calls itself recursively for each item
        */
-      add: function( input ) {
-        var cache = this;
+      add: function( input, userId ) {
+        var I = this,
+            userId = this._userIdOrGeneric( userId );
+            
         if ( angular.isArray( input ) ) {
           input.forEach( function( dataObj ) {
-            cache.add( dataObj );
+            I.add( dataObj, userId );
           } );
         } else if ( angular.isObject( input ) ) {
-          dataCache[input.id] = input;
+            dataCache[ userId ][ input.id ] = input;
         }
       },
       
       /*
        * Returns a boolean depending on whether the id exists
        */
-      doesExist: function( id ) {
-        if ( dataCache[id] ) {
-          return true;
-        } else {
-          return false;
-        }
+      doesExist: function( merchantId, userId ) {
+        var userId = this._userIdOrGeneric( userId );
+        return !!dataCache[ userId ][ merchantId ];
       },
       
       /*
        * Given an array of ids, return all ids that aren't in the cache
        */
-      removeCachedIds: function( ids ) {
-        var cache = this;
+      removeCachedIds: function( merchantIds, userId ) {
+        var I = this;
         
-        return ids.filter( function( id ) {
-          return !cache.doesExist( id );
+        return merchantIds.filter( function( merchantId ) {
+          return !I.doesExist( merchantId, userId );
         })
       },
       
       /* 
        * Returns information for an id or ids
        *   If input is an array, returns an array of merchant objects
-       *   If input is a number ( or is it string? ) returns a single object
+       *   If input is a number returns a single object
        */
-      lookup: function( input ) {
-        var cache = this;
+      lookup: function( input, userId ) {
+        var I = this;
+        
         if ( angular.isArray( input ) ) {
           var toReturn = [];
           
-          input.forEach( function( id ) {
-            if ( dataCache[id] ) {
-              toReturn.push( dataCache[id] );
+          _.each( input, function( merchantId ) {
+            if ( I.doesExist( merchantId, userId ) ) {
+              toReturn.push( I.lookup( merchantId, userId ) )
             }
           });
+          
           return toReturn;
+          
         } else {
-          return dataCache[input];
+          var userId = this._userIdOrGeneric( userId );
+          
+          return dataCache[ userId ][ input ];
+        }
+      },
+      
+      /*
+       * A helper function that ensures userId is set correctly
+       * ... even if it's not passed to the function ( in which case we use generic, non-logged in value )
+       */
+      _userIdOrGeneric: function( userId ) {
+        if ( angular.isDefined( userId ) ) {
+          this._ensureExists( userId );
+          return userId;
+        } else {
+          return 0;
+        }
+      },
+      
+      _ensureExists: function( userId ) {
+        if ( !angular.isDefined( dataCache[ userId ] ) ) {
+          dataCache[ userId ] = {};
         }
       }
       

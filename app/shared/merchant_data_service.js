@@ -26,15 +26,15 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
   /*
    * Fetch the data for a given id
    */
-  this.getDataForId = function( id ) {
-    return merchantCache.lookup(id);
+  this.getDataForId = function( id, userId ) {
+    return merchantCache.lookup( id, userId );
   }
   
   /*
    * Check if the cache has a given id
    */
-  this.hasDataForId = function( id ) {
-    return merchantCache.doesExist( id );
+  this.hasDataForId = function( id, userId ) {
+    return merchantCache.doesExist( id, userId );
   }
 
   /*
@@ -42,7 +42,7 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
    * Retrieves either a range of ids for a given search
    * OR a range of filtered ids, if the optional filter object is present
    */
-  this.getDataForIdRange = function( startPos, endPos, searchName, filterState ) {
+  this.getDataForIdRange = function( startPos, endPos, searchName, filterState, userId ) {
     var idList;
     if ( filterState && filterState.hasAnyFilters() ) {
       idList = searchCache.getFilteredIds( startPos, endPos, searchName, filterState.hash() );
@@ -50,7 +50,7 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
       idList = searchCache.getIds( startPos, endPos, searchName );
     }
     
-    return merchantCache.lookup( idList );
+    return merchantCache.lookup( idList, userId );
   }
   
   /*
@@ -99,8 +99,8 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
   /*
    * This takes an array of ids, and removes any that we already have data for
    */
-  this.removeCachedIds = function( ids ) {
-    return merchantCache.removeCachedIds( ids );
+  this.removeCachedIds = function( ids, userId ) {
+    return merchantCache.removeCachedIds( ids, userId );
   }
   
   
@@ -115,8 +115,8 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
    * This one takes the results of an api call to grab merchant data
    * .. and updates both the merchant data cache and the search metadata cache
    */
-  this.addResults = function( merchantResults, numCached, searchName, filterState ) {
-    merchantCache.add( merchantResults );
+  this.addResults = function( merchantResults, numCached, searchName, filterState, userId ) {
+    merchantCache.add( merchantResults, userId );
     
     var additionalLoaded = merchantResults.length + numCached;
     searchCache.addToNumLoaded( additionalLoaded, searchName );
@@ -124,7 +124,7 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
     if ( filterState && filterState.hasAnyFilters() ) {
       var previousIdx = searchCache.getNumLoaded( searchName ) - additionalLoaded;
       var addedIds = searchCache.getIds( previousIdx, previousIdx + additionalLoaded, searchName );
-      var merchantData = merchantCache.lookup( addedIds );
+      var merchantData = merchantCache.lookup( addedIds, userId );
       var filteredIds = filterState.getFilteredIdsFromData( merchantData );
 
       searchCache.addFilteredIds( filteredIds, searchName, filterState.hash() );
@@ -134,8 +134,8 @@ app.service('merchantDataService', ["merchantCacheFactory", "searchCacheFactory"
   /*
    * A simple method for adding merchant data to the cache without any other operations
    */
-  this.cacheMerchantData = function( merchantData ) {
-    merchantCache.add( merchantData );
+  this.cacheMerchantData = function( merchantData, userId ) {
+    merchantCache.add( merchantData, userId );
   }
   
 }])

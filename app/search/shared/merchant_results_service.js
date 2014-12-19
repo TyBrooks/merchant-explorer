@@ -32,7 +32,7 @@ app.service('merchantResultsService',
       pendingPromise = null,
     
       // Information about the CURRENT search and its state
-      searchState = null,
+      searchState = { userId: 0 },
       searchName = "",
       filterState = null,
       
@@ -53,7 +53,6 @@ app.service('merchantResultsService',
     if ( dataService.getNumIdsLoaded( searchName, filterState ) === 0 ) {
       var apiSearchParams = searchParams.asApiSearchParams();
       
-      console.log(apiSearchParams);
       pendingPromise = api.searchApiCall( apiSearchParams );
       pendingPromise.then( angular.bind( this, this._handleInitialCall ) );
     }
@@ -74,7 +73,7 @@ app.service('merchantResultsService',
   this._batchCall = function() {
     //TODO add an optional batch size param for initial call?
     var nextIds = dataService.getNextIdsForBatch( batchSize, searchName ),
-        toFetch = dataService.removeCachedIds( nextIds ),
+        toFetch = dataService.removeCachedIds( nextIds, searchState.userId ),
         apiRetrieveParams = searchState.asApiRetrieveParams( toFetch );
     
     //TODO.. might be problematic if batch size is less than sent size
@@ -88,7 +87,7 @@ app.service('merchantResultsService',
    * Process the merchant data returned from a batch call
    */
   this._handleBatchCall = function( merchantData ) {
-    dataService.addResults( merchantData, numCached, searchName, filterState );
+    dataService.addResults( merchantData, numCached, searchName, filterState, searchState.userId );
     numCached = 0;
     pendingPromise = null;
   }
@@ -112,7 +111,7 @@ app.service('merchantResultsService',
     }
 
 
-    var returned = dataService.getDataForIdRange( startPos, endPos, searchName, filterState );
+    var returned = dataService.getDataForIdRange( startPos, endPos, searchName, filterState, searchState.userId );
     
     if ( returned.length < perPage ) {
       return returned.concat( getBlankResults().slice(0, perPage - returned.length) );
