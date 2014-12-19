@@ -35,7 +35,7 @@ app.controller( 'SearchCtrl',
    * Kicks off the search process by sending the result service a copy of the current search state
    */
   this.search = function() {
-    lastSearch = this.params.hash( true );
+    lastSearch = this.params.hash({ includeAffiliatable: true });
     
     merchantResultsService.makeInitialCall( angular.copy( this.params ) );
   }
@@ -46,9 +46,9 @@ app.controller( 'SearchCtrl',
    */
   this.isSearchable = function() {
     var input = this.params,
-        hashedCurrent = this.params.hash( true ),
-        hashedCurrentNoUserId = this.params.hash( true, true ),
-        hashedDefaultNoUserId = searchParamsFactory.createDefault().hash( true, true );
+        hashedCurrent = this.params.hash({ includeAffiliatable: true }),
+        hashedCurrentNoUserId = this.params.hash({ includeAffiliatable: true, excludeUserId: true }),
+        hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: true, excludeUserId: true });
         
     return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrentNoUserId !== hashedDefaultNoUserId ) );
   }

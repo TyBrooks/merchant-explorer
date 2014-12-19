@@ -29,12 +29,12 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
        * Note: for cacheing search metadata, we want the hash without the affiliability status....
        * ... but for testing whether the search button is active, we do want to include it
        */
-      hash: function( includeAffiliatable, excludeUserId ) {
+      hash: function( options ) {
         var insider = ( this.starsOnly ) ? "1" : "0",
             unrestricted = ( this.unrestrictedOnly ) ? "1" : "0",
             affiliated = ( this.affiliatableOnly ) ? "1" : "0",
-            affiliated = ( includeAffiliatable ) ? affiliated : "",
-            userId = ( excludeUserId ) ? "" : this.userId;
+            affiliated = ( options && options.includeAffiliatable ) ? affiliated : "",
+            userId = ( options && options.excludeUserId ) ? "" : this.userId;
             
         return  insider +
                 unrestricted +
