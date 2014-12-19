@@ -22,6 +22,20 @@ app.service('merchantResultModel', ["merchantCacheFactory", "searchCacheFactory"
    */
   var searchCache = searchCacheFactory.create(),
       merchantCache = merchantCacheFactory.create();
+      
+  /*
+   * Fetch the data for a given id
+   */
+  this.getDataForId = function( id ) {
+    return merchantCache.lookup(id);
+  }
+  
+  /*
+   * Check if the cache has a given id
+   */
+  this.hasDataForId = function( id ) {
+    return merchantCache.doesExist( id );
+  }
 
   /*
    * The main data retrieval method
