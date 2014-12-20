@@ -85,7 +85,6 @@ app.service('bootstrapService',['$http', function($http) {
   this.userIds = [ [ "Ty's Campaign", 1569178 ], [ "Shoe Campaign", 1569934 ], [ "Dress Campaign", 1573667 ] ];
   
   this.isSignedIn = function() {
-    return false;
     return this.userIds.length !== 0;
   }
   

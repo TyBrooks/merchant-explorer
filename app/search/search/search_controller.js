@@ -66,8 +66,16 @@ app.controller( 'SearchCtrl',
   this.isSearchable = function() {
     var input = this.params,
         hashedCurrent = this.params.hash({ includeAffiliatable: true }),
-        hashedCurrentNoUserId = this.params.hash({ includeAffiliatable: true, excludeUserId: true }),
-    hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: true, excludeUserId: true });
+        hashedCurrentNoUserId,
+        hashedDefaultNoUserId;
+    
+    if ( this.isSignedIn() ) {
+      hashedCurrentNoUserId = this.params.hash({ includeAffiliatable: true, excludeUserId: true })
+      hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: true, excludeUserId: true });
+    } else {
+      hashedCurrentNoUserId = this.params.hash({ includeAffilatable: false, excludeUserId: true });
+      hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: false, excludeUserId: true });
+    }
         
     return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrentNoUserId !== hashedDefaultNoUserId ) );
   }
