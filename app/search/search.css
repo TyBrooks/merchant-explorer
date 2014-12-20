@@ -48,6 +48,8 @@ section#results {
 .result-name {
   display: inline-block;
   width: 150px;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .result-insider-badge {

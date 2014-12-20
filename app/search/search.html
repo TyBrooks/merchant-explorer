@@ -17,7 +17,7 @@
       <div>
          <input type='text' name='searchPhrase' ng-model='search.params.keyword'>
          
-         <div ng-show='search.params.affiliatableOnly'>
+         <div ng-show='search.isSignedIn() && search.params.affiliatableOnly'>
            <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
            <select name='campaign' id='campaign' ng-model='search.params.userId'
                    ng-options='campaign[1] as campaign[0] for campaign in search.campaigns'>
@@ -42,17 +42,23 @@
       
 
       <div>
-        <label for='affiliatable'>Affiliates to Me</label>
-        <input type='checkbox' id='affiliatable' name='affiliatable'
-               ng-model='search.params.affiliatableOnly'>
-        </input>
+        <span ng-show='search.isSignedIn()'>
+          <label for='affiliatable'>Affiliates to Me</label>
+          <input type='checkbox' id='affiliatable' name='affiliatable'
+                 ng-model='search.params.affiliatableOnly'>
+          </input>
+        </span>
+        
+        <span ng-show='!search.isSignedIn()'>
+          <label for='unrestricted'>Unrestricted Only</label>
+          <input type='checkbox' id='unrestricted' name='unrestricted'
+                 ng-model='search.params.unrestrictedOnly'>
+          </input>
+        </span>
+        
         <label for='insider'>Insider Only</label>
         <input type='checkbox' id='insider'      name='insider'
                ng-model='search.params.starsOnly'>
-        </input>
-        <label for='unrestricted'>Unrestricted Only</label>
-        <input type='checkbox' id='unrestricted' name='unrestricted'
-               ng-model='search.params.unrestrictedOnly'>
         </input>
       </div>
       
@@ -70,14 +76,16 @@
       <col class='col-country'>
       <col class='col-cpc'>
       <col class='col-aff'>
+      <col class='col-restricted'>
       <col class='col-commission'>
       <thead>
         <tr>
           <th>Merchant Name</th>
-          <th>Domain</th>
-          <th>Country</th>
+          <th>Domains</th>
+          <th>Countries</th>
           <th>CPC/CPA</th>
-          <th>Aff Status</th>
+          <th ng-show=' results.isSignedIn() '>Affiliates to Me?</th>
+          <th ng-show=' !results.isSignedIn() '>Can I make Money?</th>
           <th>Commission</th>
         </tr>
       </thead>
@@ -89,14 +97,21 @@
             &nbsp;
             <div ng-show='results.isInsider( result )' class='result-insider-badge'>Insider!</div>
           </td>
-          <td>{{result.displayDomain}}</td>
-          <td>{{result.countries[0]}}</td>
+          <td>{{results.domainInfoString( result ) }}</td>
+          <td>{{results.countryInfoString( result ) }}</td>
           <td>{{result.overallCoverage}}</td>
-          <td>
-            <!-- A little hacky -->
-            <div ng-show='result.name !== " "' class='aff-status-circle' ng-class='{ "affiliatable": result.overallAffiliable }'></div>
+          
+          <td ng-show=' results.isSignedIn() '>
+            <div ng-show=' results.displayAffiliatableOrb( result )' class='aff-status-circle' ng-class='{ "affiliatable": result.overallAffiliable }'></div>
           </td>
-          <td>{{result.displayCommission}}</td>
+          <td ng-show=' !results.isSignedIn()'>
+            <span ng-show='results.displayRestrictedInfo( result )'>
+              {{ result.overallRestricted ? "Network Restricted" : "Yes!" }}
+            </span>
+          </td>
+          
+          
+          <td>{{results.commissionInfoString( result ) }}</td>
         </tr>
       </tbody>
     </table>

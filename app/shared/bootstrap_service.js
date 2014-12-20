@@ -1,3 +1,7 @@
+/*
+ * This service is responsible for handling the loading of bootstrapped data from Rails
+ * For dev purposes, it may load up mock data as well
+ */
 var app = angular.module('merchantExplorer');
 
 app.service('bootstrapService', function() {
@@ -58,6 +62,10 @@ app.service('bootstrapService', function() {
   
   //TODO make a call to /account/users?
   this.userIds = [ [ "Ty's Campaign", 1569178 ], [ "Shoe Campaign", 1569934 ], [ "Dress Campaign", 1573667 ] ];
+  
+  this.isSignedIn = function() {
+    return this.userIds.length !== 0;
+  }
   
   
 })

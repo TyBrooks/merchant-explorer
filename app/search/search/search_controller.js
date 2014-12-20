@@ -27,6 +27,24 @@ app.controller( 'SearchCtrl',
   this.params = searchParamsFactory.createDefault();
   this.params.userId = this.campaigns[0][1];
   // this.params.userId = angular.element( document.findElementById( "campaign" ) ).find( "option" ).first().val();
+  
+  
+  /*
+   * Figures out whether the current user is logged in or not
+   * Reason: Aff status / Restricted info is mutually exclusive depending on login status
+   */
+  this.isSignedIn = function() {
+    return bootstrap.isSignedIn();
+  }
+  
+  /*
+   * Need to make sure the aff status param isn't automatically on for this
+   */
+  if ( !this.isSignedIn() ) {
+    this.params.affiliatableOnly = false;
+  }
+  
+  
     
   //Information needed for the search button display logic
   var lastSearch = "";
@@ -48,7 +66,7 @@ app.controller( 'SearchCtrl',
     var input = this.params,
         hashedCurrent = this.params.hash({ includeAffiliatable: true }),
         hashedCurrentNoUserId = this.params.hash({ includeAffiliatable: true, excludeUserId: true }),
-        hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: true, excludeUserId: true });
+    hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: true, excludeUserId: true });
         
     return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrentNoUserId !== hashedDefaultNoUserId ) );
   }

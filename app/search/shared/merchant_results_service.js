@@ -156,13 +156,7 @@ app.service('merchantResultsService',
     var results = []
     for ( var i = 0; i < 10; i++ ) {
       results.push({
-        name: " ",
-        id: " ",
-        domain: " ",
-        country: " ",
-        cpc: " ",
-        aff_status: " ",
-        commission: " "
+        name: " "
       })
     }
     return function() {

@@ -37,16 +37,16 @@
         <tr>
           <th>Domain</th>
           <th>CPC / CPA</th>
-          <th>Affiliates to Me?</th>
-          <th>Can I make money with this?</th>
+          <th ng-show=' merchant.isSignedIn() '>Affiliates to Me?</th>
+          <th ng-show=' !merchant.isSignedIn() '>Can I make money with this?</th>
         </tr>
       </tead>
       <tbody>
         <tr ng-repeat='domain in merchant.selected.domains'>
           <td>{{domain.name}}</td>
           <td>{{domain.coverage}}</td>
-          <td>{{domain.affiliable}}</td>
-          <td>{{domain.restricted ? "Network Restricted" : "Yes!" }}
+          <td ng-show=' merchant.isSignedIn() '>{{domain.affiliable}}</td>
+          <td ng-show=' !merchant.isSignedIn() '>{{domain.restricted ? "Network Restricted" : "Yes!" }}
       </tbody>
     </table>
   </section>

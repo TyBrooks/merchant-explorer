@@ -10,8 +10,8 @@
 var app = angular.module('merchantExplorer');
 
 app.controller('ResultsCtrl',
-  ['merchantResultsService', 'selectedMerchantService', '$location', 'config',
-  function( resultsService, selectedService, $location, config ) {
+  ['merchantResultsService', 'selectedMerchantService', 'bootstrapService', '$location', 'config',
+  function( resultsService, selectedService, bootstrap, $location, config ) {
   
   var currentPage = 1,
       perPage = config.lookup('perPage');
@@ -85,10 +85,56 @@ app.controller('ResultsCtrl',
     }
   }
   
+  this.isSignedIn = function() {
+    return bootstrap.isSignedIn();
+  }
+  
+  this.displayAffiliatableOrb = function( result ) {
+    return angular.isDefined( result.overallAffiliable );
+  }
+  
+  this.displayRestrictedInfo = function( result ) {
+    return angular.isDefined( result.overallRestricted );
+  }
+  
+  this.countryInfoString = function( result ) {
+    if ( result.countries && result.countries.length > 1 ) {
+      return result.countries[0] + " + " + ( result.countries.length - 1 ) + " Others";
+    } else if ( result.countries && result.countries.length === 1 ) {
+      return result.countries[0];
+    } else {
+      return "";
+    }
+  }
+  
+  this.domainInfoString = function( result ) {
+    if ( result.domains && result.domains.length > 1 ) {
+      return result.displayDomain + " + " + ( result.domains.length - 1 ) + " Others";
+    } else if ( result.domains && results.domains.length === 1 ) {
+      return result.displayDomain;
+    } else {
+      return "";
+    }
+  }
+  
+  this.commissionInfoString = function( result ) {
+    if ( result.rates && result.rates.length > 1 ) {
+      return result.displayCommission + " + Others";
+    } else if ( result.rates && result.rates.length === 1 ) {
+      return result.displayCommision;
+    } else {
+      return "";
+    }
+  }
+  
+  
   this.redirectTo = function( result ) {
-    selectedService.setSelected( result );
-    $location.path('/merchants/' + result.id);
-    $location.replace();
+    //This check is arbitrary -- just need to check for a field that doesn't appear in the blank results
+    if ( angular.isDefined( result.overallAffiliable ) ) {
+      selectedService.setSelected( result );
+      $location.path('/merchants/' + result.id);
+      $location.replace();
+    }
   }
   
 }]);

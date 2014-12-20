@@ -1,6 +1,9 @@
 var app = angular.module('merchantExplorer');
 
-app.controller("MerchantCtrl", ['selectedMerchantService', '$location', function(selectedService, $location) {
+app.controller("MerchantCtrl",
+  ['selectedMerchantService', 'bootstrapService', '$location',
+  function(selectedService, bootstrap, $location) {
+  
   var controller = this;
   
   //TODO how to set this?
@@ -36,6 +39,10 @@ app.controller("MerchantCtrl", ['selectedMerchantService', '$location', function
     //TODO - derive the url from the path (it's just the url.gif)
     
     return "//localhost:3000/mock_data/firestone.gif";
+  }
+  
+  this.isSignedIn = function() {
+    return bootstrap.isSignedIn();
   }
 
   this.back = function() {
