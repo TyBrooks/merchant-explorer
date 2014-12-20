@@ -59,11 +59,12 @@ app.service('bootstrapService',['$http', function($http) {
   
   
   this.categories = categories;
-  this.userInfo = [];
-  
-  
-  // var userInfoPromise = $http.get("publishers.viglink.com/account/users");
+// this.userInfo = [];
+//
+   //
+  // var userInfoPromise = $http.get("//publishers.viglink.com/account/users");
   // userInfoPromise.success( function( data ) {
+  //   console.log( data );
   //   if ( data.users ) {
   //     _.each( data.users, function( user ) {
   //       this.userInfo.push( [ user.name, user.id ] );
@@ -74,7 +75,7 @@ app.service('bootstrapService',['$http', function($http) {
   //
   // this.getUserInfo = function() {
   //   if ( this.userInfo.length === 0 ) {
-  //     return [ ["". "" ] ];
+  //     return [ [ "", "" ] ];
   //   } else {
   //     return this.userInfo;
   //   }

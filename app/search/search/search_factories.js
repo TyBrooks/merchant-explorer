@@ -42,7 +42,7 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
                 userId +
                 this.keyword +
                 this.industryIds +
-                this.country +
+                this.countryIds +
                 this.coverage;
       },
       
