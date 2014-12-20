@@ -4,7 +4,7 @@
  */
 var app = angular.module('merchantExplorer');
 
-app.service('bootstrapService', function() {
+app.service('bootstrapService',['$http', function($http) {
   var categoryBootstrap = {
   	"categories": {
   		"134": "Food & Drink",
@@ -59,13 +59,35 @@ app.service('bootstrapService', function() {
   
   
   this.categories = categories;
+  this.userInfo = [];
   
-  //TODO make a call to /account/users?
+  
+  // var userInfoPromise = $http.get("publishers.viglink.com/account/users");
+  // userInfoPromise.success( function( data ) {
+  //   if ( data.users ) {
+  //     _.each( data.users, function( user ) {
+  //       this.userInfo.push( [ user.name, user.id ] );
+  //     } );
+  //   }
+  // })
+  // console.log( this.userInfo );
+  //
+  // this.getUserInfo = function() {
+  //   if ( this.userInfo.length === 0 ) {
+  //     return [ ["". "" ] ];
+  //   } else {
+  //     return this.userInfo;
+  //   }
+  // }
+  
+  
+  // TODO make a call to /account/users?
   this.userIds = [ [ "Ty's Campaign", 1569178 ], [ "Shoe Campaign", 1569934 ], [ "Dress Campaign", 1573667 ] ];
   
   this.isSignedIn = function() {
+    return false;
     return this.userIds.length !== 0;
   }
   
   
-})
+}])

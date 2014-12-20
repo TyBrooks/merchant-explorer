@@ -42,6 +42,7 @@ app.controller( 'SearchCtrl',
    */
   if ( !this.isSignedIn() ) {
     this.params.affiliatableOnly = false;
+    this.params.userId = "";
   }
   
   
