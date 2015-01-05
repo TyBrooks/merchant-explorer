@@ -50,26 +50,28 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
        * Return an object that represents the parameters in the form that the backend needs via the API
        * ... for the initial fetch Id's request
        */
-      asApiSearchParams: function() {
-        return this._filterEmptyParams({
+      asApiSearchParams: function( isSignedIn ) {
+        var signedOutParams = ( isSignedIn ) ? {} : { unrestrictedOnly: this.unrestrictedOnly };
+        
+        return this._filterEmptyParams(angular.extend({
           keyword:      this.keyword,
           industryIds:  [ this.industryIds ],
           countryIds:   [ this.countryIds ],
           coverage:     this.coverage,
-          starsOnly:    this.starsOnly,
-          unrestrictedOnly:  this.unrestrictedOnly,
-        });
+          starsOnly:    this.starsOnly
+        }, signedOutParams ) );
       },
       
       /*
        * Returns object representing the filters needed for retrieving merchant data in a batch call
        */
-      asApiRetrieveParams: function( ids ) {
-        return this._filterEmptyParams({
+      asApiRetrieveParams: function( ids, isSignedIn ) {
+        var signedInParams = ( isSignedIn ) ? { userId: this.userId } : {};
+        
+        return this._filterEmptyParams(angular.extend({
           unrestrictedOnly: this.unrestrictedOnly,
-          userId: this.userId,
           merchantGroupIds: ids
-        });
+        }, signedInParams ) );
       },
       
       getFilterState: function() {

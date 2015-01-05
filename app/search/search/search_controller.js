@@ -19,7 +19,7 @@ app.controller( 'SearchCtrl',
    */
   this.categories = [ ["All Categories", ""] ].concat( bootstrap.categories );
   this.countries = [ [ "All Countries", "" ], [ "US|International", 101 ], [ "Brazil|International", 102 ] ];
-  this.coverages = [ [ "CPC + CPA", "" ], [ "CPC Only", "C" ], [ "CPA Only", "A" ] ];
+  this.coverages = [ [ "CPC + CPA", "" ], [ "Has CPC", "C" ], [ "Has CPA", "A" ] ];
   this.campaigns = bootstrap.userIds;
   
   
