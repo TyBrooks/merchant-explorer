@@ -97,36 +97,47 @@ app.controller('ResultsCtrl',
     return angular.isDefined( result.overallRestricted );
   }
   
+  this.additionalInfoString = function( resultArr, excludeNum ) {
+    if ( resultArr ) {
+      if ( excludeNum ) {
+        if (resultArr.length > 1 ) {
+          return " + Others";
+        }
+      } else {
+        if ( resultArr.length === 2 ) {
+          return " + 1 Other";
+        } else if ( resultArr.length  > 2 ) {
+          return " + " + resultArr.length + "Others";
+        }
+      }
+    }
+    
+    return "";
+  }
+  
   this.countryInfoString = function( result ) {
-    if ( result.countries && result.countries.length > 1 ) {
-      return result.countries[0] + " + " + ( result.countries.length - 1 ) + " Others";
-    } else if ( result.countries && result.countries.length === 1 ) {
-      return result.countries[0];
-    } else {
-      return "";
+    if ( result.countries ) {
+      var additionalInfoString = this.additionalInfoString( result.countries );
+    
+      return result.countries[0] + additionalInfoString;
     }
   }
   
   this.domainInfoString = function( result ) {
-    if ( result.domains && result.domains.length > 1 ) {
-      return result.displayDomain + " + " + ( result.domains.length - 1 ) + " Others";
-    } else if ( result.domains && results.domains.length === 1 ) {
-      return result.displayDomain;
-    } else {
-      return "";
+    if ( result.domains ) {
+      var additionalInfoString = this.additionalInfoString( result.domains );
+      
+      return result.displayDomain + additionalInfoString;
     }
   }
   
   this.commissionInfoString = function( result ) {
-    if ( result.rates && result.rates.length > 1 ) {
-      return result.displayCommission + " + Others";
-    } else if ( result.rates && result.rates.length === 1 ) {
-      return result.displayCommision;
-    } else {
-      return "";
+    if ( result.rates ) {
+      var additionalInfoString = this.additionalInfoString( result.rates, true );
+      
+      return result.displayCommission + additionalInfoString;
     }
   }
-  
   
   this.redirectTo = function( result ) {
     //This check is arbitrary -- just need to check for a field that doesn't appear in the blank results
