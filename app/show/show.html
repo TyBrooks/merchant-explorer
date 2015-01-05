@@ -49,6 +49,13 @@
           <td ng-show=' !merchant.isSignedIn() '>{{domain.restricted ? "Network Restricted" : "Yes!" }}
       </tbody>
     </table>
+    
+    <span ng-show='merchant.isSignedIn()'>
+      <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
+      <select name='campaign' id='campaign' ng-model='merchant.userId'
+              ng-options='campaign[1] as campaign[0] for campaign in merchant.campaigns'>
+      </select>
+    </span>
   </section>
   
 </div>

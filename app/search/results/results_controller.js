@@ -127,7 +127,7 @@ app.controller('ResultsCtrl',
     if ( result.domains ) {
       var additionalInfoString = this.additionalInfoString( result.domains );
       
-      return result.displayDomain + additionalInfoString;
+      return result.displayDomain.name + additionalInfoString;
     }
   }
   

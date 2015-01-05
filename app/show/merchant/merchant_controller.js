@@ -6,9 +6,14 @@ app.controller("MerchantCtrl",
   
   var controller = this;
   
+  this.campaigns = bootstrap.userIds;
   //TODO how to set this?
-  this.userId = 1111;
-  this.id = 10;
+  if ( !this.userId ) {
+    this.userId = this.campaigns[0][1];
+  }
+  
+  var loc = $location.path();
+  this.id = loc.match(/\/merchants\/(\d+)/i);
   
   this.selected = {};
   this.isLoading = true;
@@ -33,7 +38,6 @@ app.controller("MerchantCtrl",
   this.isInsider = function() {
     return this.selected.promotionType && this.selected.promotionType.toLowerCase() === "star";
   }
-
   
   this.logoSrc = function() {
     //TODO - derive the url from the path (it's just the url.gif)

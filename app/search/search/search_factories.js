@@ -53,7 +53,7 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
       asApiSearchParams: function( isSignedIn ) {
         var signedOutParams = ( isSignedIn ) ? {} : { unrestrictedOnly: this.unrestrictedOnly };
         
-        return this._filterEmptyParams(angular.extend({
+        return this._filterEmptyParams( angular.extend( {
           keyword:      this.keyword,
           industryIds:  [ this.industryIds ],
           countryIds:   [ this.countryIds ],

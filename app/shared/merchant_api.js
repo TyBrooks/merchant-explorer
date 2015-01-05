@@ -18,11 +18,7 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
       return this._getMockIds();
     }
     
-    currentPromise = $http({
-      method: "GET",
-      url: searchUrl,
-      data: apiSearchParams
-    })
+    currentPromise = $http.get(searchUrl, { params: apiSearchParams } );
     
     return currentPromise;
   }
@@ -36,12 +32,7 @@ app.service('merchantApi', ["$http", "config", "$q", function($http, config, $q)
       return this._getMockMerchantData( apiRetrieveParams.merchantGroupIds );
     }
     
-    currentPromise = $http({
-      method: "GET",
-      url: retrieveUrl,
-      data: apiRetrieveParams
-    })
-    
+    currentPromise = $http.get(retrieveUrl, { params: apiRetrieveParams } );
     return currentPromise;
   }
   

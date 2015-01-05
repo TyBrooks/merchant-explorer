@@ -62,7 +62,8 @@ app.service('merchantResultsService',
   /*
    * Handle the id's returned from the api and go ahead and fetch the first batch
    */
-  this._handleInitialCall = function( returnedIds ) {
+  this._handleInitialCall = function( response ) {
+    var returnedIds = response.data;
     dataService.initializeIdsForSearch( returnedIds, searchName );
     
     this._batchCall();
@@ -87,7 +88,8 @@ app.service('merchantResultsService',
   /*
    * Process the merchant data returned from a batch call
    */
-  this._handleBatchCall = function( merchantData ) {
+  this._handleBatchCall = function( response ) {
+    var merchantData = response.data;
     dataService.addResults( merchantData, numCached, searchName, filterState, searchState.userId );
     numCached = 0;
     pendingPromise = null;
