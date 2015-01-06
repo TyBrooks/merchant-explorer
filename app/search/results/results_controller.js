@@ -116,10 +116,12 @@ app.controller('ResultsCtrl',
   }
   
   this.countryInfoString = function( result ) {
-    if ( result.countries ) {
-      var additionalInfoString = this.additionalInfoString( result.countries );
+    if ( result.countriesByRegion ) {
+      var additionalInfoString = this.additionalInfoString( result.countriesByRegion );
     
       return result.countriesByRegion[0] + additionalInfoString;
+    } else {
+      return "Not Listed";
     }
   }
   
@@ -132,7 +134,7 @@ app.controller('ResultsCtrl',
   }
   
   this.commissionInfoString = function( result ) {
-    if ( result.rates || result.displayCommission) {
+    if ( result.displayCommission && ( result.displayCommission.min !== 0 || result.displayCommission.max !== 0 ) ) {
       var additionalInfoString = this.additionalInfoString( result.rates, true ),
           displayCommission = result.displayCommission;
       
@@ -141,6 +143,8 @@ app.controller('ResultsCtrl',
       } else {
         return "" + displayCommission.min + " - " + displayCommission.max + displayCommission.type + " " + displayCommission.description + additionalInfoString;
       }
+    } else {
+      return "Not Listed";
     }
   }
   

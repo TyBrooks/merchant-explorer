@@ -159,7 +159,9 @@ app.service('merchantResultsService',
     var results = []
     for ( var i = 0; i < 10; i++ ) {
       results.push({
-        name: " "
+        name: " ",
+        countriesByRegion: [""],
+        displayCommission: { min: "", max: "", type: "", description: "" }
       })
     }
     return function() {
