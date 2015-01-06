@@ -208,6 +208,13 @@ app.service('merchantResultsService',
     }
   }
   
+  /* 
+   * A method that returns the current userId of the given search
+   */
+  this.currentUserId = function() {
+    return searchState.userId;
+  }
+  
   /*
    * Returns the number of ids that have been loaded but aren't yet being displayed
    */

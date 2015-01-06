@@ -154,6 +154,8 @@ app.controller('ResultsCtrl',
     //This check is arbitrary -- just need to check for a field that doesn't appear in the blank results
     if ( angular.isDefined( result.overallAffiliable ) ) {
       selectedService.setSelected( result );
+      selectedService.currentPage = currentPage;
+      selectedService.userId = resultsService.currentUserId;
       $location.path('/merchants/' + result.id);
       $location.replace();
     }

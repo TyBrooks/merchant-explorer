@@ -7,13 +7,10 @@ app.controller("MerchantCtrl",
   var controller = this;
   
   this.campaigns = bootstrap.userIds;
-  //TODO how to set this?
-  if ( !this.userId ) {
-    this.userId = this.campaigns[0][1];
-  }
+  this.userId = selectedService.userId || this.campaigns[0][1];
   
   var loc = $location.path();
-  this.id = loc.match(/\/merchants\/(\d+)/i);
+  this.id = loc.match(/\/merchants\/(\d+)/i)[1];
   
   this.selected = {};
   this.isLoading = true;
@@ -36,7 +33,9 @@ app.controller("MerchantCtrl",
   }
   
   this.isInsider = function() {
-    return this.selected.promotionType && this.selected.promotionType.toLowerCase() === "star";
+    if ( !this.isLoading ) {
+      return this.selected.promotionType && this.selected.promotionType.toLowerCase() === "star";
+    }
   }
   
   this.logoSrc = function() {
