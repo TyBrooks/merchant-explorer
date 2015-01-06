@@ -13,7 +13,7 @@ app.controller('ResultsCtrl',
   ['merchantResultsService', 'selectedMerchantService', 'bootstrapService', '$location', 'config',
   function( resultsService, selectedService, bootstrap, $location, config ) {
   
-  var currentPage = 1,
+  var currentPage = selectedService.currentPage || 1,
       perPage = config.lookup('perPage');
   
   // Pass through methods
@@ -155,7 +155,7 @@ app.controller('ResultsCtrl',
     if ( angular.isDefined( result.overallAffiliable ) ) {
       selectedService.setSelected( result );
       selectedService.currentPage = currentPage;
-      selectedService.userId = resultsService.currentUserId;
+      selectedService.searchState = resultsService.currentSearchState();
       $location.path('/merchants/' + result.id);
       $location.replace();
     }

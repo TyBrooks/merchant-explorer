@@ -1,3 +1,5 @@
+//TODO: handle not signed in
+
 var app = angular.module('merchantExplorer');
 
 app.controller("MerchantCtrl",
@@ -7,7 +9,7 @@ app.controller("MerchantCtrl",
   var controller = this;
   
   this.campaigns = bootstrap.userIds;
-  this.userId = selectedService.userId || this.campaigns[0][1];
+  this.userId = ( selectedService.searchState && selectedService.searchState.userId ) ? selectedService.searchState.userId : this.campaigns[0][1];
   
   var loc = $location.path();
   this.id = loc.match(/\/merchants\/(\d+)/i)[1];
@@ -49,6 +51,9 @@ app.controller("MerchantCtrl",
   }
 
   this.back = function() {
+    if ( selectedService.searchState && selectedService.searchState.userId ) {
+      selectedService.searchState.userId = this.userId;
+    }
     $location.path('/merchants');
     $location.replace();
   }

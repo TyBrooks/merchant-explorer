@@ -3,13 +3,12 @@ var app = angular.module('merchantExplorer');
 
 /*
  * This is the service responsible for transfering data between the show and search pages
- * Besides being a one-time 
  */
 app.service('selectedMerchantService', ['merchantDataService', 'merchantApi', '$q', function(dataService, api, $q) {
   var selected = {},
       service = this;
       
-  this.userId = null;
+  this.searchState = null;
   this.currentPage = 1;
   
   this.setSelected = function( results ) {

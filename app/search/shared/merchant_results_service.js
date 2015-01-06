@@ -211,8 +211,8 @@ app.service('merchantResultsService',
   /* 
    * A method that returns the current userId of the given search
    */
-  this.currentUserId = function() {
-    return searchState.userId;
+  this.currentSearchState = function() {
+    return searchState;
   }
   
   /*
