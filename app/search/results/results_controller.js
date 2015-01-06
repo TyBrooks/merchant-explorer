@@ -107,7 +107,7 @@ app.controller('ResultsCtrl',
         if ( resultArr.length === 2 ) {
           return " + 1 Other";
         } else if ( resultArr.length  > 2 ) {
-          return " + " + resultArr.length + "Others";
+          return " + " + resultArr.length + " Others";
         }
       }
     }
@@ -119,7 +119,7 @@ app.controller('ResultsCtrl',
     if ( result.countries ) {
       var additionalInfoString = this.additionalInfoString( result.countries );
     
-      return result.countries[0] + additionalInfoString;
+      return result.countriesByRegion[0] + additionalInfoString;
     }
   }
   
@@ -132,10 +132,21 @@ app.controller('ResultsCtrl',
   }
   
   this.commissionInfoString = function( result ) {
-    if ( result.rates ) {
-      var additionalInfoString = this.additionalInfoString( result.rates, true );
+    if ( result.rates || result.displayCommission) {
+      var additionalInfoString = this.additionalInfoString( result.rates, true ),
+          displayCommission = result.displayCommission;
       
-      return result.displayCommission + additionalInfoString;
+      if ( displayCommission.min === displayCommission.max ) {
+        return "" + displayCommission.min + displayCommission.type + " " + displayCommission.description + additionalInfoString;
+      } else {
+        return "" + displayCommission.min + " - " + displayCommission.max + displayCommission.type + " " + displayCommission.description + additionalInfoString;
+      }
+    }
+  }
+  
+  this.coverageInfoString = function( result ) {
+    if ( result.overallCoverage ) {
+      return result.overallCoverage.replace("and", " and ");
     }
   }
   

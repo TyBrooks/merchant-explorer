@@ -99,7 +99,7 @@
           </td>
           <td>{{results.domainInfoString( result ) }}</td>
           <td>{{results.countryInfoString( result ) }}</td>
-          <td>{{result.overallCoverage}}</td>
+          <td>{{results.coverageInfoString( result )}}</td>
           
           <td ng-show=' results.isSignedIn() '>
             <div ng-show=' results.displayAffiliatableOrb( result )' class='aff-status-circle' ng-class='{ "affiliatable": result.overallAffiliable }'></div>
