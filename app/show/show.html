@@ -45,7 +45,7 @@
         <tr ng-repeat='domain in merchant.selected.domains'>
           <td>{{domain.name}}</td>
           <td>{{domain.coverage}}</td>
-          <td ng-show=' merchant.isSignedIn() '>{{domain.affiliable}}</td>
+          <td ng-show=' merchant.isSignedIn() '>{{merchant.isRefreshingAffStatus ? "Loading" : domain.affiliable}}</td>
           <td ng-show=' !merchant.isSignedIn() '>{{domain.restricted ? "Network Restricted" : "Yes!" }}
       </tbody>
     </table>
@@ -53,7 +53,8 @@
     <span ng-show='merchant.isSignedIn()'>
       <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
       <select name='campaign' id='campaign' ng-model='merchant.userId'
-              ng-options='campaign[1] as campaign[0] for campaign in merchant.campaigns'>
+              ng-options='campaign[1] as campaign[0] for campaign in merchant.campaigns'
+              ng-change='merchant.changeCampaign()'>
       </select>
     </span>
   </section>

@@ -24,6 +24,7 @@ app.service('selectedMerchantService', ['merchantDataService', 'merchantApi', '$
       case ( !_.isEmpty( selected ) ):
         dataPromise = deferred.promise;
         deferred.resolve( selected );
+        this.setSelected( {} );
         break;
       // When the data for the selected merchant hasn't been set, but is cached already
       case ( dataService.hasDataForId( id, userId ) ):

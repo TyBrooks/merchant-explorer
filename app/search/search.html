@@ -17,7 +17,7 @@
       <div>
          <input type='text' name='searchPhrase' ng-model='search.params.keyword'>
          
-         <div ng-show='search.isSignedIn() && search.params.affiliatableOnly'>
+         <div ng-show='search.isSignedIn()'>
            <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
            <select name='campaign' id='campaign' ng-model='search.params.userId'
                    ng-options='campaign[1] as campaign[0] for campaign in search.campaigns'>

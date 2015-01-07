@@ -13,6 +13,7 @@ app.controller("MerchantCtrl",
 
   this.selected = {};
   this.isLoading = true;
+  this.isRefreshingAffStatus = false;
   
   var campaignsPromise = bootstrap.getUserInfo();
   campaignsPromise.then( function( userIds ) {
@@ -56,13 +57,22 @@ app.controller("MerchantCtrl",
   }
 
   this.back = function() {
-    if ( selectedService.searchState && selectedService.searchState.userId ) {
-      selectedService.searchState.userId = this.userId;
-    }
+    //TODO make selectedService's params defaults? OR just scrap the changes altogether?
+    // if ( selectedService.searchState && selectedService.searchState.userId ) {
+  //     selectedService.searchState.userId = this.userId;
+  //   }
     $location.path('/merchants');
     $location.replace();
   }
   
-  
+  this.changeCampaign = function() {
+    var dataPromise = selectedService.getDataPromiseForSelected( this.id, this.userId );
+    this.isRefreshingAffStatus = true;
+    
+    dataPromise.then( function( merchantData ) {
+      merchantCtrl.isRefreshingAffStatus = false;
+      merchantCtrl.selected.domains = merchantData.domains;
+    });
+  }
   
 }])
