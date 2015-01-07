@@ -5,8 +5,8 @@ var app = angular.module('merchantExplorer');
 app.service("config", function() {
   var configInfo = {
     showcaseApiUrl:     "",
-    searchApiUrl:       "//qa-web-va.ec2.viglink.com:8080/rest/merchantgroups/search",
-    retrieveApiUrl:     "//qa-web-va.ec2.viglink.com:8080/rest/merchantgroups",
+    searchApiUrl:       "//publishers.qa.viglink.com:8080/rest/merchantgroups/search",
+    retrieveApiUrl:     "//publishers.qa.viglink.com:8080/rest/merchantgroups",
     perPage:            10,
     batchSize:          10,
     minBuffer:          20,
