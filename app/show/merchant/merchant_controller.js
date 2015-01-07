@@ -6,23 +6,28 @@ app.controller("MerchantCtrl",
   ['selectedMerchantService', 'bootstrapService', '$location',
   function(selectedService, bootstrap, $location) {
   
-  var controller = this;
-  
-  this.campaigns = bootstrap.userIds;
-  this.userId = ( selectedService.searchState && selectedService.searchState.userId ) ? selectedService.searchState.userId : this.campaigns[0][1];
+  var merchantCtrl = this;
   
   var loc = $location.path();
   this.id = loc.match(/\/merchants\/(\d+)/i)[1];
-  
+
   this.selected = {};
   this.isLoading = true;
   
-  var dataPromise = selectedService.getDataPromiseForSelected( this.id, this.userId );
+  var campaignsPromise = bootstrap.getUserInfo();
+  campaignsPromise.then( function( userIds ) {
+    merchantCtrl.campaigns = ( !_.isEmpty(userIds) ) ? userIds : [ ["", ""] ];
+    merchantCtrl.userId = ( selectedService.searchState && selectedService.searchState.userId ) ? selectedService.searchState.userId : merchantCtrl.campaigns[0][1];
   
-  dataPromise.then( function( merchantData ) {
-    controller.selected = merchantData;
-    controller.isLoading = false;
-  });
+    var dataPromise = selectedService.getDataPromiseForSelected( merchantCtrl.id, merchantCtrl.userId );
+  
+    dataPromise.then( function( merchantData ) {
+      merchantCtrl.selected = merchantData;
+      merchantCtrl.isLoading = false;
+    });
+  } );
+  
+  
   
   this.buildCommissionRates = function() {
     return _.map( this.selected.rates, function( rate ) {

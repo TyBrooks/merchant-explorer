@@ -75,10 +75,14 @@ app.service('bootstrapService', ['$http', 'config', '$q', function($http, config
    * In production, this should also be bootstrappable from rails
    */
   
-  this.userIds = [];
+  this.userIds = null;
   
   this.getUserInfo = function() {
-    if ( loadExternalUsers ) {
+    if ( !_.isNull( this.userIds ) ) {
+      var deferred = $q.defer();
+      deferred.resolve( this.userIds );
+      return deferred.promise;
+    } else if ( loadExternalUsers ) {
       var userInfoPromise = $http.get( usersApi );
 
       var formattedPromise = userInfoPromise.then( function( response ) {
@@ -90,7 +94,7 @@ app.service('bootstrapService', ['$http', 'config', '$q', function($http, config
              userIds.push( [ user.name, user.id ] );
           } );
         }
-
+        bootstrap.userIds = userIds;
         return userIds;
       } )
       
@@ -104,8 +108,7 @@ app.service('bootstrapService', ['$http', 'config', '$q', function($http, config
   
   
   this.isSignedIn = function() {
-    return true;
-    return this.userIds.length !== 0;
+    return ( this.userIds && this.userIds.length !== 0 );
   }
   
   

@@ -26,18 +26,24 @@ app.controller( 'SearchCtrl',
   //TODO clean this up -- put logic in app initialization?
   campaignPromise = bootstrap.getUserInfo();
   campaignPromise.then( function( userIds ) {
-    if ( userIds ) {
+    if ( !_.isEmpty( userIds ) ) {
       search.campaigns = userIds;
     } else {
       search.campaigns = [ ["", ""] ];
     }
-    
     
     // Search parameters initialization
     search.params = selectedService.searchState || searchParamsFactory.createDefault();
     search.params.userId = ( selectedService.searchState && selectedService.searchState.userId ) ? selectedService.searchState.userId : search.campaigns[0][1];
     // this.params.userId = angular.element( document.findElementById( "campaign" ) ).find( "option" ).first().val();
     isLoading = false;
+    
+    /*
+     * Need to make sure the aff status param isn't automatically on for this
+     */
+    if ( !bootstrap.isSignedIn() ) {
+      search.params.affiliatableOnly = false;
+    }
   })
   
   
@@ -49,16 +55,8 @@ app.controller( 'SearchCtrl',
   this.isSignedIn = function() {
     return bootstrap.isSignedIn();
   }
-  
-  /*
-   * Need to make sure the aff status param isn't automatically on for this
-   */
-  if ( !this.isSignedIn() ) {
-    this.params.affiliatableOnly = false;
-    this.params.userId = "";
-  }
-  
-  
+
+
     
   //Information needed for the search button display logic
   var lastSearch = "";
