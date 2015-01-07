@@ -88,13 +88,15 @@ app.service('bootstrapService', ['$http', 'config', '$q', function($http, config
       var formattedPromise = userInfoPromise.then( function( response ) {
         var data = response.data;
         var userIds = [];
-      
+        console.log( "/account/users response received", response);
         if ( data && data.users ) {
           _.each( data.users, function( user ) {
+             console.log( "adding user to list ", user)
              userIds.push( [ user.name, user.id ] );
           } );
         }
         bootstrap.userIds = userIds;
+        console.log( 'current list of userIds ', userIds );
         return userIds;
       } )
       
@@ -108,6 +110,7 @@ app.service('bootstrapService', ['$http', 'config', '$q', function($http, config
   
   
   this.isSignedIn = function() {
+    console.log( 'checking if signed in, current userId list = ', this.userIds);
     return ( this.userIds && this.userIds.length !== 0 );
   }
   
