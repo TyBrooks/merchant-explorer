@@ -25,7 +25,6 @@ app.service('merchantResultsService',
       batchSize = config.lookup( 'batchSize' ),
       minBuffer = config.lookup( 'minBuffer' ),
       perPage = config.lookup( 'perPage' ),
-      signedIn = bootstrap.isSignedIn(),
     
       service = this,
     
@@ -52,7 +51,7 @@ app.service('merchantResultsService',
     filterState = searchParams.getFilterState();
       
     if ( dataService.getNumIdsLoaded( searchName, filterState ) === 0 ) {
-      var apiSearchParams = searchParams.asApiSearchParams( signedIn );
+      var apiSearchParams = searchParams.asApiSearchParams( bootstrap.isSignedIn() );
       
       pendingPromise = api.searchApiCall( apiSearchParams );
       pendingPromise.then( angular.bind( this, this._handleInitialCall ) );
@@ -76,7 +75,7 @@ app.service('merchantResultsService',
     //TODO add an optional batch size param for initial call?
     var nextIds = dataService.getNextIdsForBatch( batchSize, searchName ),
         toFetch = dataService.removeCachedIds( nextIds, searchState.userId ),
-        apiRetrieveParams = searchState.asApiRetrieveParams( toFetch, signedIn );
+        apiRetrieveParams = searchState.asApiRetrieveParams( toFetch, bootstrap.isSignedIn() );
     
     //TODO.. might be problematic if batch size is less than sent size
     numCached = nextIds.length - toFetch.length;
