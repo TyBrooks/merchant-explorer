@@ -12,6 +12,8 @@ var app = angular.module('merchantExplorer');
 app.controller( 'SearchCtrl',
   ["searchParamsFactory", "merchantResultsService", "bootstrapService", "selectedMerchantService",
   function( searchParamsFactory, merchantResultsService, bootstrap, selectedService ) {
+  var search = this,
+      isLoading = true;
   
   /*
    * This section contains the data for the select boxes. However, it probably needs to be bootstrapped from rails.
@@ -20,13 +22,24 @@ app.controller( 'SearchCtrl',
   this.categories = [ ["All Categories", ""] ].concat( bootstrap.categories );
   this.countries = [ [ "All Countries", "" ], [ "US|International", 101 ], [ "Brazil|International", 102 ] ];
   this.coverages = [ [ "CPC + CPA", "" ], [ "Has CPC", "CPC" ], [ "Has CPA", "CPA" ] ];
-  this.campaigns = bootstrap.userIds;
   
+  //TODO clean this up -- put logic in app initialization?
+  campaignPromise = bootstrap.getUserInfo();
+  campaignPromise.then( function( userIds ) {
+    if ( userIds ) {
+      search.campaigns = userIds;
+    } else {
+      search.campaigns = [ ["", ""] ];
+    }
+    
+    
+    // Search parameters initialization
+    search.params = selectedService.searchState || searchParamsFactory.createDefault();
+    search.params.userId = ( selectedService.searchState && selectedService.searchState.userId ) ? selectedService.searchState.userId : search.campaigns[0][1];
+    // this.params.userId = angular.element( document.findElementById( "campaign" ) ).find( "option" ).first().val();
+    isLoading = false;
+  })
   
-  // Search parameters initialization
-  this.params = selectedService.searchState || searchParamsFactory.createDefault();
-  this.params.userId = ( selectedService.searchState && selectedService.searchState.userId ) ? selectedService.searchState.userId : this.campaigns[0][1];
-  // this.params.userId = angular.element( document.findElementById( "campaign" ) ).find( "option" ).first().val();
   
   
   /*
@@ -64,6 +77,11 @@ app.controller( 'SearchCtrl',
    * Returns a boolean
    */
   this.isSearchable = function() {
+    if ( isLoading ) {
+      return false;
+    }
+    
+    
     var input = this.params,
         hashedCurrent = this.params.hash({ includeAffiliatable: true }),
         hashedCurrentNoUserId,

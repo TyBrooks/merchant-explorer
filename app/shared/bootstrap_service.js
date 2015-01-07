@@ -4,7 +4,18 @@
  */
 var app = angular.module('merchantExplorer');
 
-app.service('bootstrapService',['$http', function($http) {
+app.service('bootstrapService', ['$http', 'config', '$q', function($http, config, $q) {
+  var loadExternalUsers = config.lookup('loadExternalUsers'),
+      usersApi = ( loadExternalUsers ) ? config.lookup('userApiUrl') : "";
+      
+  var bootstrap = this;
+      
+  /*
+   * Categories section
+   * In prod, this will probably be bootstrapped from Rails
+   */
+  
+  //The hardcoded category data
   var categoryBootstrap = {
   	"categories": {
   		"134": "Food & Drink",
@@ -42,12 +53,13 @@ app.service('bootstrapService',['$http', function($http) {
   	}
   }
 
-  var categories = [];
+  this.categories = [];
+  //The category data has to be formatted into an arrray of arrays
   angular.forEach( categoryBootstrap.categories, function( catName, catId ) {
-    categories.push( [catName, catId] );
+    bootstrap.categories.push( [ catName, catId ] );
   });
-
-  categories.sort( function( prev, next ) {
+  // Finally we want to sort the categories so that they're in alphabetical order
+  this.categories.sort( function( prev, next ) {
     var prevBigger = prev[0].toLowerCase() >= next[0].toLowerCase();
 
     if ( prevBigger ) {
@@ -58,34 +70,41 @@ app.service('bootstrapService',['$http', function($http) {
   });
   
   
-  this.categories = categories;
-// this.userInfo = [];
-//
-   //
-  // var userInfoPromise = $http.get("//publishers.viglink.com/account/users");
-  // userInfoPromise.success( function( data ) {
-  //   console.log( data );
-  //   if ( data.users ) {
-  //     _.each( data.users, function( user ) {
-  //       this.userInfo.push( [ user.name, user.id ] );
-  //     } );
-  //   }
-  // })
-  // console.log( this.userInfo );
-  //
-  // this.getUserInfo = function() {
-  //   if ( this.userInfo.length === 0 ) {
-  //     return [ [ "", "" ] ];
-  //   } else {
-  //     return this.userInfo;
-  //   }
-  // }
+  /*
+   * User Ids section
+   * In production, this should also be bootstrappable from rails
+   */
   
+  this.userIds = [];
   
-  // TODO make a call to /account/users?
-  this.userIds = [ [ "Ty's Campaign", 1569178 ], [ "Shoe Campaign", 1569934 ], [ "Dress Campaign", 1573667 ] ];
+  this.getUserInfo = function() {
+    if ( loadExternalUsers ) {
+      var userInfoPromise = $http.get( usersApi );
+
+      var formattedPromise = userInfoPromise.then( function( response ) {
+        var data = response.data;
+        var userIds = [];
+      
+        if ( data && data.users ) {
+          _.each( data.users, function( user ) {
+             userIds.push( [ user.name, user.id ] );
+          } );
+        }
+
+        return userIds;
+      } )
+      
+      return formattedPromise;
+    } else {
+      var deferred = $q.defer();
+      deferred.resolve( [ [ "Ty's Campaign", 1569178 ], [ "Shoe Campaign", 1569934 ], [ "Dress Campaign", 1573667 ] ] )
+      return deferred.promise;
+    }
+  }
+  
   
   this.isSignedIn = function() {
+    return true;
     return this.userIds.length !== 0;
   }
   

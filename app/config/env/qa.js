@@ -5,13 +5,15 @@ var app = angular.module('merchantExplorer');
 app.service("config", function() {
   var configInfo = {
     showcaseApiUrl:     "",
+    userApiUrl:         "//publishers.qa.viglink.com:8080/account/users",
     searchApiUrl:       "//publishers.qa.viglink.com:8080/rest/merchantgroups/search",
     retrieveApiUrl:     "//publishers.qa.viglink.com:8080/rest/merchantgroups",
     perPage:            10,
     batchSize:          10,
     minBuffer:          20,
     numShowcases:       3,
-    useMockData:        false
+    useMockData:        false,
+    loadExternalUsers:  true
   }
   
   this.lookup = function(name) {

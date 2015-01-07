@@ -11,7 +11,8 @@ app.service("config", function() {
     batchSize:          10,
     minBuffer:          20,
     numShowcases:       3,
-    useMockData:        true
+    useMockData:        true,
+    loadExternalUsers:  false
   }
   
   this.lookup = function(name) {
