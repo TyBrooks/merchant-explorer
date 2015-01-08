@@ -48,7 +48,7 @@ app.service('merchantResultsService',
     isNewSearch = true;
     isLoading = true;
     searchState = searchParams;
-    searchName = searchParams.hash();
+    searchName = searchParams.hash({ includeOptional: true, includeUserId: true });
     filterState = searchParams.getFilterState();
       
     if ( dataService.getNumIdsLoaded( searchName, filterState ) === 0 ) {
@@ -56,6 +56,8 @@ app.service('merchantResultsService',
       
       pendingPromise = api.searchApiCall( apiSearchParams );
       pendingPromise.then( angular.bind( this, this._handleInitialCall ) );
+    } else {
+      isLoading = false;
     }
   }
   
