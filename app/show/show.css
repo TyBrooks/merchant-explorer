@@ -57,6 +57,8 @@
   position: absolute;
   top: 10px;
   
+  font-size: 24px;
+  
   text-align: center;
   line-height: 50px;
   
@@ -64,9 +66,9 @@
   display: inline-block;
   width: 140px;
   height: 50px;
-  background-color: yellow;
+  background-color: orange;
   
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .merchant-logo {
@@ -83,12 +85,14 @@
 
 #merchant-group-info {
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 #merchant-group-info > div {
   border: 1px solid black;
   padding: 5px;
   min-height: 50px;
+  vertical-align: top;
 }
 
 .commissions {
@@ -105,11 +109,10 @@
 }
 
 
-
-
 /* Domains table section */
 
 #domains-info {
+  position: relative;
 }
 
 .domain-info-table td, .domain-info-table th {
@@ -121,9 +124,17 @@
 }
 
 .domain-info-table {
+  display: inline-block;
   border-collapse: collapse;
   empty-cells: show;
 }
+
+.aff-campaign-select {
+  vertical-align: top;
+  display: inline-block;
+  margin-left: 25px;
+}
+
 
 
 /* Other stuff */

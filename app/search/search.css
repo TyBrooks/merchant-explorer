@@ -230,17 +230,3 @@ section#results {
 }
 
 
-/* Aff status circle styling */
-
-.aff-status-circle {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-color: lightgrey;
-  border-radius: 100%;
-  vertical-align: middle;
-}
-
-.affiliatable {
-  background-color: green;
-}

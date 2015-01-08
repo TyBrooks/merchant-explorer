@@ -47,9 +47,9 @@ app.controller("MerchantCtrl",
   }
   
   this.logoSrc = function() {
-    //TODO - derive the url from the path (it's just the url.gif)
-    
-    return "//localhost:3000/mock_data/firestone.gif";
+    var slug = this.slugify("" + this.selected.id + " " + this.selected.name);
+    // TODO fix this up
+    return "//www.viglink.com/merchants/" + slug + ".gif";
   }
   
   this.isSignedIn = function() {
@@ -73,6 +73,39 @@ app.controller("MerchantCtrl",
       merchantCtrl.isRefreshingAffStatus = false;
       merchantCtrl.selected.domains = merchantData.domains;
     });
+  }
+  
+  this.hasImage = function() {
+    if ( !this.isLoading ) {
+      return !!this.selected.imgId;
+    } else {
+      return false;
+    }
+  }
+  
+  this.doShowTrafficPlaceholder = function() {
+    if ( !this.isLoading ) {
+      return !this.selected.countriesByRegion || this.selected.countriesByRegion.length === 0;
+    } else {
+      return false;
+    }
+  }
+  
+  this.doShowCommissionPlaceholder = function() {
+    if ( !this.isLoading ) {
+      return !this.selected.rates || this.selected.rates.length === 0;
+    } else {
+      return false;
+    }
+  }
+  
+  this.slugify = function( text ) {
+    return text.toString().toLowerCase()
+      .replace(/\s+/g, '-')           // Replace spaces with -
+      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+      .replace(/^-+/, '')             // Trim - from start of text
+      .replace(/-+$/, '');            // Trim - from end of text
   }
   
 }])

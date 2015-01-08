@@ -117,7 +117,7 @@ app.controller('ResultsCtrl',
   
   this.countryInfoString = function( result ) {
     if ( result.countriesByRegion ) {
-      var additionalInfoString = this.additionalInfoString( result.countriesByRegion );
+      var additionalInfoString = this.additionalInfoString( result.countriesByRegionx );
     
       return result.countriesByRegion[0] + additionalInfoString;
     } else {

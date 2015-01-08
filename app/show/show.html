@@ -11,7 +11,7 @@
     
     <div class='merchant-imgs'>
       <div class='insider-badge' ng-show='merchant.isInsider()'>Insider</div>
-      <img class='merchant-logo' alt='The logo of the merchant' ng-src='{{merchant.logoSrc()}}'>
+      <img ng-show='merchant.hasImage()' class='merchant-logo' alt='The logo of the merchant' ng-src='{{merchant.logoSrc()}}'>
     </div>
   </section>
   
@@ -20,6 +20,7 @@
       <header>Commissions Offered</header>
       <ul class='commission-list'>
         <li ng-repeat='rate in merchant.buildCommissionRates()'>{{rate}}</li>
+        <li ng-show='merchant.doShowCommissionPlaceholder()'>None Listed</li>
       </ul>
     </div>
     
@@ -27,6 +28,7 @@
       <header>Accepts traffic from these countries:</header>
       <ul class='country-list'>
         <li ng-repeat='country in merchant.selected.countries'>{{country}}</li>
+        <li ng-show='merchant.doShowTrafficPlaceholder()'>None Listed</li>
       </ul>
     </div>
   </section>
@@ -45,13 +47,18 @@
         <tr ng-repeat='domain in merchant.selected.domains'>
           <td>{{domain.name}}</td>
           <td>{{domain.coverage}}</td>
-          <td ng-show=' merchant.isSignedIn() '>{{merchant.isRefreshingAffStatus ? "Loading" : domain.affiliable}}</td>
+          <td ng-show=' merchant.isSignedIn() '>
+            <span ng-show='merchant.isRefreshingAffStatus'>Loading</span>
+            <div ng-show='!merchant.isRefreshingAffStatus && !merchant.isLoading' class='aff-status-circle'
+                 ng-class='{ "affiliatable": merchant.selected.overallAffiliable }'>
+            </div>
+          </td>
           <td ng-show=' !merchant.isSignedIn() '>{{domain.restricted ? "Network Restricted" : "Yes!" }}
       </tbody>
     </table>
     
-    <span ng-show='merchant.isSignedIn()'>
-      <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
+    <span class='aff-campaign-select' ng-show='merchant.isSignedIn()'>
+      <label for='campaign'>Show Affiliability For:</label>
       <select name='campaign' id='campaign' ng-model='merchant.userId'
               ng-options='campaign[1] as campaign[0] for campaign in merchant.campaigns'
               ng-change='merchant.changeCampaign()'>
