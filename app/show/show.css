@@ -22,13 +22,14 @@
 #merchant-info {
   max-height: 500px;
   position: relative;
+  margin-bottom: 20px;
 }
 
 .merchant-text {
   display: inline-block;
   margin-top: 0;
   width: 600px;
-  min-height: 220px;
+/*  min-height: 220px;*/
   max-height: 500px;
   
   vertical-align: top;
@@ -47,15 +48,14 @@
   display: inline-block;
   position: relative;
   width: 300px;
-  height: 200px;
+  max-height: 200px;
   margin-left: 40px;
   
   vertical-align: top;
 }
 
 .insider-badge {
-  position: absolute;
-  top: 10px;
+  margin-top: 10px;
   
   font-size: 24px;
   
@@ -72,10 +72,7 @@
 }
 
 .merchant-logo {
-  position: absolute;
-  top: 100px;
-  
-    border: 10px solid lightgrey;
+  border: 10px solid lightgrey;
    
   height: 55px;
   width: 240px;
@@ -141,18 +138,21 @@
 
 .back-button {
   position: absolute;
-  width: 100px;
+  width: 140px;
   height: 50px;
   text-align: center;
   line-height: 50px;
+  font-size:14px;
   vertical-align: center;
-  background-color: red;
+
   
   margin: 0;
   padding: 0;
   
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: -140px;
   
   z-index: 2;
+  
+  border-radius: 10px;
 }
