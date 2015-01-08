@@ -83,7 +83,11 @@ app.service('bootstrapService', ['$http', 'config', '$q', function($http, config
       deferred.resolve( this.userIds );
       return deferred.promise;
     } else if ( loadExternalUsers ) {
-      var userInfoPromise = $http({withCredentials: true}).get( usersApi );
+      var userInfoPromise = $http({
+        method: "GET",
+        url: usersApi,
+        withCredentials: true
+      })
 
       var formattedPromise = userInfoPromise.then( function( response ) {
         var data = response.data;
