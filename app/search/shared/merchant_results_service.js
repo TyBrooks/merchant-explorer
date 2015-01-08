@@ -39,13 +39,14 @@ app.service('merchantResultsService',
       // Slightly hacky vars that should probably eventually be refactored out. :-(
       numCached = 0, //needed as workaround to scope issue w/ async function
       isNewSearch = false; // Needed to pass info about button press to the results controller from search controller
-      
+      isLoading = false;
   /*
    * Triggered when the user clicks the search button
    *   checks to see if the given search has already been made, if not, fetches an id list via the api
    */
   this.makeInitialCall = function( searchParams ) {
     isNewSearch = true;
+    isLoading = true;
     searchState = searchParams;
     searchName = searchParams.hash();
     filterState = searchParams.getFilterState();
@@ -64,7 +65,7 @@ app.service('merchantResultsService',
   this._handleInitialCall = function( response ) {
     var returnedIds = response.data;
     dataService.initializeIdsForSearch( returnedIds, searchName );
-    
+    isLoading = false;
     this._batchCall();
   }
   
@@ -172,6 +173,10 @@ app.service('merchantResultsService',
    * returns a boolean corresponding to whether or not the page is in the process of loading data for that page
    */
   this.isLoading = function( pageNum ) {
+    if ( isLoading ) {
+      return true;
+    }
+    
     var totalLoaded = dataService.getNumIdsLoaded( searchName, filterState ),
         needed = pageNum * perPage,
         stillToLoad = dataService.getNumIdsNotLoaded( searchName );
