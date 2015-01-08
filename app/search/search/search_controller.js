@@ -33,9 +33,13 @@ app.controller( 'SearchCtrl',
     }
     
     // Search parameters initialization
-    search.params = selectedService.searchState || searchParamsFactory.createDefault();
-    search.params.userId = ( selectedService.searchState && selectedService.searchState.userId ) ? selectedService.searchState.userId : search.campaigns[0][1];
+    search.params = angular.copy( selectedService.searchState ) || searchParamsFactory.createDefault();
+    
+    if ( !search.params.userId ) {
+      search.params.userId = search.campaigns[0][1];
+    }
     // this.params.userId = angular.element( document.findElementById( "campaign" ) ).find( "option" ).first().val();
+    lastSearch = search.params.hash({ includeOptional: true, includeUserId: search.isSignedIn() })
     isLoading = false;
     
     /*
