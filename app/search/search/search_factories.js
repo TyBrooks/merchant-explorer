@@ -56,7 +56,7 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
         return this._filterEmptyParams( angular.extend( {
           keyword:      this.keyword,
           industryIds:  [ this.industryIds ],
-          countryIds:   [ this.countryIds ],
+          // countryIds:   [ this.countryIds ],
           coverage:     this.coverage,
           starsOnly:    this.starsOnly
         }, signedOutParams ) );
