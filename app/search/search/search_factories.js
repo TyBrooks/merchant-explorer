@@ -30,20 +30,22 @@ app.factory('searchParamsFactory', ["filterStateFactory", function( filterStateF
        * ... but for testing whether the search button is active, we do want to include it
        */
       hash: function( options ) {
-        var insider = ( this.starsOnly ) ? "1" : "0",
+        if ( !options ) {
+          options = {};
+        }
+        
+        var affiliatable = ( this.affiliatableOnly ) ? "1" : "0",
             unrestricted = ( this.unrestrictedOnly ) ? "1" : "0",
-            affiliated = ( this.affiliatableOnly ) ? "1" : "0",
-            affiliated = ( options && options.includeAffiliatable ) ? affiliated : "",
-            userId = ( options && options.excludeUserId ) ? "" : this.userId;
-            
-        return  insider +
-                unrestricted +
-                affiliated +
-                userId +
-                this.keyword +
-                this.industryIds +
-                this.countryIds +
-                this.coverage;
+            insider = ( this.starsOnly ) ? "1" : "0",
+            optionalInfoHash = ( options.includeOptional ) ? affiliatable + unrestricted + insider : "",
+            userId = ( options.includeUserId ) ? this.userId : "";
+        
+        return this.keyword +
+               this.industryIds +
+               this.countryIds +
+               this.coverage +
+               optionalInfoHash +
+               userId;
       },
       
       /*

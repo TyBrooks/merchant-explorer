@@ -65,7 +65,7 @@ app.controller( 'SearchCtrl',
    * Kicks off the search process by sending the result service a copy of the current search state
    */
   this.search = function() {
-    lastSearch = this.params.hash({ includeAffiliatable: true });
+    lastSearch = this.params.hash({ includeOptional: true, includeUserId: this.isSignedIn() });
     
     merchantResultsService.makeInitialCall( angular.copy( this.params ) );
   }
@@ -79,21 +79,13 @@ app.controller( 'SearchCtrl',
       return false;
     }
     
-    
     var input = this.params,
-        hashedCurrent = this.params.hash({ includeAffiliatable: true }),
-        hashedCurrentNoUserId,
-        hashedDefaultNoUserId;
-    
-    if ( this.isSignedIn() ) {
-      hashedCurrentNoUserId = this.params.hash({ includeAffiliatable: true, excludeUserId: true })
-      hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: true, excludeUserId: true });
-    } else {
-      hashedCurrentNoUserId = this.params.hash({ includeAffilatable: false, excludeUserId: true });
-      hashedDefaultNoUserId = searchParamsFactory.createDefault().hash({ includeAffiliatable: false, excludeUserId: true });
-    }
+        hashedDefault = searchParamsFactory.createDefault().hash({ includeOptional: false, includeUserId: false }),
+        hashedCurrentNoUser = this.params.hash({ includeOptional: false, includeUserId: false }),
+        hashedCurrentAllParams = this.params.hash({ includeOptional: true, includeUserId: this.isSignedIn() });
         
-    return ( ( hashedCurrent !== lastSearch ) && ( hashedCurrentNoUserId !== hashedDefaultNoUserId ) );
+        
+    return ( ( hashedCurrentAllParams !== lastSearch ) && ( hashedCurrentNoUser !== hashedDefault ) );
   }
   
 }]);
