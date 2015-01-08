@@ -7,133 +7,147 @@
            
            <span class='showcase-commission'>{{merchant.commission}}</span>
         </a>
-      </li>
-    <ul>
+    </ul>
   </section>
   
   <section id='search' ng-controller='SearchCtrl as search'>
+    <div id='search-box'>
     
-    <form name='searchForm'>
-      <div>
-         <input type='text' name='searchPhrase' ng-model='search.params.keyword'>
-         
-         <div ng-show='search.isSignedIn()'>
-           <label for='campaign'>Campaign To Use For Affiliability Testing:</label>
-           <select name='campaign' id='campaign' ng-model='search.params.userId'
-                   ng-options='campaign[1] as campaign[0] for campaign in search.campaigns'>
-           </select>
-         </div>
-      </div>
-      
-      
-      <div>
-        <select name='category' ng-model='search.params.industryIds'
-                ng-options='category[1] as category[0] for category in search.categories'>
-        </select>
+      <form name='searchForm'>
         
-        <select name='country' ng-model='search.params.countryIds'
-                ng-options='country[1] as country[0] for country in search.countries'>
-        </select>
+        <div class='search-col search-col-1'>
         
-        <select name='cpc' ng-model='search.params.coverage'
-                ng-options='coverage[1] as coverage[0] for coverage in search.coverages'>
-        </select>
-      </div>
-      
-
-      <div>
-        <span ng-show='search.isSignedIn()'>
-          <label for='affiliatable'>Affiliates to Me</label>
-          <input type='checkbox' id='affiliatable' name='affiliatable'
-                 ng-model='search.params.affiliatableOnly'>
-          </input>
-        </span>
+          <input class='search-phrase' type='text' name='searchPhrase' ng-model='search.params.keyword' placeholder='e.g. Ebay, Amazon, etc.'></input>
         
-        <span ng-show='!search.isSignedIn()'>
-          <label for='unrestricted'>Unrestricted Only</label>
-          <input type='checkbox' id='unrestricted' name='unrestricted'
-                 ng-model='search.params.unrestrictedOnly'>
-          </input>
-        </span>
+          <div class='search-boxes'>
+            Only: 
+            <span ng-show='search.isSignedIn()'>
+              <label for='affiliatable'>Affiliates to Me</label>
+              <input type='checkbox' id='affiliatable' name='affiliatable'
+                     ng-model='search.params.affiliatableOnly'>
+              </input>
+            </span>
         
-        <label for='insider'>Insider Only</label>
-        <input type='checkbox' id='insider'      name='insider'
-               ng-model='search.params.starsOnly'>
-        </input>
-      </div>
-      
-      <button ng-click='search.search()' ng-disabled="!search.isSearchable()">Search</button>
-
-    <form>
-    
+            <span ng-show='!search.isSignedIn()'>
+              <label for='unrestricted'>Unrestricted Only</label>
+              <input type='checkbox' id='unrestricted' name='unrestricted'
+                     ng-model='search.params.unrestrictedOnly'>
+              </input>
+            </span>
+            
+            <span>
+              <label for='insider'>Insider Only</label>
+              <input type='checkbox' id='insider'      name='insider'
+                     ng-model='search.params.starsOnly'>
+              </input>
+            </span>
+          </div>
+          
+          <div class='search-campaigns' ng-show='search.isSignedIn()'>
+            <label for='campaign'>Affiliatable For:</label>
+            <select name='campaign' id='campaign' ng-model='search.params.userId'
+                    ng-options='campaign[1] as campaign[0] for campaign in search.campaigns'>
+            </select>
+          </div>
+          
+        </div>
+        
+        <div class='search-col search-col-2'>
+          <select name='category' ng-model='search.params.industryIds'
+                  ng-options='category[1] as category[0] for category in search.categories'>
+          </select>
+        
+          <select name='country' ng-model='search.params.countryIds'
+                  ng-options='country[1] as country[0] for country in search.countries'>
+          </select>
+        
+          <select name='cpc' ng-model='search.params.coverage'
+                  ng-options='coverage[1] as coverage[0] for coverage in search.coverages'>
+          </select>
+        </div>
+        
+        <div class='search-col search-col-3'>
+          <button class='search-button' ng-click='search.search()' ng-disabled="!search.isSearchable()">Search</button>
+        </div>
+      <form>
+        
+    </div>
   </section>
   
   <section id='results' ng-controller='ResultsCtrl as results'>
-    <div id='loading' ng-show='results.isLoading()'>LOADING...</div>
-    <table id='results-table'>
-      <col class='col-name'>
-      <col class='col-domain'>
-      <col class='col-country'>
-      <col class='col-cpc'>
-      <col class='col-aff'>
-      <col class='col-restricted'>
-      <col class='col-commission'>
-      <thead>
-        <tr>
-          <th>Merchant Name</th>
-          <th>Domains</th>
-          <th>Countries</th>
-          <th>CPC/CPA</th>
-          <th ng-show=' results.isSignedIn() '>Affiliates to Me?</th>
-          <th ng-show=' !results.isSignedIn() '>Can I make Money?</th>
-          <th>Commission</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat='result in results.getCurrentPageData() track by $index'>
-          <!-- A little hacky but lets the blank table display-->
-          <td class='result-name-cell' ng-click='results.redirectTo(result)'>
-            <span class='result-name'>{{result.name}}</span>
-            &nbsp;
-            <div ng-show='results.isInsider( result )' class='result-insider-badge'>Insider!</div>
-          </td>
-          <td>{{results.domainInfoString( result ) }}</td>
-          <td>{{results.countryInfoString( result ) }}</td>
-          <td>{{results.coverageInfoString( result )}}</td>
+    <div class='results-container'>
+      <div id='loading' ng-show='results.isLoading()'>LOADING...</div>
+      <table id='results-table'>
+        <colgroup>
+          <col class='col-name'>
+          <col class='col-domain'>
+          <col class='col-country'>
+          <col class='col-cpc'>
+          <col class='col-aff'>
+          <col class='col-restricted'>
+          <col class='col-commission'>
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Merchant Name</th>
+            <th class='col-dom'>Domains</th>
+            <th>Countries</th>
+            <th class='col-cpc'>CPC/CPA</th>
+            <th class='col-aff' ng-show=' results.isSignedIn() '>Affiliates to Me?</th>
+            <th ng-show=' !results.isSignedIn() '>Can I make Money?</th>
+            <th class='col-com'>Commission</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat='result in results.getCurrentPageData() track by $index'>
+            <!-- A little hacky but lets the blank table display-->
+            <td class='result-name-cell' ng-click='results.redirectTo(result)'>
+              <span class='result-name'>{{result.name}}</span>
+              &nbsp;
+              <div ng-show='results.isInsider( result )' class='result-insider-badge'>Insider!</div>
+            </td>
+            <td class='col-dom'>{{results.domainInfoString( result ) }}</td>
+            <td>{{results.countryInfoString( result ) }}</td>
+            <td class='col-cpc'>{{results.coverageInfoString( result )}}</td>
           
-          <td ng-show=' results.isSignedIn() '>
-            <div ng-show=' results.displayAffiliatableOrb( result )' class='aff-status-circle' ng-class='{ "affiliatable": result.overallAffiliable }'></div>
-          </td>
-          <td ng-show=' !results.isSignedIn()'>
-            <span ng-show='results.displayRestrictedInfo( result )'>
-              {{ result.overallRestricted ? "Network Restricted" : "Yes!" }}
-            </span>
-          </td>
+            <td class='col-aff' ng-show=' results.isSignedIn() '>
+              <div ng-show=' results.displayAffiliatableOrb( result )' class='aff-status-circle'
+                   ng-class='{ "affiliatable": result.overallAffiliable }'>
+              </div>
+            </td>
+            <td ng-show=' !results.isSignedIn()'>
+              <span ng-show='results.displayRestrictedInfo( result )'>
+                {{ result.overallRestricted ? "Network Restricted" : "Yes!" }}
+              </span>
+            </td>
           
           
-          <td>{{results.commissionInfoString( result ) }}</td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <button class='page-button' ng-click='results.previousPage()'
-            ng-disabled='!results.doShowPrevious()'>
-      Previous
-    </button>
-    <div id='page-nums'>
-      <a ng-show='results.doShowLeadingDots()' ng-click='results.setPage(1)' class='page-number'>1</a>
-      <span ng-show='results.doShowLeadingDots()'>...</span>
-      <a ng-repeat='pageNum in [results.currentPage() - 2, results.currentPage() - 1, results.currentPage(), results.currentPage() + 1, results.currentPage() + 2]'
-         ng-show='(pageNum > 0) && (pageNum <= results.getTotalPages())'
-         ng-click='results.setPage(pageNum)'
-         ng-class='{ "page-selected": results.currentPage() === pageNum, "page-number": true, "page-disabled": !results.pageLoadable(pageNum) }'>
-        {{pageNum}}
-      </a>
-      <span ng-show='results.doShowTrailingDots()'>...</span>
+            <td class='col-com'>{{results.commissionInfoString( result ) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class='result-buttons'>
+        <button class='page-button' ng-click='results.previousPage()'
+                ng-disabled='!results.doShowPrevious()'>
+          Previous
+        </button>
+        <div id='page-nums'>
+          <a ng-show='results.doShowLeadingDots()' ng-click='results.setPage(1)' class='page-number'>1</a>
+          <span ng-show='results.doShowLeadingDots()'>...</span>
+          <a ng-repeat='pageNum in [results.currentPage() - 2, results.currentPage() - 1, results.currentPage(), results.currentPage() + 1, results.currentPage() + 2]'
+             ng-show='(pageNum > 0) && (pageNum <= results.getTotalPages())'
+             ng-click='results.setPage(pageNum)'
+             ng-class='{ "page-selected": results.currentPage() === pageNum, "page-number": true, "page-disabled": !results.pageLoadable(pageNum) }'>
+            {{pageNum}}
+          </a>
+          <span ng-show='results.doShowTrailingDots()'>...</span>
+        </div>
+        <button class='page-button' ng-click='results.nextPage()'
+                ng-disabled='!results.doShowNext()'>
+          Next
+        </button>
+      </div>
     </div>
-    <button class='page-button' ng-click='results.nextPage()'
-            ng-disabled='!results.doShowNext()'>
-      Next
-    </button>
   </section>
   

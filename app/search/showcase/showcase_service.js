@@ -17,7 +17,7 @@ app.service('showcaseService', ['$http', '$q', function($http, $q) {
     
     setTimeout(function() {
       deferred.resolve(returnData);
-    }, 500);
+    }, 50);
     
     return deferred.promise;
   }
